@@ -10,7 +10,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main >
+      <main className='min-h-[80vh]'>
         <h1>
           test default
         </h1>

@@ -1,4 +1,3 @@
-import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import store from "../context"
 import { Provider } from "react-redux";
@@ -7,6 +6,7 @@ import Footer from '../components/Footer'
 import NextNProgress from 'nextjs-progressbar';
 import CircularProgress from '@mui/material/CircularProgress';
 import React, {useState, useEffect} from 'react';
+import '../styles/globals.css'
 
 export default function App({ Component, pageProps }: AppProps) {
 

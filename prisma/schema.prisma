@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id      Int       @id @default(autoincrement())
+  name    String    @unique
+  product Product[]
+}
+
+model Tag {
+  id      Int       @id @default(autoincrement())
+  name    String    @unique
+  product Product[]
+}
+
+model Iamge {
+  id      Int     @id @default(autoincrement())
+  name    String
+  fileUrl String  @unique
+  Post    Product @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId  Int
+}
+
+model Product {
+  id         Int       @id @default(autoincrement())
+  title      String
+  content    String
+  images     Iamge[]
+  tags       Tag[]
+  comments   Comment[]
+  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  likes      String[]  @default([])
+  dislikes   String[]  @default([])
+  sales      Sales[]
+  discount   Float     @default(1)
+}
+
+model Sales {
+  id            Int     @id @default(autoincrement())
+  user          User[]
+  productId     Int
+  product       Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  totalprice    Decimal
+  numberOfItems Decimal
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  lastName  String
+  firstName String
+  password  String
+  comments  Comment[]
+  role      Roles     @default(USER)
+  Sales     Sales?    @relation(fields: [salesId], references: [id])
+  salesId   Int?
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  productId Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+enum Roles {
+  ADMIN
+  USER
+}

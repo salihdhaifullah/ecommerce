@@ -13,14 +13,14 @@ const SideBar = () => {
 
     const [open, setOpen] = useState(false)
     const haveAnAccount = localStorage.getItem('user')
-    const isAdman = true;
+    const isAdmin = true;
     const cards = 2;
     const newPayments = 5;
 
     return (
         <>
             <div onClick={() => setOpen(!open)} className="block w-8  left-1/2 top-1/2  z-[2] ">
-                {isAdman ? (
+                {isAdmin ? (
                     cards || newPayments > 0 ? (
                         <div className="w-5 h-5 z-[100] absolute -top-2 -right-2 rounded-full flex items-center justify-center bg-red-600">
                             <p className='text-sm text-white font-semibold'>{cards + newPayments}</p>
@@ -65,29 +65,29 @@ const SideBar = () => {
                                             <span className="flex-1 ml-3 whitespace-nowrap">Home</span>
                                         </Link>
                                     </li>
-                                    {isAdman === true && (
+                                    {isAdmin === true && (
                                         <>
                                             <hr />
                                             <li>
-                                                <Link href="/adman/users" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
+                                                <Link href="/admin/users" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
                                                     <svg className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path></svg>
                                                     <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link href="/adman" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
+                                                <Link href="/admin" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
                                                     <svg className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd"></path></svg>
                                                     <span className="flex-1 ml-3 whitespace-nowrap">Products</span>
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link href="/adman/create-product" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
+                                                <Link href="/admin/create-product" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
                                                     <CreateOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"></CreateOutlinedIcon>
                                                     <span className="flex-1 ml-3 whitespace-nowrap">Creat Product</span>
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link href="/adman/payments" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
+                                                <Link href="/admin/payments" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
                                                     <PointOfSaleOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"></PointOfSaleOutlinedIcon>
                                                     <span className="flex-1 ml-3 whitespace-nowrap">Orders</span>
                                                     {newPayments >= 1 && (

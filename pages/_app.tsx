@@ -17,13 +17,15 @@ useEffect(() => {
 }, [])
 
   return (
-  <div className="flex flex-col min-h-[100vh]">
+  <div className="flex flex-col min-h-[100vh] bg-blue-100">
     <Provider store={store}>
       <NextNProgress />
       {isBrowser ? (
         <>
           <Header />
-          <Component {...pageProps} />
+            <main className="my-10 min-h-[80vh]">
+            <Component {...pageProps} />
+            </main>
           <Footer />
         </>
       ) : (

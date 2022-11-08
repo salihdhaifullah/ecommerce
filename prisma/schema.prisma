@@ -32,6 +32,7 @@ model Product {
   title      String
   content    String
   images     Iamge[]
+  imageUrl   String
   tags       Tag[]
   comments   Comment[]
   category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
@@ -40,13 +41,24 @@ model Product {
   updatedAt  DateTime  @updatedAt
   likes      String[]  @default([])
   dislikes   String[]  @default([])
-  sales      Sales[]
-  discount   Float     @default(1)
+  sales      Sale[]
+  discount   Float     
+  rates      Rate[] 
+  price      Decimal
+  pieces     Decimal
 }
 
-model Sales {
+model Rate {
+  id        Int      @id @default(autoincrement())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int      @unique
+  usersId   Int
+  rate      RateType
+}
+
+model Sale {
   id            Int     @id @default(autoincrement())
-  user          User[]
+  userId        Int
   productId     Int
   product       Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   totalprice    Decimal
@@ -62,8 +74,6 @@ model User {
   password  String
   comments  Comment[]
   role      Roles     @default(USER)
-  Sales     Sales?    @relation(fields: [salesId], references: [id])
-  salesId   Int?
 }
 
 model Comment {
@@ -80,4 +90,12 @@ model Comment {
 enum Roles {
   ADMIN
   USER
+}
+
+enum RateType {
+  star1
+  star2
+  star3
+  star4
+  star5
 }

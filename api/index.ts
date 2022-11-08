@@ -20,7 +20,7 @@ API.interceptors.request.use((req) => {
     return req
 })
 
-export const singUp = async (data: ISingUp) => await API.post(`/auth/sign-up`, data)
+export const singUp = async (data: ISingUp) => await API.post("/auth/sign-up", data)
 
 export const login = async (data: ILogin) => await API.post("/auth/login", data)
 

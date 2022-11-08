@@ -4,6 +4,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    
 }
 
 * {
@@ -11,7 +12,16 @@ body {
 }
 
 
+.link {
+  @apply text-blue-600 hover:text-blue-500 cursor-pointer underline 
+}
+
+.underLine {
+  @apply  after:content-[""] flex-col flex  after:w-full after:h-[2px] after:rounded-lg after:bg-blue-600
+}
+
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+

@@ -11,7 +11,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import { NextPage } from 'next';
-import { useDispatch } from 'react-redux';
 import { ISingUp } from '../types/user';
 import Swal from 'sweetalert2';
 import { singUp } from '../api'
@@ -25,7 +24,6 @@ import FormControl from '@mui/material/FormControl';
 
 
 const SingUp: NextPage = () => {
-  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -39,13 +37,9 @@ const SingUp: NextPage = () => {
     event.preventDefault();
 
     await singUp({ password: password, firstName: firstName, lastName: lastName, email: email } as ISingUp).then(({ data }) => {
-      Swal.fire({
-        title: 'Sing Up Success',
-        html: `<h2>${data.massage}</h2>`,
-        icon: 'success',
-        timer: 1500
-      })
+      Swal.fire({ title: 'Sing Up Success', html: `<h2>${data.massage}</h2>`, icon: 'success', timer: 1500 })
       localStorage.setItem("user", JSON.stringify(data.data))
+
     }).catch(({ response }: any) => {
       Swal.fire("something want wrong", response.data.error, 'error')
     })
@@ -161,7 +155,7 @@ const SingUp: NextPage = () => {
           <Grid container>
             <Grid item>
               <Link href='login'>
-                <a className='link'>already have an account? Login</a>
+                <p className='link'>already have an account? Login</p>
               </Link>
             </Grid>
           </Grid>

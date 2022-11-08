@@ -21,6 +21,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
+import FormControl from '@mui/material/FormControl';
 
 const Login: NextPage = () => {
   const [email, setEmail] = useState('')
@@ -34,16 +35,10 @@ const Login: NextPage = () => {
 
 
     await login({ email: email, password: password } as ILogin).then(({ data }) => {
-      Swal.fire({
-        title: 'Sing Up Success',
-        html: `<h2>${data.massage}</h2>`,
-        color: '#716add',
-        background: '#222222',
-        position: 'top-end',
-        icon: 'success',
-        timer: 1500
-      })
+      Swal.fire({ title: 'Sing Up Success', icon: 'success', html: `<h2>${data.massage}</h2>`, timer: 1500 })
+
       localStorage.setItem("user", JSON.stringify(data.data))
+    
     }).catch(({ response }) => {
       Swal.fire("something want wrong", response.data.error, 'error')
     })
@@ -52,7 +47,6 @@ const Login: NextPage = () => {
     setEmail("")
     setIsLoading(false)
   };
-
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
@@ -88,9 +82,10 @@ const Login: NextPage = () => {
             autoFocus
           />
 
-
-            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+          <FormControl  className="w-full">
+          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
             <OutlinedInput
+              className="w-full"
               id="outlined-adornment-password"
               type={showPassword ? 'text' : 'password'}
               value={password}
@@ -111,8 +106,8 @@ const Login: NextPage = () => {
                   </IconButton>
                 </InputAdornment>
               }
-              label="Password"
             />
+          </FormControl>
 
           <Button
             type={(isLoading) ? "reset" : "submit"}
@@ -127,7 +122,7 @@ const Login: NextPage = () => {
           <Grid container>
             <Grid item>
               <Link href='sing-up'>
-                <a className='link'>Don&apos;t have an account? Sign Up</a>
+                <p className='link'>Don&apos;t have an account? Sign Up</p>
               </Link>
             </Grid>
           </Grid>

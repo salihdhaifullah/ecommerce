@@ -9,3 +9,24 @@ export interface ICreateProduct {
     price: number;
     discount: number;
 }
+
+
+export interface IProduct {
+    id: number;
+    title: string;
+    content: string;
+    images: {
+        fileUrl: string;
+    }[];
+    createdAt: Date;
+    discount: number;
+    price: number;
+    pieces: number;
+    imageUrl: string;
+    tags: {
+        name: string;
+    }[];
+    category: {
+        name: string;
+    };
+}

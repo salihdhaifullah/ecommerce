@@ -8,9 +8,10 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Rating from '@mui/material/Rating'
 import Chip from '@mui/material/Chip'
-import {blue} from '@mui/material/colors'
+import { blue } from '@mui/material/colors'
 import { useState } from 'react'
 import { createTheme } from '@mui/material/styles';
+import ImageSlider from './ImageSlider';
 
 interface IPreviewProductProps {
     setOpen: (state: boolean) => void;
@@ -30,24 +31,25 @@ interface IPreviewProductProps {
 
 
 const theme = createTheme({
-  palette: {
-    primary: {
-      light: '#757ce8',
-      main: '#3f50b5',
-      dark: '#002884',
-      contrastText: '#fff',
+    palette: {
+        primary: {
+            light: '#757ce8',
+            main: '#3f50b5',
+            dark: '#002884',
+            contrastText: '#fff',
+        },
+        secondary: {
+            light: '#ff7961',
+            main: '#f44336',
+            dark: '#ba000d',
+            contrastText: '#000',
+        },
     },
-    secondary: {
-      light: '#ff7961',
-      main: '#f44336',
-      dark: '#ba000d',
-      contrastText: '#000',
-    },
-  },
 });
 
 export default function PreviewProduct({ setOpen, open, title, content, tags, category, image, images, pieces, price, discount }: IPreviewProductProps) {
     const [value, setValue] = useState<number | null>(null);
+    const [openImageSlider, setOpenImageSlider] = useState(false);
 
     const handleClose = () => {
         setOpen(false);
@@ -59,7 +61,7 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
 
     return (
 
-        <Dialog  fullScreen open={open} onClose={handleClose}>
+        <Dialog fullScreen open={open} onClose={handleClose}>
             <div className="min-w-fit  min-h-fit w-full h-full">
 
                 <DialogTitle className='px-10'>Preview Product</DialogTitle>
@@ -71,7 +73,16 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                         exit={{ opacity: 0.8, x: 700, scale: 1 }}
                         className="my-6 flex flex-col justify-center items-center px-40 mt-10 ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
 
-                        <div className="h-full flex max-w-[80%] flex-col rounded-lg drop-shadow-xl shadow-blue-600 bg-blue-100 p-4">
+
+
+                        <div className="h-full relative flex max-w-[80%] flex-col rounded-lg drop-shadow-xl shadow-blue-600 bg-blue-100 p-4">
+
+
+                            {openImageSlider && (
+                                <div className='fixed z-50 w-full h-full flex justify-center items-center l-0 b-0 t-0 r-0 shadow-lg'>
+                                    <ImageSlider images={images} setOpenImageSlider={setOpenImageSlider} />
+                                </div>
+                            )}
 
                             <div className="flex items-center justify-between  mr-3 w-full">
                                 <motion.div whileTap={{ scale: 0.6 }} className="w-8 h-8  duration-75 rounded-full bg-gradient-to-tr  from-red-300 to-red-600 flex items-center justify-center cursor-pointer hover:shadow-md ">
@@ -144,6 +155,12 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                                 </div>
                             </div>
 
+                            <div className="w-full flex items-center justify-center py-2">
+                                <Button variant="outlined" onClick={() => setOpenImageSlider(true)} >
+                                    Look at other images
+                                </Button>
+                            </div>
+
                             <div className="flex justify-between items-center flex-row flex-wrap mt-auto">
                                 <p className="text-gray-700 ">
                                     items left <span className="text-blue-600 font-semibold text-lg">
@@ -165,6 +182,6 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                     <Button className="bg-blue-600 text-white hover:bg-blue-300 hover:text-blue-600 shadow-xl shadow-blue-600" onClick={handelCreate}>Save</Button>
                 </DialogActions>
             </div>
-        </Dialog>
+        </Dialog >
     );
 }

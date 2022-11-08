@@ -63,7 +63,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             }
             else return res.status(400).json({ error: "user already exist try login" })
         } catch (error) {
-            console.log(error)
             return res.status(500).json({ massage: 'server error' })
         }
     }

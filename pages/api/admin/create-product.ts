@@ -8,9 +8,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { error, id, role } = GetUserIdAndRoleMiddleware(req);
 
     if (error) return res.status(500).json({ error: error });
-    
+
     if (role !== "ADMIN") return res.status(403).json({ massage: "unauthorized" })
-    
+
     const discountOptions = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
     const { tags, category, content, title, pieces, price, image, images, discount }: ICreateProduct = req.body;
@@ -20,13 +20,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!validation) return res.status(400).json({ massage: "Invalid Data" });
 
     // start Creating Process 
-    
+
     const TagsQuery = [];
     const ImagesQuery = [];
 
     for (let image of images) {
-      ImagesQuery.push({fileUrl: image})
-    } 
+      ImagesQuery.push({ fileUrl: image })
+    }
 
     for (let tag of tags) {
       TagsQuery.push({
@@ -66,7 +66,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
-    return res.status(200).json({data, massage: "Product Successfully Created"})
+    return res.status(200).json({ data, massage: "Product Successfully Created" })
 
+  }
+
+  if (req.method === "GET") {
+    const tags = prisma.tag.findMany({
+      select: {
+        name: true
+      },
+    });
+
+    const categories = prisma.category.findMany({
+      select: {
+        name: true
+      },
+    })
+
+    await Promise.all([tags, categories]).then((data) => {
+      return res.status(200).json({ tags: data[0], categories: data[1] })
+    });
+  
   }
 }

@@ -30,3 +30,7 @@ export const Logout = async () => await API.get("/auth/logout")
 export const GetToken = async () => await API.get("/auth/refresh-token");
 
 export const createProduct = async (data: ICreateProduct) => await API.post("/admin/create-product", data)
+
+export const getCategoriesAndTags = async () => await API.get("/admin/create-product")
+
+export const getProducts = async () => await API.get("/product")

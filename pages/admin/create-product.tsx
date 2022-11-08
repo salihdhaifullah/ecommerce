@@ -14,8 +14,10 @@ import imagePreview from '../../functions/imagePreview';
 import PreviewProduct from '../../components/PreviewProduct';
 import handelProcessImageForSubmitting from '../../functions/ProcessImageForSubmitting';
 import uploadImages from '../../functions/uploadImages';
-import { createProduct } from '../../api';
+import { createProduct, getCategoriesAndTags } from '../../api';
 import { ICreateProduct } from '../../types/product';
+import Swal from 'sweetalert2';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 interface ICategory {
@@ -29,10 +31,6 @@ interface IDiscountsOptions {
 }
 
 const filter = createFilterOptions<ICategory>();
-
-const tagsOptions = [{ name: "awfw" }, { name: "ITfswf" }, { name: "BYGFFH" }, { name: "Fuck" }, { name: "FLoor" }];
-
-const categoriesOptions: ICategory[] = [{ name: 'The Shawshank Redemption' }, { name: 'The Godfather' }, { name: 'The Godfather: Part II' }, { name: 'The Dark Knight' }, { name: '12 Angry Men' }, { name: "Schindler's List" }, { name: 'Pulp Fiction' }];
 
 const discountsOptions: IDiscountsOptions[] = [{ value: 0, name: "none" }, { value: 0.1, name: "10%" }, { value: 0.2, name: "20%" }, { value: 0.3, name: "30%" }, { value: 0.4, name: "40%" }, { value: 0.5, name: "50%" }, { value: 0.6, name: "60%" }, { value: 0.7, name: "70%" }, { value: 0.8, name: "80%" }, { value: 0.9, name: "90%" }];
 
@@ -49,11 +47,23 @@ const CreateProduct = () => {
     const [open, setOpen] = useState(false)
     const [isValid, setIsValid] = useState(false)
 
+    const [tagsOptions, setTagsOptions] = useState<ICategory[]>([])
+    const [categoriesOptions, setCategoriesOptions] = useState<ICategory[]>([])
+
     const [isLoading, setIsLoading] = useState(false)
 
     const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 8 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2 && (image && image.fileUrl.length > 10));
 
+    const init = useCallback(async () => {
+        await getCategoriesAndTags().then((res) => {
+            setTagsOptions(res.data.tags);
+            setCategoriesOptions(res.data.categories);
+        })
+    }, [])
 
+    useEffect(() => {
+        init()
+    }, [init])
 
     const Validator = useCallback(() => {
         if (validation) setIsValid(true);
@@ -88,6 +98,7 @@ const CreateProduct = () => {
 
     const handelSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setIsLoading(true)
         if (!isValid) return;
 
         for (let image of images) {
@@ -109,13 +120,8 @@ const CreateProduct = () => {
             discount: discount,
         }
 
-        await createProduct(endData).then((res) => {
-            console.log(res)
-        }).catch((err) => {
-            console.log(err)
-        })
-
-        console.log(endData);
+        await createProduct(endData).then((res) => { Swal.fire("success", "product Created", 'success')})
+        .catch((err) => { Swal.fire("error", "some think want wrong", 'error') })
 
         setTitle("")
         setContent("")
@@ -137,13 +143,7 @@ const CreateProduct = () => {
         return data;
     }
 
-
-
-
-
     return (
-
-
         <Container>
             {category && tags && image && (
                 <PreviewProduct
@@ -208,10 +208,10 @@ const CreateProduct = () => {
                         freeSolo
                         renderInput={(params) => (
                             <TextField
-                                error={!(category?.name && category?.name.length > 8)}
+                                error={!(category?.name && category?.name.length > 2)}
 
                                 helperText={!(category?.name) ? "Category Is Required" :
-                                    (category?.name.length > 4 && "Min length is 4")}
+                                    (category?.name.length < 2 && "Min length is 2")}
 
                                 {...params}
                                 label="category"
@@ -276,7 +276,7 @@ const CreateProduct = () => {
                         className="w-full mr-4"
                         value={price}
                         onChange={(event) => setPrice(Number(event.target.value))}
-                        error={!(price)}
+                        error={price < 1}
                         helperText="place insert a price"
                     />
 
@@ -289,7 +289,7 @@ const CreateProduct = () => {
                         className="w-full ml-4"
                         value={pieces}
                         onChange={(event) => setPieces(Number(event.target.value))}
-                        error={!(pieces)}
+                        error={pieces < 1}
                         helperText="place insert a pieces number"
                     />
                 </Box>
@@ -340,9 +340,16 @@ const CreateProduct = () => {
 
                     {isValid ? (
                         <>
-                            <Button type="submit" className="bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
-                                submit
-                            </Button>
+                            {isLoading ? (
+                                <Button disabled className="bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
+                                    <CircularProgress />
+                                </Button>
+                            ) : (
+                                <Button type="submit" className="bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
+                                    submit
+                                </Button>
+                            )}
+
 
                             <Button onClick={() => setOpen(true)} className="bg-green-600 hover:bg-green-200 shadow-lg shadow-green-600 text-white hover:text-green-600">
                                 Preview Product

@@ -1,23 +1,9 @@
-import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
-import { motion } from 'framer-motion'
-
-import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
-import FoodBankOutlinedIcon from '@mui/icons-material/FoodBankOutlined';
-import BackspaceOutlinedIcon from '@mui/icons-material/BackspaceOutlined';
-import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
-import LocalDiningOutlinedIcon from '@mui/icons-material/LocalDiningOutlined';
-import CircularProgress from '@mui/material/CircularProgress'
-import Swal from 'sweetalert2'
-import Image from 'next/image';
-
-
-
+import { useState, useEffect, FormEvent, ChangeEvent, useCallback } from 'react';
 import BackupIcon from '@mui/icons-material/Backup';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
 import InputLabel from '@mui/material/InputLabel';
@@ -26,9 +12,10 @@ import { createFilterOptions } from '@mui/material/Autocomplete';
 import { IPreviewImage } from '../../types/image';
 import imagePreview from '../../functions/imagePreview';
 import PreviewProduct from '../../components/PreviewProduct';
-
-
-
+import handelProcessImageForSubmitting from '../../functions/ProcessImageForSubmitting';
+import uploadImages from '../../functions/uploadImages';
+import { createProduct } from '../../api';
+import { ICreateProduct } from '../../types/product';
 
 
 interface ICategory {
@@ -55,14 +42,28 @@ const CreateProduct = () => {
     const [tags, setTags] = useState<string[]>([])
     const [category, setCategory] = useState<ICategory | null>(null)
     const [image, setImage] = useState<IPreviewImage | null>(null);
-    const [pieces, setPieces] = useState("")
-    const [price, setPrice] = useState("")
+    const [pieces, setPieces] = useState(1)
+    const [price, setPrice] = useState(1)
     const [discount, setDiscount] = useState(0)
     const [images, setImages] = useState<IPreviewImage[]>([])
     const [open, setOpen] = useState(false)
+    const [isValid, setIsValid] = useState(false)
 
     const [isLoading, setIsLoading] = useState(false)
 
+    const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 8 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2 && (image && image.fileUrl.length > 10));
+
+
+
+    const Validator = useCallback(() => {
+        if (validation) setIsValid(true);
+        else setIsValid(false);
+    }, [validation])
+
+
+    useEffect(() => {
+        Validator()
+    }, [Validator])
 
     const handelUploadImage = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event?.target?.files
@@ -83,26 +84,53 @@ const CreateProduct = () => {
         setImages(data);
     }
 
-    const handelSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
 
-        const endData = {
+
+    const handelSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (!isValid) return;
+
+        for (let image of images) {
+            await uploadImages(image)
+        }
+
+        await uploadImages(image as IPreviewImage)
+
+
+        const endData: ICreateProduct = {
             title: title,
             content: content,
             tags: tags,
-            category: category,
-            image: image,
-            images: images,
+            category: category?.name as string,
+            image: image?.fileUrl as string,
+            images: handelProcessImageForSubmitting(images),
             pieces: pieces,
             price: price,
             discount: discount,
         }
 
+        await createProduct(endData).then((res) => {
+            console.log(res)
+        }).catch((err) => {
+            console.log(err)
+        })
+
         console.log(endData);
+
+        setTitle("")
+        setContent("")
+        setTags([])
+        setCategory(null)
+        setImage(null)
+        setImages([])
+        setPieces(1)
+        setPrice(1)
+        setDiscount(0)
     }
 
-    const getImagesUrl = (): string[] => {
+    const getImagesUrl = (): string[] | null => {
         const data: string[] = []
+        if (images.length === 0) return null;
         for (let image of images) {
             data.push(image.previewUrl)
         }
@@ -247,7 +275,7 @@ const CreateProduct = () => {
                         type="number"
                         className="w-full mr-4"
                         value={price}
-                        onChange={(event) => setPrice(event.target.value)}
+                        onChange={(event) => setPrice(Number(event.target.value))}
                         error={!(price)}
                         helperText="place insert a price"
                     />
@@ -260,7 +288,7 @@ const CreateProduct = () => {
                         type="number"
                         className="w-full ml-4"
                         value={pieces}
-                        onChange={(event) => setPieces(event.target.value)}
+                        onChange={(event) => setPieces(Number(event.target.value))}
                         error={!(pieces)}
                         helperText="place insert a pieces number"
                     />
@@ -309,13 +337,29 @@ const CreateProduct = () => {
                 </div>
 
                 <div className="w-full inline-flex mt-2 justify-evenly">
-                    <Button  type="submit" className="bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
-                        submit
-                    </Button>
 
-                    <Button onClick={() => setOpen(true)} className="bg-green-600 hover:bg-green-200 shadow-lg shadow-green-600 text-white hover:text-green-600">
-                        Preview Product
-                    </Button>
+                    {isValid ? (
+                        <>
+                            <Button type="submit" className="bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
+                                submit
+                            </Button>
+
+                            <Button onClick={() => setOpen(true)} className="bg-green-600 hover:bg-green-200 shadow-lg shadow-green-600 text-white hover:text-green-600">
+                                Preview Product
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Button disabled className="bg-gray-600 hover:bg-gray-200 text-white hover:text-gray-600">
+                                submit
+                            </Button>
+
+                            <Button disabled className="bg-gray-600 hover:bg-gray-200 text-white hover:text-gray-600">
+                                Preview Product
+                            </Button>
+                        </>
+                    )}
+
                 </div>
             </Box>
         </Container >

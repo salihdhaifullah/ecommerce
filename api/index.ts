@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ICreateProduct } from '../types/product';
 import { ILogin, ISingUp, IUser } from '../types/user'
 
 let baseURL = 'http://localhost:3000/api'
@@ -27,3 +28,5 @@ export const login = async (data: ILogin) => await API.post("/auth/login", data)
 export const Logout = async () => await API.get("/auth/logout")
 
 export const GetToken = async () => await API.get("/auth/refresh-token");
+
+export const createProduct = async (data: ICreateProduct) => await API.post("/admin/create-product", data)

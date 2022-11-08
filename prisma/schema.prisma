@@ -21,7 +21,6 @@ model Tag {
 
 model Iamge {
   id      Int     @id @default(autoincrement())
-  name    String
   fileUrl String  @unique
   Post    Product @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId  Int

@@ -8,9 +8,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Rating from '@mui/material/Rating'
 import Chip from '@mui/material/Chip'
-import { blue } from '@mui/material/colors'
 import { useState } from 'react'
-import { createTheme } from '@mui/material/styles';
 import ImageSlider from './ImageSlider';
 
 interface IPreviewProductProps {
@@ -23,45 +21,25 @@ interface IPreviewProductProps {
         name: string;
     };
     image: string;
-    images: string[]
+    images: string[] | null;
     pieces: number;
     price: number;
     discount: number;
 }
 
 
-const theme = createTheme({
-    palette: {
-        primary: {
-            light: '#757ce8',
-            main: '#3f50b5',
-            dark: '#002884',
-            contrastText: '#fff',
-        },
-        secondary: {
-            light: '#ff7961',
-            main: '#f44336',
-            dark: '#ba000d',
-            contrastText: '#000',
-        },
-    },
-});
-
 export default function PreviewProduct({ setOpen, open, title, content, tags, category, image, images, pieces, price, discount }: IPreviewProductProps) {
     const [value, setValue] = useState<number | null>(null);
     const [openImageSlider, setOpenImageSlider] = useState(false);
 
-    const handleClose = () => {
-        setOpen(false);
-    };
 
-    const handelCreate = () => {
-        console.log(blue)
+    const handelClose = () => {
+        setOpen(false);
     }
 
     return (
 
-        <Dialog fullScreen open={open} onClose={handleClose}>
+        <Dialog fullScreen open={open} onClose={handelClose}>
             <div className="min-w-fit  min-h-fit w-full h-full">
 
                 <DialogTitle className='px-10'>Preview Product</DialogTitle>
@@ -71,14 +49,14 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                         initial={{ x: 400, opacity: 0, scale: 0.2 }}
                         animate={{ x: 0, opacity: 1, scale: 1 }}
                         exit={{ opacity: 0.8, x: 700, scale: 1 }}
-                        className="my-6 flex flex-col justify-center items-center px-40 mt-10 ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
+                        className="my-6 flex flex-col justify-center items-center mt-10 ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
 
 
 
-                        <div className="h-full relative flex max-w-[80%] flex-col rounded-lg drop-shadow-xl shadow-blue-600 bg-blue-100 p-4">
+                        <div className="h-full relative flex w-full sm:w-[80%] md:w-[70%]  lg:w-[60%] flex-col rounded-lg drop-shadow-xl shadow-blue-600 bg-blue-100 p-4">
 
 
-                            {openImageSlider && (
+                            {images && openImageSlider && (
                                 <div className='fixed z-50 w-full h-full flex justify-center items-center l-0 b-0 t-0 r-0 shadow-lg'>
                                     <ImageSlider images={images} setOpenImageSlider={setOpenImageSlider} />
                                 </div>
@@ -155,11 +133,13 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                                 </div>
                             </div>
 
-                            <div className="w-full flex items-center justify-center py-2">
-                                <Button variant="outlined" onClick={() => setOpenImageSlider(true)} >
-                                    Look at other images
-                                </Button>
-                            </div>
+                            {images && (
+                                <div className="w-full flex items-center justify-center py-2">
+                                    <Button variant="outlined" onClick={() => setOpenImageSlider(true)} >
+                                        Look at other images
+                                    </Button>
+                                </div>
+                            )}
 
                             <div className="flex justify-between items-center flex-row flex-wrap mt-auto">
                                 <p className="text-gray-700 ">
@@ -178,8 +158,7 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
 
                 </DialogContent>
                 <DialogActions>
-                    <Button className="bg-red-600 text-white hover:bg-red-300 hover:text-red-600 shadow-xl shadow-red-600" onClick={handleClose}>Cancel</Button>
-                    <Button className="bg-blue-600 text-white hover:bg-blue-300 hover:text-blue-600 shadow-xl shadow-blue-600" onClick={handelCreate}>Save</Button>
+                    <Button className="bg-blue-600 text-white hover:bg-blue-300 hover:text-blue-600 shadow-xl shadow-blue-600" onClick={handelClose}>Close</Button>
                 </DialogActions>
             </div>
         </Dialog >

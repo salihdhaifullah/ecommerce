@@ -39,7 +39,6 @@ model Product {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   likes      String[]  @default([])
-  dislikes   String[]  @default([])
   sales      Sale[]
   discount   Float     
   rates      Rate[] 

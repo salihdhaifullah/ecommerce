@@ -3,7 +3,10 @@ export interface IComment {
     content: string;
     userId: number;
     createdAt: Date;
-    userName: string;
+    user: {
+        firstName: string;
+        lastName: string;
+    };
 }
 
 export interface ICreateComment {

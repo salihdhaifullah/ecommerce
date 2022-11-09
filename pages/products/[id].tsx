@@ -12,6 +12,7 @@ import Chip from '@mui/material/Chip'
 import handelProcessImageForSubmitting from '../../functions/ProcessImageForSubmitting';
 import { IPreviewImage } from '../../types/image';
 import Comments from '../../components/Comments';
+import { CircularProgress } from '@mui/material';
 
 interface IProductPageProps {
     product: IProduct
@@ -21,9 +22,10 @@ const ProductPage = ({ product }: IProductPageProps) => {
     const [value, setValue] = useState<number | null>(null);
     const [openImageSlider, setOpenImageSlider] = useState(false);
     const [isFound, setIsFound] = useState(false);
+    const [isLoadingLike, setIsLoadingLike] = useState(false)
+    const [isLikedByUser, setIsLikedByUser] = useState(false)
+    const [likes, setLikes] = useState<string[]>([])
 
-
-    
     useEffect(() => {
         setIsFound(Boolean(localStorage.getItem(`product id ${product.id}`)))
     }, [product.id])
@@ -37,6 +39,11 @@ const ProductPage = ({ product }: IProductPageProps) => {
         setIsFound(false)
         localStorage.removeItem(`product id ${product.id}`)
     }
+
+    const handelLike = async () => {
+        setIsLikedByUser(!isLikedByUser)
+    }
+
     return (
         <>
             {product.images && openImageSlider ? (
@@ -53,6 +60,23 @@ const ProductPage = ({ product }: IProductPageProps) => {
                     <div className="h-full relative p-10 flex w-full sm:w-[80%] md:w-[70%]  lg:w-[60%] flex-col rounded-lg drop-shadow-xl shadow-blue-600 bg-white">
 
                         <div className="flex items-center justify-between  mr-3 w-full">
+
+                            {isLoadingLike ? (
+                                <div className="flex items-center -mr-3 justify-center w-10 h-10 text-xs">
+                                    <CircularProgress />
+                                </div>
+                            ) : (
+                                <motion.button
+                                    whileTap={{ scale: 0.6 }}
+                                    onClick={handelLike} className={`flex-none flex flex-col items-center ease-in-out duration-[50] transition-all justify-center w-10 h-10 rounded-md ${isLikedByUser ? 'text-red-600 shadow-md shadow-red-500 border-red-300' : 'text-slate-300 border-slate-200'} border `} type="button" aria-label="Like">
+
+                                    <svg width="20" height="20" fill="currentColor" aria-hidden="true">
+                                        <path fillRule="evenodd" clipRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
+                                    </svg>
+                                    <span className="flex text-xs text-gray-400">{likes.length}</span>
+                                </motion.button>
+                            )}
+
                             {isFound ? (
                                 <motion.div whileTap={{ scale: 0.6 }} className="w-8 h-8 rounded-full  bg-gradient-to-tr from-blue-300 to-blue-600   flex items-center justify-center cursor-pointer hover:shadow-md ">
                                     <AddTaskIcon onClick={handelRemove} className='text-white' />
@@ -99,12 +123,12 @@ const ProductPage = ({ product }: IProductPageProps) => {
 
                         <div className="flex items-center w-full flex-col relative justify-center">
 
+
+
                             <h1 className='text-2xl flex flex-col justify-center items-center text-gray-900 mb-6'>{product.title}
                                 <span className='min-h-[1px] min-w-full mt-2  bg-gradient-to-tr from-blue-300 to-blue-600  flex '></span>
                             </h1>
 
-
-                            {/*  eslint-disable-next-line @next/next/no-img-element */}
                             <Image width={100} height={100} className='flex mb-6 w-full max-h-[200px] object-contain' src={product.imageUrl} alt={product.title} />
                         </div>
 
@@ -153,7 +177,7 @@ const ProductPage = ({ product }: IProductPageProps) => {
                 </div>
             )}
 
-            <Comments id={product.id}/>
+            <Comments id={product.id} />
         </>
     )
 }

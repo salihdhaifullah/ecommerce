@@ -40,4 +40,6 @@ export const getComments = async (id: number) => await API.get(`/comment/?id=${i
 
 export const createComment = async (id: number, data: ICreateComment) => await API.post(`/comment/?id=${id}`, data)
 
-export const deleteComment = async (productId: number, commentId: number) => await API.delete(`/comment/?id=${productId}&?commentId=${commentId}`);
+export const deleteComment = async (productId: number, commentId: number) => await API.delete(`/comment/?id=${productId}&commentId=${commentId}`);
+
+export const updateComment = async (productId: number, commentId: number, data: ICreateComment) => await API.patch(`/comment/?id=${productId}&commentId=${commentId}`, data);

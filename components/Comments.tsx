@@ -1,22 +1,37 @@
-import React, { FormEvent, useCallback, useEffect, useState } from 'react'
+import React, { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion';
 import Comment from './Comment';
 import { CircularProgress } from '@mui/material';
 import { IComment, ICreateComment } from '../types/comment';
-import { createComment, getComments } from '../api';
+import { createComment, deleteComment, getComments, updateComment } from '../api';
 
 
 
 const Comments = ({ id }: { id: number }) => {
     const [comment, setComment] = useState("")
     const [isLoading, setIsLoading] = useState(false)
-    const [isUpdate, setIsUpdate] = useState(false)
-    const [comments, setComments] = useState<IComment[]>([])
-
+    const [isUpdateById, setIsUpdateById] = useState<number | null>(null)
+    const [comments, setComments] = useState<IComment[]>([]);
+    const formRef = useRef<HTMLDivElement>(null)
 
     const init = useCallback(async () => {
         await getComments(id).then((res) => { setComments(res.data.comments.comments) }).catch((err) => { console.log(err) })
     }, [id])
+
+    useEffect(() => {
+        if (isUpdateById) {
+            setComment(comments.find((comment) => comment.id === isUpdateById)?.content || "")
+            scroll(Number(formRef.current?.offsetLeft), (Number(formRef.current?.offsetTop) - 200));
+        }
+    }, [comments, isUpdateById])
+
+    const handelDelete = async (commentId: number) => {
+        await deleteComment(id, commentId).then(() => {
+            init()
+        }).catch((error) => {
+
+        })
+    }
 
     useEffect(() => {
         init()
@@ -28,14 +43,18 @@ const Comments = ({ id }: { id: number }) => {
         if (!comment) return;
 
         setIsLoading(true)
-        await createComment(id, data).then((res) => {
-            
-            console.log(res)
-            
-        }).catch((err) => {
-            console.log(err)
-        });
+        if (isUpdateById) {
+         await updateComment(id, isUpdateById, data).then(() => {}).catch((error) => {})
+        } else {
+            await createComment(id, data).then((res) => {
+            }).catch((err) => {
+                console.log(err)
+            });
+        }
+        setIsUpdateById(null)
         setIsLoading(false)
+        setComment("")
+        init()
     }
 
     return (
@@ -43,14 +62,12 @@ const Comments = ({ id }: { id: number }) => {
             initial={{ x: 400, opacity: 0, scale: 0.2 }}
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ opacity: 0.8, x: 700, scale: 1 }}
-            className="w-full my-6 grid lg:grid-cols-2 md:grid-cols-2  gap-6  ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
+            className="w-full my-6 grid px-10 lg:grid-cols-2 md:grid-cols-2  gap-6  ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
 
-
-
-            <div className="w-full flex h-[50vh] max-h-fit justify-center items-center rounded-lg drop-shadow-lg bg-white">
+            <div ref={formRef} className="w-full flex h-[50vh] max-h-fit justify-center items-center rounded-lg drop-shadow-lg bg-white">
                 <form onSubmit={(e) => handelSubmitComment(e)} className="w-full p-4">
                     <div className="mb-2">
-                        <label htmlFor="comment" className="text-lg text-gray-600">{isUpdate ? "Update comment" : "Add comment"}</label>
+                        <label htmlFor="comment" className="text-lg text-gray-600">{isUpdateById ? "Update comment" : "Add comment"}</label>
                         <textarea
                             className="w-full max-h-[35vh] h-[35vh] min-h-[1vh] p-2 border rounded focus:outline-none focus:ring-gray-300 focus:ring-1"
                             placeholder="Comment"
@@ -71,12 +88,15 @@ const Comments = ({ id }: { id: number }) => {
                                 type="submit"
                                 className="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded drop-shadow-md
                         hover:bg-white hover:drop-shadow-2xl hover:text-blue-600 hover:rounded-3xl hover:border hover:border-blue-600 transition-all duration-[130ms] ease-in-out">
-                                {isUpdate ? "Update" : "Comment"}
+                                {isUpdateById ? "Update" : "Comment"}
                             </button>
                         )}
 
                         <button
-                            onClick={() => setComment("")}
+                            onClick={() => {
+                                setComment("")
+                                setIsUpdateById(null)
+                            }}
                             className="px-3 py-2 text-sm text-blue-600 border border-blue-500 drop-shadow-md 
                     hover:bg-blue-600 hover:drop-shadow-2xl hover:text-white hover:rounded-3xl transition-all duration-[130ms] ease-in-out">
                             Cancel
@@ -88,7 +108,7 @@ const Comments = ({ id }: { id: number }) => {
 
             <div className="flex justify-center  items-center gap-6 flex-col h-fit w-full rounded-lg">
                 {comments.length > 0 && comments.map((item, index) => (
-                    <Comment item={item} key={index} />
+                    <Comment setIsUpdateById={setIsUpdateById} handelDelete={handelDelete} item={item} key={index} />
                 ))}
             </div>
         </motion.div>

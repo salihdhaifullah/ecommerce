@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
   images: {
-    domains: ['whigujckvzmtjyeqvnfe.supabase.co'],
+    domains: ['whigujckvzmtjyeqvnfe.supabase.co', 'avatars.dicebear.com'],
   },
   env: {
       HOST: process.env.HOST,

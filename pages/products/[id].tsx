@@ -11,6 +11,7 @@ import Rating from '@mui/material/Rating'
 import Chip from '@mui/material/Chip'
 import handelProcessImageForSubmitting from '../../functions/ProcessImageForSubmitting';
 import { IPreviewImage } from '../../types/image';
+import Comments from '../../components/Comments';
 
 interface IProductPageProps {
     product: IProduct
@@ -21,6 +22,8 @@ const ProductPage = ({ product }: IProductPageProps) => {
     const [openImageSlider, setOpenImageSlider] = useState(false);
     const [isFound, setIsFound] = useState(false);
 
+
+    
     useEffect(() => {
         setIsFound(Boolean(localStorage.getItem(`product id ${product.id}`)))
     }, [product.id])
@@ -149,6 +152,8 @@ const ProductPage = ({ product }: IProductPageProps) => {
                     </div>
                 </div>
             )}
+
+            <Comments id={product.id}/>
         </>
     )
 }

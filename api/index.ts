@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ICreateComment } from '../types/comment';
 import { ICreateProduct } from '../types/product';
 import { ILogin, ISingUp, IUser } from '../types/user'
 
@@ -34,3 +35,9 @@ export const createProduct = async (data: ICreateProduct) => await API.post("/ad
 export const getCategoriesAndTags = async () => await API.get("/admin/create-product")
 
 export const getProducts = async () => await API.get("/product")
+
+export const getComments = async (id: number) => await API.get(`/comment/?id=${id}`)
+
+export const createComment = async (id: number, data: ICreateComment) => await API.post(`/comment/?id=${id}`, data)
+
+export const deleteComment = async (productId: number, commentId: number) => await API.delete(`/comment/?id=${productId}&?commentId=${commentId}`);

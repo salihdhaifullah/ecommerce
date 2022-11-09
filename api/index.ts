@@ -43,3 +43,7 @@ export const createComment = async (id: number, data: ICreateComment) => await A
 export const deleteComment = async (productId: number, commentId: number) => await API.delete(`/comment/?id=${productId}&commentId=${commentId}`);
 
 export const updateComment = async (productId: number, commentId: number, data: ICreateComment) => await API.patch(`/comment/?id=${productId}&commentId=${commentId}`, data);
+
+export const getLikes = async (productId: number) => await API.get(`/like/?id=${productId}`);
+
+export const likeProduct = async (productId: number) => await API.patch(`/like/?id=${productId}`);

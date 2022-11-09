@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import prisma from '../../libs/prisma';
 import { IProduct } from '../../types/product';
 import { motion } from 'framer-motion';
@@ -12,7 +12,9 @@ import Chip from '@mui/material/Chip'
 import handelProcessImageForSubmitting from '../../functions/ProcessImageForSubmitting';
 import { IPreviewImage } from '../../types/image';
 import Comments from '../../components/Comments';
-import { CircularProgress } from '@mui/material';
+import { getLikes, likeProduct } from '../../api';
+import { IUser } from '../../types/user';
+import useGetUser from '../../hooks/useGetUser';
 
 interface IProductPageProps {
     product: IProduct
@@ -22,9 +24,24 @@ const ProductPage = ({ product }: IProductPageProps) => {
     const [value, setValue] = useState<number | null>(null);
     const [openImageSlider, setOpenImageSlider] = useState(false);
     const [isFound, setIsFound] = useState(false);
-    const [isLoadingLike, setIsLoadingLike] = useState(false)
     const [isLikedByUser, setIsLikedByUser] = useState(false)
     const [likes, setLikes] = useState<string[]>([])
+    const [user] = useGetUser()
+
+
+    const isLikedByUserFunction = useCallback(() => {
+        if (user && likes.length > 0 && likes.includes(user.id.toString())) setIsLikedByUser(true);
+        else setIsLikedByUser(false)
+    }, [likes, user])
+
+    const init = useCallback(async () => {
+        await getLikes(product.id).then((res) => { setLikes(res.data.likes) }).catch((err) => { console.log(err) });
+        isLikedByUserFunction()
+    }, [isLikedByUserFunction, product.id])
+
+    useEffect(() => {
+        init()
+    }, [init])
 
     useEffect(() => {
         setIsFound(Boolean(localStorage.getItem(`product id ${product.id}`)))
@@ -41,7 +58,15 @@ const ProductPage = ({ product }: IProductPageProps) => {
     }
 
     const handelLike = async () => {
-        setIsLikedByUser(!isLikedByUser)
+        setIsLikedByUser(true)
+        await likeProduct(product.id).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
+        init()
+    }
+
+    const handelDislike = async () => {
+        setIsLikedByUser(false)
+        await likeProduct(product.id).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
+        init()
     }
 
     return (
@@ -61,14 +86,20 @@ const ProductPage = ({ product }: IProductPageProps) => {
 
                         <div className="flex items-center justify-between  mr-3 w-full">
 
-                            {isLoadingLike ? (
-                                <div className="flex items-center -mr-3 justify-center w-10 h-10 text-xs">
-                                    <CircularProgress />
-                                </div>
+                            {isLikedByUser ? (
+                                <motion.button
+                                    whileTap={{ scale: 0.6 }}
+                                    onClick={handelDislike} className="flex-none flex flex-col items-center ease-in-out duration-[50] transition-all justify-center w-10 h-10 rounded-md text-red-600 shadow-md shadow-red-500 border-red-300 border" type="button" aria-label="Like">
+
+                                    <svg width="20" height="20" fill="currentColor" aria-hidden="true">
+                                        <path fillRule="evenodd" clipRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
+                                    </svg>
+                                    <span className="flex text-xs text-gray-400">{likes.length}</span>
+                                </motion.button>
                             ) : (
                                 <motion.button
                                     whileTap={{ scale: 0.6 }}
-                                    onClick={handelLike} className={`flex-none flex flex-col items-center ease-in-out duration-[50] transition-all justify-center w-10 h-10 rounded-md ${isLikedByUser ? 'text-red-600 shadow-md shadow-red-500 border-red-300' : 'text-slate-300 border-slate-200'} border `} type="button" aria-label="Like">
+                                    onClick={handelLike} className="flex-none flex flex-col items-center ease-in-out duration-[50] transition-all justify-center w-10 h-10 rounded-md text-slate-300 border-slate-200 border" type="button" aria-label="Like">
 
                                     <svg width="20" height="20" fill="currentColor" aria-hidden="true">
                                         <path fillRule="evenodd" clipRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />

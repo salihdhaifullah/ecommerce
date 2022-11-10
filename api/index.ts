@@ -47,3 +47,7 @@ export const updateComment = async (productId: number, commentId: number, data: 
 export const getLikes = async (productId: number) => await API.get(`/like/?id=${productId}`);
 
 export const likeProduct = async (productId: number) => await API.patch(`/like/?id=${productId}`);
+
+export const getRates = async (productId: number) => await API.get(`/rate/?id=${productId}`);
+
+export const createRate = async (productId: number, rateType: {rateType: 1 | 2 | 3 | 4 | 5}) => await API.patch(`/rate/?id=${productId}`, rateType)

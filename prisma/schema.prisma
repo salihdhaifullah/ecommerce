@@ -50,7 +50,7 @@ model Rate {
   id        Int      @id @default(autoincrement())
   product   Product  @relation(fields: [productId], references: [id])
   productId Int      @unique
-  usersId   Int
+  userId   Int
   rate      RateType
 }
 

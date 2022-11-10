@@ -12,36 +12,52 @@ import Chip from '@mui/material/Chip'
 import handelProcessImageForSubmitting from '../../functions/ProcessImageForSubmitting';
 import { IPreviewImage } from '../../types/image';
 import Comments from '../../components/Comments';
-import { getLikes, likeProduct } from '../../api';
-import { IUser } from '../../types/user';
+import { createRate, getLikes, getRates, likeProduct } from '../../api';
 import useGetUser from '../../hooks/useGetUser';
+import { IRate } from '../../types/rate';
+import ProcessRates from '../../functions/processRates';
+
+
 
 interface IProductPageProps {
     product: IProduct
 }
 
 const ProductPage = ({ product }: IProductPageProps) => {
-    const [value, setValue] = useState<number | null>(null);
+    const [rate, setRate] = useState<number | null>(null);
     const [openImageSlider, setOpenImageSlider] = useState(false);
     const [isFound, setIsFound] = useState(false);
     const [isLikedByUser, setIsLikedByUser] = useState(false)
     const [likes, setLikes] = useState<string[]>([])
+    const [rates, setRates] = useState<IRate[]>([])
     const [user] = useGetUser()
 
-
     const isLikedByUserFunction = useCallback(() => {
-        if (user && likes.length > 0 && likes.includes(user.id.toString())) setIsLikedByUser(true);
+        if (user && likes.length > 0 && likes.includes(user.id.toString())) setIsLikedByUser(true)
         else setIsLikedByUser(false)
     }, [likes, user])
 
+    const processRatesFunction = useCallback(() => {
+        setRate(ProcessRates(rates))
+    }, [rates])
+
     const init = useCallback(async () => {
         await getLikes(product.id).then((res) => { setLikes(res.data.likes) }).catch((err) => { console.log(err) });
-        isLikedByUserFunction()
-    }, [isLikedByUserFunction, product.id])
+        await getRates(product.id).then((res) => { setRates(res.data.rates) }).catch((err) => { console.log(err) });
+    }, [product.id])
+
 
     useEffect(() => {
         init()
     }, [init])
+
+    useEffect(() => {
+        isLikedByUserFunction()
+    }, [isLikedByUserFunction])
+
+    useEffect(() => {
+        processRatesFunction()
+    }, [processRatesFunction])
 
     useEffect(() => {
         setIsFound(Boolean(localStorage.getItem(`product id ${product.id}`)))
@@ -67,6 +83,18 @@ const ProductPage = ({ product }: IProductPageProps) => {
         setIsLikedByUser(false)
         await likeProduct(product.id).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
         init()
+    }
+
+    const handelCreateRate = async (rate: number | null) => {
+        if (typeof rate !== 'number') return;
+        await createRate(product.id, { rateType: rate as 2 | 1 | 3 | 4 | 5 }).then((res) => { console.log(res) }).catch((err) => { console.log(err) })
+        await getRates(product.id).then((res) => { setRates(res.data.rates) }).catch((err) => { console.log(err) });
+    }
+
+    const handelRateChange = (rate: number | null) => {
+        setRate(rate)
+        console.log(rate);
+        handelCreateRate(rate)
     }
 
     return (
@@ -168,14 +196,14 @@ const ProductPage = ({ product }: IProductPageProps) => {
                         <hr className="min-h-[1px] min-w-full  bg-gradient-to-tr mt-4 from-blue-300 to-blue-600  flex" />
 
                         <div className="w-full flex flex-col mb-6 justify-between items-center">
-                            <Rating
-                                name="rate"
-                                className="my-6"
-                                value={value}
-                                onChange={(event, newValue) => {
-                                    setValue(newValue);
-                                }}
-                            />
+                            <div className="w-full gap-4 my-6 flex-row flex justify-center items-center">
+                                <Rating
+                                    name="rate"
+                                    value={rate}
+                                    onChange={(event, newValue) => handelRateChange(newValue)}
+                                />
+                                <p>votes: {rates.length}</p>
+                            </div>
 
                             <div className="flex items-center justify-center w-full ">
                                 {product.tags.length > 0 && product.tags.map((tag, index) => (

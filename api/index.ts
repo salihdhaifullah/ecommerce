@@ -51,3 +51,5 @@ export const likeProduct = async (productId: number) => await API.patch(`/like/?
 export const getRates = async (productId: number) => await API.get(`/rate/?id=${productId}`);
 
 export const createRate = async (productId: number, rateType: {rateType: 1 | 2 | 3 | 4 | 5}) => await API.patch(`/rate/?id=${productId}`, rateType)
+
+export const getCartProducts = async (productsIds: number[]) => await API.post(`/cart`, {ids: productsIds});

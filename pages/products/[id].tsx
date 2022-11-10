@@ -18,7 +18,6 @@ import { IRate } from '../../types/rate';
 import ProcessRates from '../../functions/processRates';
 
 
-
 interface IProductPageProps {
     product: IProduct
 }
@@ -76,13 +75,13 @@ const ProductPage = ({ product }: IProductPageProps) => {
     const handelLike = async () => {
         setIsLikedByUser(true)
         await likeProduct(product.id).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
-        init()
+        await getLikes(product.id).then((res) => { setLikes(res.data.likes) }).catch((err) => { console.log(err) });
     }
 
     const handelDislike = async () => {
         setIsLikedByUser(false)
         await likeProduct(product.id).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
-        init()
+        await getLikes(product.id).then((res) => { setLikes(res.data.likes) }).catch((err) => { console.log(err) });
     }
 
     const handelCreateRate = async (rate: number | null) => {

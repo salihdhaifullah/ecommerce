@@ -56,11 +56,14 @@ model Rate {
 
 model Sale {
   id            Int     @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        Int
   productId     Int
   product       Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   totalprice    Decimal
   numberOfItems Decimal
+  verified Boolean @default(false)
+  rejected Boolean @default(false)
 }
 
 model User {
@@ -72,6 +75,7 @@ model User {
   password  String
   comments  Comment[]
   role      Roles     @default(USER)
+  payment   Sale[]
 }
 
 model Comment {

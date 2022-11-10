@@ -10,58 +10,68 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (req.method === "POST") {
         const { password, email, firstName, lastName }: ISingUp = req.body
-        const user = await prisma.user.findUnique({ where: { email: email } })
+
+        console.log(password, email, firstName, lastName)
+
+        const user = await prisma.user.findFirst({
+            where: {
+                email: email
+            },
+            select: {
+                email: true,
+            },
+        });
+
+
         try {
+            if (!(password.length > 6) && !(lastName.length > 3) && !(firstName.length > 3) && !(email.length > 8)) return res.status(400).json({ error: 'unValid Fields' })
 
-            if (!user) {
-              
-                if (password && lastName && firstName && email) {
-
-                  const isAdmin = (password === process.env.ADMIN_PASSWORD && email === process.env.ADMIN_EMAIL)
-                    const salt = genSaltSync(10);
-                    const hashPassword = hashSync(password, salt)
-                    const UserData = await prisma.user.create({
-                        data: {
-                            firstName: firstName,
-                            lastName: lastName,
-                            email: email,
-                            password: hashPassword,
-                            role: isAdmin ? "ADMIN" : "USER"
-                        }
-                    })
-
-                    const token = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY as string, { expiresIn: '2h' })
-                    
-                    const fullYear = 1000 * 60 * 60 * 24 * 365;
-                    
-                    const refreshToken = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY as string, { expiresIn: fullYear })
+            if (user?.email) return res.status(400).json({ error: "user already exist try login", user })
 
 
-                    setCookie("refresh-token", refreshToken, {
-                        httpOnly: true,
-                        secure: process.env.NODE_ENV === "production",
-                        sameSite: "strict",
-                        maxAge: fullYear, // full year
-                        expires: new Date(Date.now() + fullYear),
-                        path: "/",
-                        req,
-                        res
-                    })
-                    const data = { 
-                        id: UserData.id, 
-                        createdAt: UserData.createdAt, 
-                        email: UserData.email, 
-                        lastName: UserData.lastName, 
-                        firstName: UserData.firstName, 
-                        token,
-                        role: UserData.role
-                     } 
-
-                    return res.status(200).json({ data, massage: "sing up success" })
+            const isAdmin = (password === process.env.ADMIN_PASSWORD && email === process.env.ADMIN_EMAIL)
+            const salt = genSaltSync(10);
+            const hashPassword = hashSync(password, salt)
+            const UserData = await prisma.user.create({
+                data: {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: hashPassword,
+                    role: isAdmin ? "ADMIN" : "USER"
                 }
-                else return res.status(400).json({ error: 'you must fill all fields' })
+            })
+
+            const token = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY as string, { expiresIn: '2h' })
+
+            const fullYear = 1000 * 60 * 60 * 24 * 365;
+
+            const refreshToken = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY as string, { expiresIn: fullYear })
+
+
+            setCookie("refresh-token", refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: fullYear, // full year
+                expires: new Date(Date.now() + fullYear),
+                path: "/",
+                req,
+                res
+            })
+
+            const data = {
+                id: UserData.id,
+                createdAt: UserData.createdAt,
+                email: UserData.email,
+                lastName: UserData.lastName,
+                firstName: UserData.firstName,
+                token,
+                role: UserData.role
             }
-            else return res.status(400).json({ error: "user already exist try login" })
+
+            return res.status(200).json({ data, massage: "sing up success" })
+
         } catch (error) {
             return res.status(500).json({ massage: 'server error' })
         }

@@ -49,7 +49,10 @@ const Cart = () => {
 
         console.log(data);
         await makePayment(data).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
-        init()
+        for (let productId of productsIds) {
+            localStorage.removeItem("product id " + productId)
+        }
+        setProducts([])
     }
 
     return (

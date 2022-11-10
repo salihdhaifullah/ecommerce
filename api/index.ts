@@ -56,3 +56,13 @@ export const createRate = async (productId: number, rateType: {rateType: 1 | 2 |
 export const getCartProducts = async (productsIds: number[]) => await API.post(`/cart`, {ids: productsIds});
 
 export const makePayment = async (data: ISale[]) => await API.post(`/payment`, {data: data});
+
+export const getHistoryOrders = async (skip: number, take: number) => await API.get(`history-orders/?skip=${skip}&take=${take}`)
+
+export const getOrders = async (skip: number, take: number) => await API.get(`orders/?skip=${skip}&take=${take}`)
+
+export const getProductsTable = async (skip: number, take: number) => await API.get(`products/?skip=${skip}&take=${take}`)
+
+export const getUsers = async (skip: number, take: number) => await API.get(`users/?skip=${skip}&take=${take}`)
+
+export const getOrdersLength = async () => await API.get("get-orders-length");

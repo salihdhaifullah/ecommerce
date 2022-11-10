@@ -14,22 +14,22 @@ const SideBar = () => {
     const [open, setOpen] = useState(false)
     const haveAnAccount = localStorage.getItem('user')
     const isAdmin = true;
-    const cards = 2;
+    const products = 2;
     const newPayments = 5;
 
     return (
         <>
             <div onClick={() => setOpen(!open)} className="block w-8  left-1/2 top-1/2  z-[2] ">
                 {isAdmin ? (
-                    cards || newPayments > 0 ? (
+                    products || newPayments > 0 ? (
                         <div className="w-5 h-5 z-[100] absolute -top-2 -right-2 rounded-full flex items-center justify-center bg-red-600">
-                            <p className='text-sm text-white font-semibold'>{cards + newPayments}</p>
+                            <p className='text-sm text-white font-semibold'>{products + newPayments}</p>
                         </div>
                     ) : null
                 ) : (
-                    cards > 0 ? (
+                    products > 0 ? (
                         <div className="w-5 h-5 z-[100] absolute -top-2 -right-2 rounded-full flex items-center justify-center bg-red-600">
-                            <p className='text-sm text-white font-semibold'>{cards}</p>
+                            <p className='text-sm text-white font-semibold'>{products}</p>
                         </div>
                     ) : null
                 )}
@@ -51,11 +51,11 @@ const SideBar = () => {
                             <div className=" overflow-y-auto py-4 px-3 bg-gray-50 rounded">
                                 <ul className="space-y-2">
                                     <li>
-                                        <Link href="/card" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
+                                        <Link href="/cart" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
                                             <AddShoppingCartOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" />
                                             <span className="flex-1 ml-3 whitespace-nowrap">Cart</span>
-                                            {cards >= 1 && (
-                                                <span className="inline-flex justify-center items-center p-3 ml-3 w-3 h-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full ">{cards}</span>
+                                            {products >= 1 && (
+                                                <span className="inline-flex justify-center items-center p-3 ml-3 w-3 h-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full ">{products}</span>
                                             )}
                                         </Link>
                                     </li>

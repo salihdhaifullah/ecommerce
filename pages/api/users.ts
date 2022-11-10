@@ -4,8 +4,8 @@ import prisma from '../../libs/prisma';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     if (req.method === 'GET') {
-        const skip = req.query["skip"]
-        const take = req.query["take"]
+        const skip = Number(req.query["skip"])
+        const take = Number(req.query["take"])
 
         if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({massage: "Bad Request"});
 

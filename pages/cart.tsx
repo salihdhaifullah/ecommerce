@@ -5,8 +5,9 @@ import TotalCard from '../components/TotalCard'
 import { AnimatePresence } from 'framer-motion'
 import useGetProductsIds from '../hooks/useGetProductsIds'
 import { CircularProgress } from '@mui/material'
-import { getCartProducts } from '../api'
+import { getCartProducts, makePayment } from '../api'
 import { ICartProduct } from '../types/cart'
+import { ISale } from '../types/sale'
 
 const Cart = () => {
     const [productsIds] = useGetProductsIds()
@@ -34,6 +35,23 @@ const Cart = () => {
         init()
     }, [init])
 
+
+    const handelPayment = async () => {
+        const data: ISale[] = [];
+
+        for (let item of totalProductsPrice) {
+            const product = products.find((product) => product.id === item.id)
+            if (!product) return;
+            const quantity = item.price / (product.price - (product.price * product.discount))
+            data.push({ productId: item.id, quantity: quantity })
+
+        }
+
+        console.log(data);
+        await makePayment(data).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
+        init()
+    }
+
     return (
         <section className='w-full h-auto flex justify-center items-center min-h-screen bg-Blur rounded-lg py-2 px-6'>
             {products ? (
@@ -49,7 +67,7 @@ const Cart = () => {
                                     )
                                 })}
                             </div>
-                            <TotalCard Total={total} />
+                            <TotalCard handelPayment={handelPayment} Total={total} />
                         </div>
                     ) : (
                         <div className="min-w-[100vh] min-h-[60vh] justify-center items-center w-full h-full gap-4 flex flex-col ">

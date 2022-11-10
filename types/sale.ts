@@ -1,4 +1,12 @@
-export interface IMakeASale {
+export interface ICreateSale {
+    userId: number;
+    productId: number;
+    totalprice: number;
+    numberOfItems: number;
+}
+
+
+export interface ISale {
     productId: number
-    numberOfItems: number
+    quantity: number
 }

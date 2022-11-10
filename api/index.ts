@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { ICreateComment } from '../types/comment';
 import { ICreateProduct } from '../types/product';
+import { ISale } from '../types/sale';
 import { ILogin, ISingUp, IUser } from '../types/user'
 
 let baseURL = 'http://localhost:3000/api'
@@ -53,3 +54,5 @@ export const getRates = async (productId: number) => await API.get(`/rate/?id=${
 export const createRate = async (productId: number, rateType: {rateType: 1 | 2 | 3 | 4 | 5}) => await API.patch(`/rate/?id=${productId}`, rateType)
 
 export const getCartProducts = async (productsIds: number[]) => await API.post(`/cart`, {ids: productsIds});
+
+export const makePayment = async (data: ISale[]) => await API.post(`/payment`, {data: data});

@@ -69,4 +69,10 @@ export const getOrdersLength = async () => await API.get("get-orders-length");
 
 export const getProductToUpdate = async (id: number) => await API.get(`admin/update-product?id=${id}`)
 
+export const deleteProduct = async (id: number) => await API.delete(`admin/update-product?id=${id}`)
+
 export const updateProduct = async (id: number, data: IUpdateProduct) => await API.patch(`admin/update-product?id=${id}`, data)
+
+export const rejectOrder = async (id: number) => await API.patch(`orders/?id=${id}&reject=${true}`)
+
+export const verifyOrder = async (id: number) => await API.patch(`orders/?id=${id}&verify=${true}`)

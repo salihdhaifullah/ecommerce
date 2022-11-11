@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../libs/prisma';
+import supabase from '../../../libs/supabase';
 import { GetUserIdAndRoleMiddleware } from '../../../middleware';
 import { IUpdateProduct } from '../../../types/product';
 
@@ -38,13 +39,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
 
-    if (req.method === 'POST') {
-
-    }
-
-
     if (req.method === 'DELETE') {
+        const { error, id, role } = GetUserIdAndRoleMiddleware(req);
 
+        if (error) return res.status(500).json({ error: error });
+
+        if (role !== "ADMIN") return res.status(403).json({ massage: "unauthorized" })
+
+        const productId: number = Number(req.query["id"]);
+
+        if (typeof productId !== "number") return res.status(400).json({ massage: "Product Id Not Found" });
+
+
+        await prisma.product.delete({
+            where: {
+                id: productId
+            },
+        });
+
+        return res.status(200).json({ massage: "Product Successfully Deleted" })
     }
 
 

@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { getProductsTable, getUsers } from '../../api';
+import { deleteProduct, getProductsTable } from '../../api';
 import moment from 'moment';
 import Link from 'next/link';
 
@@ -51,7 +51,12 @@ export default function Products() {
   };
 
   const handelDelete = async (id: number) => {
-
+    await deleteProduct(id).then((res) => {
+      console.log(res)
+    }).catch((err) => {
+      console.log(err)
+    })
+    GetProducts()
   }
 
   return (
@@ -62,8 +67,8 @@ export default function Products() {
             <TableHead>
               <TableRow>
                 <TableCell> Created At </TableCell>
-                <TableCell> Category </TableCell>
                 <TableCell> Title </TableCell>
+                <TableCell> Category </TableCell>
                 <TableCell> Likes </TableCell>
                 <TableCell> Pieces </TableCell>
                 <TableCell> Price </TableCell>

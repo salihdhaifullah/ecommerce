@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ICreateComment } from '../types/comment';
-import { ICreateProduct } from '../types/product';
+import { ICreateProduct, IUpdateProduct } from '../types/product';
 import { ISale } from '../types/sale';
 import { ILogin, ISingUp, IUser } from '../types/user'
 
@@ -66,3 +66,7 @@ export const getProductsTable = async (skip: number, take: number) => await API.
 export const getUsers = async (skip: number, take: number) => await API.get(`users/?skip=${skip}&take=${take}`)
 
 export const getOrdersLength = async () => await API.get("get-orders-length");
+
+export const getProductToUpdate = async (id: number) => await API.get(`admin/update-product?id=${id}`)
+
+export const updateProduct = async (id: number, data: IUpdateProduct) => await API.patch(`admin/update-product?id=${id}`, data)

@@ -30,3 +30,14 @@ export interface IProduct {
         name: string;
     };
 }
+
+
+export interface IUpdateProduct {
+    title: string;
+    content: string;
+    tags: string[];
+    category: string;
+    pieces: number;
+    price: number;
+    discount: number;
+}

@@ -15,11 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             select: {
                 id: true,
                 title: true,
-                rates: {
-                    select: {
-                        rate: true,
-                    },
-                },
                 likes: true, 
                 price: true,
                 pieces: true,

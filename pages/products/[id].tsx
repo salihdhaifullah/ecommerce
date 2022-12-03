@@ -9,7 +9,6 @@ import Button from '@mui/material/Button'
 import ImageSlider from '../../components/ImageSlider';
 import Rating from '@mui/material/Rating'
 import Chip from '@mui/material/Chip'
-import handelProcessImageForSubmitting from '../../functions/ProcessImageForSubmitting';
 import { IPreviewImage } from '../../types/image';
 import Comments from '../../components/Comments';
 import { createRate, getLikes, getRates, likeProduct } from '../../api';

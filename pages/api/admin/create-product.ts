@@ -1,7 +1,8 @@
 import { ICreateProduct } from './../../../types/product';
-import { GetUserIdAndRoleMiddleware } from './../../../middleware/index';
+import GetUserIdAndRoleMiddleware  from './../../../middleware/index';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../libs/prisma';
+import stripe from '../../../libs/stripe/api';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -10,6 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (error) return res.status(500).json({ error: error });
 
     if (role !== "ADMIN") return res.status(403).json({ massage: "unauthorized" })
+    if (typeof id !== "number") return res.status(404).json({ massage: "User Not Found" });
 
     const discountOptions = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
@@ -24,46 +26,42 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const TagsQuery = [];
     const ImagesQuery = [];
 
+    const stripeImages = images
+    stripeImages.unshift(image);
+
+    const product = await stripe.products.create({
+      name: title,
+      description: content,
+      shippable: true,
+      images: stripeImages,
+      default_price_data: {
+        unit_amount: (price * 100) - (discount * price * 100),
+        currency: 'usd',
+      }
+    });
+
+    console.log(product)
+
     for (let image of images) {
       ImagesQuery.push({ fileUrl: image })
     }
 
     for (let tag of tags) {
-      TagsQuery.push({
-        where: {
-          name: tag
-        },
-        create: {
-          name: tag
-        }
-      })
+      TagsQuery.push({ where: { name: tag }, create: { name: tag } })
     }
 
     const data = await prisma.product.create({
       data: {
         imageUrl: image,
-        tags: {
-          connectOrCreate: TagsQuery,
-        },
+        tags: { connectOrCreate: TagsQuery },
         title: title,
         content: content,
-        images: {
-          create: ImagesQuery,
-        },
+        images: { create: ImagesQuery },
         discount: discount,
         price: price,
         pieces: pieces,
-        category: {
-          connectOrCreate: {
-            where: {
-              name: category
-            },
-            create: {
-              name: category
-            }
-          },
-        },
-      },
+        category: { connectOrCreate: { where: { name: category }, create: {name: category } } }
+      }
     });
 
     return res.status(200).json({ data, massage: "Product Successfully Created" })
@@ -86,6 +84,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await Promise.all([tags, categories]).then((data) => {
       return res.status(200).json({ tags: data[0], categories: data[1] })
     });
-  
+
   }
 }

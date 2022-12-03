@@ -19,31 +19,25 @@ model Tag {
   product Product[]
 }
 
-model Iamge {
-  id      Int     @id @default(autoincrement())
-  fileUrl String  @unique
-  Post    Product @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId  Int
-}
-
 model Product {
   id         Int       @id @default(autoincrement())
   title      String
   content    String
-  images     Iamge[]
+  images     String[]
   imageUrl   String
   tags       Tag[]
   comments   Comment[]
   category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId Int
   createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
   likes      String[]  @default([])
   sales      Sale[]
   discount   Float     
   rates      Rate[] 
   price      Decimal
   pieces     Decimal
+  stripeProductId String
+  stripePriceId String
 }
 
 model Rate {

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../libs/prisma';
 import supabase from '../../../libs/supabase';
-import { GetUserIdAndRoleMiddleware } from '../../../middleware';
+import GetUserIdAndRoleMiddleware from '../../../middleware';
 import { IUpdateProduct } from '../../../types/product';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

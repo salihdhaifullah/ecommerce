@@ -5,19 +5,15 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import Container from '@mui/material/Container';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import { createFilterOptions } from '@mui/material/Autocomplete';
-import { IPreviewImage } from '../../types/image';
-import imagePreview from '../../functions/imagePreview';
 import PreviewProduct from '../../components/PreviewProduct';
-import handelProcessImageForSubmitting from '../../functions/ProcessImageForSubmitting';
-import uploadImages from '../../functions/uploadImages';
 import { createProduct, getCategoriesAndTags } from '../../api';
 import { ICreateProduct } from '../../types/product';
-import Swal from 'sweetalert2';
 import CircularProgress from '@mui/material/CircularProgress';
+import Toast from '../../functions/sweetAlert';
+import toBase64 from '../../functions/toBase64';
 
 
 interface ICategory {
@@ -39,11 +35,11 @@ const CreateProduct = () => {
     const [content, setContent] = useState("")
     const [tags, setTags] = useState<string[]>([])
     const [category, setCategory] = useState<ICategory | null>(null)
-    const [image, setImage] = useState<IPreviewImage | null>(null);
+    const [image, setImage] = useState<string>("");
     const [pieces, setPieces] = useState(1)
     const [price, setPrice] = useState(1)
     const [discount, setDiscount] = useState(0)
-    const [images, setImages] = useState<IPreviewImage[]>([])
+    const [images, setImages] = useState<string[]>([])
     const [open, setOpen] = useState(false)
     const [isValid, setIsValid] = useState(false)
 
@@ -52,10 +48,11 @@ const CreateProduct = () => {
 
     const [isLoading, setIsLoading] = useState(false)
 
-    const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 8 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2 && (image && image.fileUrl.length > 10));
+    const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 8 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2 && (image && image.length > 10));
 
     const init = useCallback(async () => {
-        await getCategoriesAndTags().then((res) => {
+        await getCategoriesAndTags()
+        .then((res) => {
             setTagsOptions(res.data.tags);
             setCategoriesOptions(res.data.categories);
         })
@@ -70,27 +67,27 @@ const CreateProduct = () => {
         else setIsValid(false);
     }, [validation])
 
-
     useEffect(() => {
         Validator()
     }, [Validator])
 
-    const handelUploadImage = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event?.target?.files
-        if (!file?.length) return;
-        const imageObject = imagePreview(file[0]);
-        if (imageObject) setImage(imageObject);
+    const handelUploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event?.target?.files ? event.target.files[0] : null;
+        if (!file) return Toast.fire("No File Selected", '', "error");
+        const base64 = await toBase64(file)
+        setImage(base64);
     }
 
-    const handelUploadImages = (event: ChangeEvent<HTMLInputElement>) => {
+    const handelUploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
         const files = event?.target?.files
         if (!files?.length) return;
-        let data: IPreviewImage[] = [];
+        let data: string[] = [];
 
         for (let file of files) {
-            const imageObject = imagePreview(file);
-            if (imageObject) data.push(imageObject);
+            const base64 = await toBase64(file)
+             data.push(base64);
         }
+
         setImages(data);
     }
 
@@ -101,50 +98,35 @@ const CreateProduct = () => {
         setIsLoading(true)
         if (!isValid) return;
 
-        for (let image of images) {
-            await uploadImages(image)
-        }
-
-        await uploadImages(image as IPreviewImage)
-
-
         const endData: ICreateProduct = {
             title: title,
             content: content,
             tags: tags,
-            category: category?.name as string,
-            image: image?.fileUrl as string,
-            images: handelProcessImageForSubmitting(images),
+            category: category?.name!,
+            image: image,
+            images: images,
             pieces: pieces,
             price: price,
             discount: discount,
         }
 
-        await createProduct(endData).then((res) => { Swal.fire("success", "product Created", 'success')})
-        .catch((err) => { Swal.fire("error", "some think want wrong", 'error') })
+        await createProduct(endData)
+        .then((res) => { Toast.fire(res.data.massage  || "Success Product Created", "", 'success') })
+        .catch((err) => { Toast.fire(err.response.data.massage || "some thing want wrong !", "", 'error') })
 
         setTitle("")
         setContent("")
         setTags([])
         setCategory(null)
-        setImage(null)
+        setImage("")
         setImages([])
         setPieces(1)
         setPrice(1)
         setDiscount(0)
     }
 
-    const getImagesUrl = (): string[] | null => {
-        const data: string[] = []
-        if (images.length === 0) return null;
-        for (let image of images) {
-            data.push(image.previewUrl)
-        }
-        return data;
-    }
-
     return (
-        <Container>
+        <Box className="flex min-w-full min-h-[100vh] items-center justify-center">
             {category && tags && image && (
                 <PreviewProduct
                     setOpen={setOpen}
@@ -152,20 +134,20 @@ const CreateProduct = () => {
                     title={title}
                     tags={tags}
                     category={category}
-                    image={image?.previewUrl}
+                    image={image}
                     pieces={Number(pieces)}
                     price={Number(price)}
                     discount={discount}
-                    images={getImagesUrl()}
+                    images={images}
                     content={content}
                 />
             )}
 
-            <Box component="form" onSubmit={(event) => handelSubmit(event)} className='px-6 sm:p-10 my-10 flex items-center justify-center flex-col py-2 rounded-md shadow-md bg-white'>
-                <Box className="flex w-full sm:mb-2">
+            <Box component="form" onSubmit={(event) => handelSubmit(event)} className='sm:p-10 m-10 gap-4 p-8 flex items-center justify-center flex-col rounded-md shadow-md bg-white'>
+                <Box className="flex w-full gap-4 flex-wrap sm:flex-nowrap">
 
                     <TextField
-                        className='w-full mb-2 mr-4'
+                        className='w-full'
                         error={title.length < 8}
                         value={title}
                         onChange={(event) => setTitle(event.target.value)}
@@ -179,7 +161,7 @@ const CreateProduct = () => {
                     />
 
                     <Autocomplete
-                        className='w-full  ml-4'
+                        className='w-full'
                         value={category}
                         onChange={(event, newValue) => {
                             if (typeof newValue === 'string') setCategory({ name: newValue });
@@ -221,10 +203,10 @@ const CreateProduct = () => {
 
                 </Box>
 
-                <Box className="flex flex-col sm:flex-row w-full sm:mb-2">
+                <Box className="flex w-full gap-4 flex-wrap sm:flex-nowrap">
 
                     <Autocomplete
-                        className='w-full mr-4 mb-2'
+                        className='w-full'
                         multiple
                         id="tags"
                         options={tagsOptions.map((option) => option.name)}
@@ -253,11 +235,10 @@ const CreateProduct = () => {
                         required
                         select
                         label="discount"
-                        className=" w-full ml-4"
+                        className="w-full"
                         value={discount}
                         error={!(`${discount}`)}
                         onChange={(event) => setDiscount(Number(event.target.value))}
-                        helperText="Please select a discount"
                     >
                         {discountsOptions.map((option, index) => (
                             <MenuItem key={index} value={option.value}>
@@ -267,13 +248,13 @@ const CreateProduct = () => {
                     </TextField>
                 </Box>
 
-                <Box className="flex flex-col sm:flex-row  w-full sm:mb-2">
+                <Box className="flex w-full gap-4 flex-wrap sm:flex-nowrap">
                     <TextField
                         id="Price"
                         label="Price"
                         required
                         type="number"
-                        className="w-full mr-4"
+                        className="w-full"
                         value={price}
                         onChange={(event) => setPrice(Number(event.target.value))}
                         error={price < 1}
@@ -286,7 +267,7 @@ const CreateProduct = () => {
                         label="Pieces"
                         required
                         type="number"
-                        className="w-full ml-4"
+                        className="w-full"
                         value={pieces}
                         onChange={(event) => setPieces(Number(event.target.value))}
                         error={pieces < 1}
@@ -294,8 +275,8 @@ const CreateProduct = () => {
                     />
                 </Box>
 
-                <Box className="flex mt-4 w-full sm:mb-2">
-                    <div className="w-full mr-4">
+                <Box className="flex w-full gap-4 flex-wrap sm:flex-nowrap">
+                    <div className="w-full">
                         <Button size='small' startIcon={<BackupIcon />} className="text-sm w-full justify-center items-center flex lowercase" variant="contained" component="label">
                             {image ? "uploaded" : "Upload background image"}
                             <input onChange={(event) => handelUploadImage(event)} hidden accept="image/*" type="file" />
@@ -308,7 +289,7 @@ const CreateProduct = () => {
                         )}
                     </div>
 
-                    <div className="w-full ml-4">
+                    <div className="w-full">
 
                         <Button size='small' startIcon={<BackupIcon />} className="text-sm w-full justify-center items-center flex lowercase" variant="contained" component="label">
                             {images.length ? "uploaded" : "Upload images"}
@@ -319,7 +300,7 @@ const CreateProduct = () => {
 
                 </Box>
 
-                <div className="w-full flex-1 sm:ml-2 mb-2 sm:mb-0">
+                <div className="w-full mb-2">
                     <TextField
                         error={content.length < 20}
                         value={content}
@@ -336,40 +317,39 @@ const CreateProduct = () => {
                     />
                 </div>
 
-                <div className="w-full inline-flex mt-2 justify-evenly">
+                <div className="w-full flex mt-2 justify-evenly">
 
                     {isValid ? (
                         <>
                             {isLoading ? (
-                                <Button disabled className="bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
+                                <Button disabled className="bg-blue-600 text-xs sm:text-sm hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
                                     <CircularProgress />
                                 </Button>
                             ) : (
-                                <Button type="submit" className="bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
+                                <Button type="submit" className="bg-blue-600 text-xs sm:text-sm hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
                                     submit
                                 </Button>
                             )}
 
 
-                            <Button onClick={() => setOpen(true)} className="bg-green-600 hover:bg-green-200 shadow-lg shadow-green-600 text-white hover:text-green-600">
+                            <Button onClick={() => setOpen(true)} className="bg-green-600 text-xs sm:text-sm hover:bg-green-200 shadow-lg shadow-green-600 text-white hover:text-green-600">
                                 Preview Product
                             </Button>
                         </>
                     ) : (
                         <>
-                            <Button disabled className="bg-gray-600 hover:bg-gray-200 text-white hover:text-gray-600">
+                            <Button disabled className="bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600">
                                 submit
                             </Button>
 
-                            <Button disabled className="bg-gray-600 hover:bg-gray-200 text-white hover:text-gray-600">
+                            <Button disabled className="bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600">
                                 Preview Product
                             </Button>
                         </>
                     )}
-
                 </div>
             </Box>
-        </Container >
+        </Box>
     )
 }
 

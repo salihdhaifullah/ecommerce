@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../libs/prisma';
-import { GetUserIdMiddleware } from '../../middleware';
+import GetUserIdAndRoleMiddleware  from '../../middleware';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -22,36 +22,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     }
 
-
-    if (req.method === 'POST') {
-
-    }
-
-
-    if (req.method === 'DELETE') {
-
-    }
-
-
     if (req.method === 'PATCH') {
         const productId = Number(req.query["id"]);
 
         if (typeof productId !== 'number') return res.status(400).json({ massage: "No Product Found" });
 
-        const { id: userId, error } = GetUserIdMiddleware(req)
+        const { id: userId, error } = GetUserIdAndRoleMiddleware(req)
 
-        if (error || !userId) return res.status(400).json({ massage: "No user Found" });
+        if (error || typeof userId !== "number") return res.status(400).json({ massage: "No user Found" });
 
-
-        const likes = await prisma.product.findFirst({
-            where: {
-                id: productId,
-            },
-            select: {
-                likes: true,
-                id: true,
-            }
-        })
+        const likes = await prisma.product.findFirst({ where: { id: productId }, select: { likes: true, id: true } })
 
         if (!likes?.id) return res.status(400).json({ massage: "No Product Found" });
 

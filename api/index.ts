@@ -9,17 +9,15 @@ let ISSERVER = typeof window === "undefined";
 let isFoundUser: string | null = null;
 let user: IUser | null = null;
 
+
 if (!ISSERVER) isFoundUser = localStorage.getItem("user");
 if (isFoundUser) user = JSON.parse(isFoundUser);
-
-if (process.env.NODE_ENV === "production" && !ISSERVER) {
-    baseURL = `https://${window.location.host}/api`;
-}
+if (process.env.NODE_ENV === "production" && !ISSERVER) baseURL = `https://${window.location.host}/api`;
 
 const API = axios.create({ baseURL: baseURL })
 
 API.interceptors.request.use((req) => {
-    if (user && req?.headers?.authorization) req.headers.authorization = `Bearer ${user.token}`;
+    if (user && req.headers) req.headers.authorization = `Bearer ${user.token}`;
     return req
 })
 

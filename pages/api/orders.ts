@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../libs/prisma';
-import { GetUserIdAndRoleMiddleware } from '../../middleware';
+import GetUserIdAndRoleMiddleware from '../../middleware';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -11,42 +11,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({massage: "Bad Request"});
 
         const orders = await prisma.sale.findMany({
-            where: {
-                verified: false,
-                rejected: false,
-            },
+            where: { verified: false, rejected: false },
             skip: skip,
             take: take,
             select: {
-                user: {
-                    select: {
-                        firstName: true,
-                        lastName: true,
-                    },
-                },
+                user: { select: { firstName: true, lastName: true } },
                 totalprice: true,
                 numberOfItems: true,
-                product: {
-                    select: {
-                        title: true,
-                        id: true,
-                    },
-                },
-                id: true,
-            },
+                product: { select: { title: true, id: true } },
+                id: true
+            }
         });
 
         return res.status(200).json({orders})
-    }
-
-
-    if (req.method === 'POST') {
-
-    }
-
-
-    if (req.method === 'DELETE') {
-
     }
 
 
@@ -64,24 +41,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (typeof orderId !== "number") return res.status(400).json({ massage: "Order Id Not Found" });
 
+        if (isVerify === isReject) return res.status(400).json({massage: "Bad Request"});
+
         if (isVerify) {
-            await prisma.sale.update({
-                where: {
-                    id: orderId,
-                },
-                data: {
-                    verified: true,
-                },
-            })
-        } else if (isReject) {
-            await prisma.sale.update({
-                where: {
-                    id: orderId,
-                },
-                data: {
-                    rejected: true,
-                },
-            })
+            await prisma.sale.update({ where: { id: orderId }, data: { verified: true } })
+        } else  {
+            await prisma.sale.update({ where: { id: orderId }, data: { rejected: true } })
         }
 
         return res.status(200).json({ massage: "Success"})

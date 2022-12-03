@@ -2,19 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../libs/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-
-    if (req.method === 'GET') {
-
-    }
-
-
     if (req.method === 'POST') {
         const ids: number[] = req.body.ids;
 
         const products = await prisma.product.findMany({
-            where: {
-                id: { in: ids },
-            },
+            where: { id: { in: ids } },
             select: {
                 id: true,
                 title: true,
@@ -28,15 +20,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
 
         return res.status(200).json({products})
-    }
-
-
-    if (req.method === 'DELETE') {
-
-    }
-
-
-    if (req.method === 'PATCH') {
-
     }
 };

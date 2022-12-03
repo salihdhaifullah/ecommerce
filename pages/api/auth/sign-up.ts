@@ -9,21 +9,11 @@ import prisma from '../../../libs/prisma/index';
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (req.method === "POST") {
-        const { password, email, firstName, lastName }: ISingUp = req.body
-
-        console.log(password, email, firstName, lastName)
-
-        const user = await prisma.user.findFirst({
-            where: {
-                email: email
-            },
-            select: {
-                email: true,
-            },
-        });
-
-
         try {
+            const { password, email, firstName, lastName }: ISingUp = req.body;
+
+            const user = await prisma.user.findFirst({where: { email: email }, select: { email: true } });
+
             if (!(password.length > 6) && !(lastName.length > 3) && !(firstName.length > 3) && !(email.length > 8)) return res.status(400).json({ error: 'unValid Fields' })
 
             if (user?.email) return res.status(400).json({ error: "user already exist try login", user })
@@ -31,7 +21,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             const isAdmin = (password === process.env.ADMIN_PASSWORD && email === process.env.ADMIN_EMAIL)
             const salt = genSaltSync(10);
+
             const hashPassword = hashSync(password, salt)
+            
             const UserData = await prisma.user.create({
                 data: {
                     firstName: firstName,
@@ -42,12 +34,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 }
             })
 
-            const token = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY as string, { expiresIn: '2h' })
+            const token = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY!, { expiresIn: 100 * 60 * 5 })
 
             const fullYear = 1000 * 60 * 60 * 24 * 365;
 
-            const refreshToken = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY as string, { expiresIn: fullYear })
-
+            const refreshToken = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY!, { expiresIn: fullYear })
 
             setCookie("refresh-token", refreshToken, {
                 httpOnly: true,
@@ -75,8 +66,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         } catch (error) {
             return res.status(500).json({ massage: 'server error' })
         }
+        
     }
-    else return res.status(404).json({ massage: `this method ${req.method} is not allowed` })
 }
 
 export default handler;

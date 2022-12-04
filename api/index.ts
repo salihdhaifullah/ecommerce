@@ -29,9 +29,9 @@ export const Logout = async () => await API.get("/auth/logout")
 
 export const GetToken = async () => await API.get("/auth/refresh-token");
 
-export const createProduct = async (data: ICreateProduct) => await API.post("/admin/create-product", data)
+export const createProduct = async (data: ICreateProduct) => await API.post("/admin/product", data)
 
-export const getCategoriesAndTags = async () => await API.get("/admin/create-product")
+export const getCategoriesAndTags = async () => await API.get("/admin/product")
 
 export const getProducts = async () => await API.get("/product")
 
@@ -65,11 +65,11 @@ export const getUsers = async (skip: number, take: number) => await API.get(`use
 
 export const getOrdersLength = async () => await API.get("get-orders-length");
 
-export const getProductToUpdate = async (id: number) => await API.get(`admin/update-product?id=${id}`)
+export const getProductToUpdate = async (id: number) => await API.get(`admin/product?id=${id}`)
 
-export const deleteProduct = async (id: number) => await API.delete(`admin/update-product?id=${id}`)
+export const deleteProduct = async (id: number) => await API.delete(`admin/product?id=${id}`)
 
-export const updateProduct = async (id: number, data: IUpdateProduct) => await API.patch(`admin/update-product?id=${id}`, data)
+export const updateProduct = async (id: number, data: IUpdateProduct) => await API.patch(`admin/product?id=${id}`, data)
 
 export const rejectOrder = async (id: number) => await API.patch(`orders/?id=${id}&reject=${true}`)
 

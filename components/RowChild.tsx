@@ -39,7 +39,7 @@ const RowChild = ({ item, index }: IRowChild) => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
             key={item.id}
-            className={`bg-Blur h-[270px]  min-w-[180px] md:min-w-[220px] flex flex-col   rounded-lg py-2 px-4  my-12 backdrop-blur-lg hover:drop-shadow-lg shadow-xl relative`}>
+            className={`bg-Blur bg-white h-[270px]  min-w-[180px] md:min-w-[220px] flex flex-col   rounded-lg py-2 px-4  my-12 backdrop-blur-lg hover:drop-shadow-lg shadow-xl relative`}>
             <div className="w-full flex flex-col items-center justify-between -p-2">
                 <div className="w-full flex justify-between items-center mb-16">
                     {item.discount !== 0 ?

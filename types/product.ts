@@ -15,9 +15,7 @@ export interface IProduct {
     id: number;
     title: string;
     content: string;
-    images: {
-        fileUrl: string;
-    }[];
+    images: string[];
     createdAt: Date;
     discount: number;
     price: number;

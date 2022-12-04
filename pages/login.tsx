@@ -22,26 +22,29 @@ import IconButton from '@mui/material/IconButton';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import FormControl from '@mui/material/FormControl';
+import { useRouter } from 'next/router';
+import Toast from '../functions/sweetAlert';
 
 const Login: NextPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setIsLoading(true);
     event.preventDefault();
 
 
-    await login({ email: email, password: password } as ILogin).then(({ data }) => {
-      Swal.fire({ title: 'Sing Up Success', icon: 'success', html: `<h2>${data.massage}</h2>`, timer: 1500 })
-
-      localStorage.setItem("user", JSON.stringify(data.data))
-    
-    }).catch(({ response }) => {
-      Swal.fire("something want wrong", response.data.error, 'error')
+    await login({ email, password } as ILogin)
+    .then(({ data }) => {
+      Toast.fire("Successfully Login", "", 'success');
+      localStorage.setItem("user", JSON.stringify(data.data));
+      router.push("/")
+      router.reload()
     })
+    .catch(({ response }) => Toast.fire(response.data.error || "something want wrong", "", 'error'));
 
     setPassword("")
     setEmail("")

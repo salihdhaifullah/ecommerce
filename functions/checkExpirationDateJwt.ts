@@ -1,4 +1,4 @@
-export default function checkExpirationDateJwt(token: string): boolean {
+export default function checkExpirationDateJwt(token: string | null): boolean {
 
     if (!token) return true;
 

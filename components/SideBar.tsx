@@ -6,13 +6,13 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PointOfSaleOutlinedIcon from '@mui/icons-material/PointOfSaleOutlined';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
+import useGetUser from '../hooks/useGetUser';
 
 const SideBar = () => {
-
-
     const [open, setOpen] = useState(false)
-    const haveAnAccount = localStorage.getItem('user')
+    const [user] = useGetUser()
     const isAdmin = true;
     const products = 2;
     const newPayments = 5;
@@ -57,6 +57,12 @@ const SideBar = () => {
                                             {products >= 1 && (
                                                 <span className="inline-flex justify-center items-center p-3 ml-3 w-3 h-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full ">{products}</span>
                                             )}
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/products" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
+                                            <StorefrontIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" />
+                                            <span className="flex-1 ml-3 whitespace-nowrap">Shop</span>
                                         </Link>
                                     </li>
                                     <li>
@@ -110,11 +116,9 @@ const SideBar = () => {
                                             <span className="flex-1 ml-3 whitespace-nowrap">Log In</span>
                                         </Link>
                                     </li>
-                                    <li
-                                        className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100"
-                                    >
+                                    <li className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
                                         <LogoutOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" />
-                                        <span>{haveAnAccount ? 'Logout' : 'Login'}</span>
+                                        <span>Logout</span>
                                     </li>
                                     <li>
                                         <Link href="/sing-up" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">

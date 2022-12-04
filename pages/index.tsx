@@ -1,20 +1,6 @@
-import Head from 'next/head'
-import Row from '../components/Row';
-import CircularProgress from '@mui/material/CircularProgress'
-import { getProducts } from '../api';
-import Checkout from '../components/CheckOut';
+import Head from 'next/head';
 
-interface IHomeProps {
-  products: {
-    id: number;
-    discount: number;
-    price: number;
-    title: string;
-    imageUrl: string;
-  }[];
-}
-
-export default function Home({ products }: IHomeProps) {
+export default function Home() {
   return (
     <>
       <Head>
@@ -23,22 +9,9 @@ export default function Home({ products }: IHomeProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-
       <div className="flex w-full mt-[200px] h-full justify-center items-center">
-        <Checkout />
-
+          Landing Page Of Selexome
       </div>
-
     </>
   )
-}
-
-
-export async function getStaticProps() {
-  let data = null;
-  await getProducts().then((res) => { data = JSON.parse(JSON.stringify(res.data)) })
-
-  return {
-    props: data,
-  }
 }

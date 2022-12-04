@@ -21,6 +21,8 @@ import IconButton from '@mui/material/IconButton';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import FormControl from '@mui/material/FormControl';
+import { useRouter } from 'next/router';
+import Toast from '../functions/sweetAlert';
 
 
 const SingUp: NextPage = () => {
@@ -30,19 +32,20 @@ const SingUp: NextPage = () => {
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-
+  const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setIsLoading(true);
     event.preventDefault();
 
-    await singUp({ password: password, firstName: firstName, lastName: lastName, email: email } as ISingUp).then(({ data }) => {
-      Swal.fire({ title: 'Sing Up Success', html: `<h2>${data.massage}</h2>`, icon: 'success', timer: 1500 })
-      localStorage.setItem("user", JSON.stringify(data.data))
-
-    }).catch(({ response }: any) => {
-      Swal.fire("something want wrong", response.data.error, 'error')
+    await singUp({ password, firstName, lastName, email })
+    .then(({ data }) => {
+      Toast.fire("Successfully SingUp", "", 'success');
+      localStorage.setItem("user", JSON.stringify(data.data));
+      router.push("/")
+      router.reload()
     })
+    .catch(({ response }: any) => Toast.fire(response.data.massage || "something want wrong", "", 'error') )
 
     setIsLoading(false)
     setLastName("")

@@ -9,7 +9,6 @@ import Button from '@mui/material/Button'
 import ImageSlider from '../../components/ImageSlider';
 import Rating from '@mui/material/Rating'
 import Chip from '@mui/material/Chip'
-import { IPreviewImage } from '../../types/image';
 import Comments from '../../components/Comments';
 import { createRate, getLikes, getRates, likeProduct } from '../../api';
 import useGetUser from '../../hooks/useGetUser';
@@ -17,11 +16,7 @@ import { IRate } from '../../types/rate';
 import ProcessRates from '../../functions/processRates';
 
 
-interface IProductPageProps {
-    product: IProduct
-}
-
-const ProductPage = ({ product }: IProductPageProps) => {
+const ProductPage = ({ product }: {product: IProduct}) => {
     const [rate, setRate] = useState<number | null>(null);
     const [openImageSlider, setOpenImageSlider] = useState(false);
     const [isFound, setIsFound] = useState(false);
@@ -99,7 +94,7 @@ const ProductPage = ({ product }: IProductPageProps) => {
         <>
             {product.images && openImageSlider ? (
                 <div className='w-full h-full flex justify-center items-center mt-20'>
-                    <ImageSlider images={handelProcessImageForSubmitting(product.images as IPreviewImage[], true)} setOpenImageSlider={setOpenImageSlider} />
+                    <ImageSlider images={product.images} setOpenImageSlider={setOpenImageSlider} />
                 </div>
             ) : (
                 <div
@@ -241,24 +236,11 @@ const ProductPage = ({ product }: IProductPageProps) => {
 
 export default ProductPage;
 
-
-
-interface IPath {
-    params: {
-        id: string,
-    },
-}
 export async function getStaticPaths() {
-    const productsIds = await prisma.product.findMany({
-        select: {
-            id: true
-        },
-    });
-    let paths: IPath[] = [];
+    const productsIds = await prisma.product.findMany({ select: { id: true } });
+    let paths: { params: { id: string } }[] = [];
 
-    for (let productId of productsIds) {
-        paths.push({ params: { id: productId.id.toString() } });
-    }
+    for (let productId of productsIds) { paths.push({ params: { id: productId.id.toString() } }) }
 
     return {
         paths,
@@ -267,35 +249,21 @@ export async function getStaticPaths() {
 }
 
 
-export async function getStaticProps({ params }: IPath) {
+export async function getStaticProps({ params }: { params: { id: string } }) {
     const product = await prisma.product.findUnique({
-        where: {
-            id: Number(params.id),
-        },
+        where: { id: Number(params.id) },
         select: {
             id: true,
             title: true,
             content: true,
-            images: {
-                select: {
-                    fileUrl: true,
-                },
-            },
+            images: true,
             imageUrl: true,
-            tags: {
-                select: {
-                    name: true,
-                },
-            },
-            category: {
-                select: {
-                    name: true,
-                },
-            },
+            tags: { select: { name: true } },
+            category: { select: { name: true } },
             createdAt: true,
             discount: true,
             price: true,
-            pieces: true,
+            pieces: true
         },
     });
 

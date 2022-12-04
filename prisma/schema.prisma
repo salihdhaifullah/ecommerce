@@ -20,44 +20,44 @@ model Tag {
 }
 
 model Product {
-  id         Int       @id @default(autoincrement())
-  title      String
-  content    String
-  images     String[]
-  imageUrl   String
-  tags       Tag[]
-  comments   Comment[]
-  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId Int
-  createdAt  DateTime  @default(now())
-  likes      String[]  @default([])
-  sales      Sale[]
-  discount   Float     
-  rates      Rate[] 
-  price      Decimal
-  pieces     Decimal
+  id              Int       @id @default(autoincrement())
+  title           String
+  content         String
+  images          String[]
+  imageUrl        String
+  tags            Tag[]
+  comments        Comment[]
+  category        Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId      Int
+  createdAt       DateTime  @default(now())
+  likes           String[]  @default([])
+  sales           Sale[]
+  discount        Float     
+  rates           Rate[] 
+  price           Decimal
+  pieces          Decimal
   stripeProductId String
-  stripePriceId String
+  stripePriceId   String
 }
 
 model Rate {
   id        Int      @id @default(autoincrement())
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int      @unique
-  userId   Int
+  userId    Int
   rate      RateType
 }
 
 model Sale {
   id            Int     @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        Int
   productId     Int
   product       Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   totalprice    Decimal
   numberOfItems Decimal
-  verified Boolean @default(false)
-  rejected Boolean @default(false)
+  verified      Boolean @default(false)
+  rejected      Boolean @default(false)
 }
 
 model User {

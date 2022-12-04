@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import CircularProgress from '@mui/material/CircularProgress';
 import { IUpdateProduct } from '../../types/product';
 import { useRouter } from 'next/router';
+import Toast from '../../functions/sweetAlert';
 
 
 interface ICategory {
@@ -113,8 +114,8 @@ const UpdateProduct = () => {
   const handelSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true)
-    if (!isValid) return;
-    if (!productId) return;
+    if (!isValid) return Toast.fire("UnValid Update Product Data", "", 'error');
+    if (!productId) return Toast.fire("Product Not Found", "", 'error');
 
     const endData: IUpdateProduct = {
       title: title,
@@ -126,31 +127,30 @@ const UpdateProduct = () => {
       discount: discount,
     }
 
-    await updateProduct(productId, endData).then((res) => { Swal.fire("success", "product Updated", 'success') })
-      .catch((err) => { Swal.fire("error", "some think want wrong", 'error') })
+    await updateProduct(productId, endData).then((res) => {
+      Toast.fire(res.data.massage || "Success Product Updated", "", 'success')
+      setTitle("")
+      setContent("")
+      setTags([])
+      setCategory(null)
+      setPieces(1)
+      setPrice(1)
+      setDiscount(0)
+      router.back()
+    })
+      .catch((err) => { Toast.fire(err.response.data.massage || "some thing want wrong", "", 'error') })
 
-    router.back()
-    
-    setTitle("")
-    setContent("")
-    setTags([])
-    setCategory(null)
-    setPieces(1)
-    setPrice(1)
-    setDiscount(0)
     setIsLoading(false)
   }
 
-
-
   return (
-    <Container>
-      <Box component="form" onSubmit={(event) => handelSubmit(event)} className='px-6 sm:p-10 my-10 flex items-center justify-center flex-col py-2 rounded-md shadow-md bg-white'>
-        <Box className="flex w-full sm:mb-2">
+    <Box>
+      <Box component="form" onSubmit={(event) => handelSubmit(event)} className='sm:p-10 m-10 gap-4 p-8 flex items-center justify-center flex-col rounded-md shadow-md bg-white'>
+        <Box className="flex w-full gap-4 flex-wrap sm:flex-nowrap">
 
           <TextField
-            className='w-full mb-2 mr-4'
-            error={title.length < 8}
+            className='w-full'
+            error={title.length < 7}
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             required
@@ -163,7 +163,7 @@ const UpdateProduct = () => {
           />
 
           <Autocomplete
-            className='w-full  ml-4'
+            className='w-full'
             value={category}
             onChange={(event, newValue) => {
               if (typeof newValue === 'string') setCategory({ name: newValue });
@@ -205,10 +205,10 @@ const UpdateProduct = () => {
 
         </Box>
 
-        <Box className="flex flex-col sm:flex-row w-full sm:mb-2">
+        <Box className="flex w-full gap-4 flex-wrap sm:flex-nowrap">
 
           <Autocomplete
-            className='w-full mr-4 mb-2'
+            className='w-full'
             multiple
             id="tags"
             options={tagsOptions.map((option) => option.name)}
@@ -237,11 +237,10 @@ const UpdateProduct = () => {
             required
             select
             label="discount"
-            className=" w-full ml-4"
+            className="w-full"
             value={discount}
             error={!(`${discount}`)}
             onChange={(event) => setDiscount(Number(event.target.value))}
-            helperText="Please select a discount"
           >
             {discountsOptions.map((option, index) => (
               <MenuItem key={index} value={option.value}>
@@ -251,13 +250,13 @@ const UpdateProduct = () => {
           </TextField>
         </Box>
 
-        <Box className="flex flex-col sm:flex-row  w-full sm:mb-2">
+        <Box className="flex w-full gap-4 flex-wrap sm:flex-nowrap">
           <TextField
             id="Price"
             label="Price"
             required
             type="number"
-            className="w-full mr-4"
+            className="w-full"
             value={price}
             onChange={(event) => setPrice(Number(event.target.value))}
             error={price < 1}
@@ -270,7 +269,7 @@ const UpdateProduct = () => {
             label="Pieces"
             required
             type="number"
-            className="w-full ml-4"
+            className="w-full"
             value={pieces}
             onChange={(event) => setPieces(Number(event.target.value))}
             error={pieces < 1}
@@ -278,7 +277,7 @@ const UpdateProduct = () => {
           />
         </Box>
 
-        <div className="w-full flex-1 sm:ml-2 mb-2 sm:mb-0">
+        <div className="w-full flex-1">
           <TextField
             error={content.length < 20}
             value={content}
@@ -295,7 +294,7 @@ const UpdateProduct = () => {
           />
         </div>
 
-        <div className="w-full inline-flex mt-2 justify-evenly">
+        <div className="w-full inline-flex text-xs sm:text-sm items-start justify-start">
 
           {isValid ? (
             <>
@@ -310,13 +309,14 @@ const UpdateProduct = () => {
               )}
             </>
           ) : (
-            <Button disabled className="bg-gray-600 hover:bg-gray-200 text-white hover:text-gray-600">
+            <Button disabled className="bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600">
               update
             </Button>
           )}
         </div>
+
       </Box>
-    </Container >
+    </Box >
   )
 }
 

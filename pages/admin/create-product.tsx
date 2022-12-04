@@ -52,10 +52,10 @@ const CreateProduct = () => {
 
     const init = useCallback(async () => {
         await getCategoriesAndTags()
-        .then((res) => {
-            setTagsOptions(res.data.tags);
-            setCategoriesOptions(res.data.categories);
-        })
+            .then((res) => {
+                setTagsOptions(res.data.tags);
+                setCategoriesOptions(res.data.categories);
+            })
     }, [])
 
     useEffect(() => {
@@ -85,12 +85,16 @@ const CreateProduct = () => {
 
         for (let file of files) {
             const base64 = await toBase64(file)
-             data.push(base64);
+            data.push(base64);
         }
 
         setImages(data);
     }
 
+
+    useEffect(() => {
+        setIsLoading(false)
+    }, [])
 
 
     const handelSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -111,18 +115,20 @@ const CreateProduct = () => {
         }
 
         await createProduct(endData)
-        .then((res) => { Toast.fire(res.data.massage  || "Success Product Created", "", 'success') })
-        .catch((err) => { Toast.fire(err.response.data.massage || "some thing want wrong !", "", 'error') })
-
-        setTitle("")
-        setContent("")
-        setTags([])
-        setCategory(null)
-        setImage("")
-        setImages([])
-        setPieces(1)
-        setPrice(1)
-        setDiscount(0)
+            .then((res) => {
+                setTitle("")
+                setContent("")
+                setTags([])
+                setCategory(null)
+                setImage("")
+                setImages([])
+                setPieces(1)
+                setPrice(1)
+                setDiscount(0)
+                Toast.fire(res.data.massage || "Success Product Created", "", 'success')
+            })
+            .catch((err) => { Toast.fire(err.response.data.massage || "some thing want wrong !", "", 'error') })
+            setIsLoading(false)
     }
 
     return (
@@ -148,7 +154,7 @@ const CreateProduct = () => {
 
                     <TextField
                         className='w-full'
-                        error={title.length < 8}
+                        error={title.length < 7}
                         value={title}
                         onChange={(event) => setTitle(event.target.value)}
                         required

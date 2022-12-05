@@ -10,6 +10,7 @@ import Rating from '@mui/material/Rating'
 import Chip from '@mui/material/Chip'
 import { useState } from 'react'
 import ImageSlider from './ImageSlider';
+import Box from '@mui/material/Box'
 
 interface IPreviewProductProps {
     setOpen: (state: boolean) => void;
@@ -53,7 +54,7 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
 
 
 
-                        <div className="h-full relative flex w-full sm:w-[80%] md:w-[70%]  lg:w-[60%] flex-col rounded-lg drop-shadow-xl shadow-blue-600 bg-blue-100 p-4">
+                        <div className="h-full relative flex w-full sm:w-[80%] md:w-[70%]  lg:w-[60%] flex-col rounded-lg shadow-xl p-6 bg-blue-100">
 
 
                             {images && openImageSlider && (
@@ -70,7 +71,7 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
 
 
                             {discount !== 0 && (
-                                <div className="shadow-lg max-w-fit rounded-full  -top-7 left-[5%] drop-shadow-lg absolute h-10 items-center justify-center  z-[4] flex ">
+                                <div className="max-w-fit rounded-full  -top-7 left-[5%] shadow-lg absolute h-10 items-center justify-center  z-[4] flex ">
                                     <p className="text-gray-100 md:text-lg p-1 rounded-full bg-red-600  flex justify-between text-semibold text-base">{String(discount).split(".")[1]}0%</p>
                                 </div>
                             )}
@@ -107,41 +108,40 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                                     <span className='min-h-[1px] min-w-full mt-2  bg-gradient-to-tr from-blue-300 to-blue-600  flex '></span>
                                 </h1>
 
+                                <motion.div whileHover={{ scale: 1.35, rotate: -15 }} className='flex relative my-6 min-w-full min-h-[200px] '>
 
-                                {/*  eslint-disable-next-line @next/next/no-img-element */}
-                                <Image width={100} height={100} className='flex mb-6 w-full max-h-[200px] object-contain' src={image} alt={title} />
+                                <Image width={100} height={100} className='w-full h-full absolute top-0 left-0 object-contain' src={image} alt={title} />
+                                </motion.div>
                             </div>
 
                             <p className="text-gray-800 flex text-center">{content}</p>
 
                             <hr className="min-h-[1px] min-w-full  bg-gradient-to-tr mt-4 from-blue-300 to-blue-600  flex" />
 
-                            <div className="w-full flex flex-col mb-6 justify-between items-center">
+                            <Box className="w-full flex flex-col mb-6 justify-between items-center">
                                 <Rating
                                     name="rate"
                                     className="my-6"
                                     value={value}
-                                    onChange={(event, newValue) => {
-                                        setValue(newValue);
-                                    }}
+                                    onChange={(event, newValue) =>  setValue(newValue)}
                                 />
 
                                 <div className="flex items-center justify-center w-full ">
                                     {tags.length > 0 && tags.map((tag, index) => (
-                                        <Chip key={index} label={tag} className="mr-1 link" variant="outlined" />
+                                        <Chip key={index} label={`#${tag}`} className="mr-1 link" variant="outlined" />
                                     ))}
                                 </div>
-                            </div>
+                            </Box>
 
-                            {images && (
+                            {Boolean(images?.length) ? (
                                 <div className="w-full flex items-center justify-center py-2">
                                     <Button variant="outlined" onClick={() => setOpenImageSlider(true)} >
                                         Look at other images
                                     </Button>
                                 </div>
-                            )}
+                            ) : null}
 
-                            <div className="flex justify-between items-center flex-row flex-wrap mt-auto">
+                            <Box className="flex justify-between items-center flex-row flex-wrap mt-auto">
                                 <p className="text-gray-700 ">
                                     items left <span className="text-blue-600 font-semibold text-lg">
                                         {pieces}
@@ -152,7 +152,7 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                                         {category.name}
                                     </span>
                                 </p>
-                            </div>
+                            </Box>
                         </div>
                     </motion.div>
 

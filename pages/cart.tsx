@@ -5,9 +5,10 @@ import TotalCard from '../components/TotalCard'
 import { AnimatePresence } from 'framer-motion'
 import useGetProductsIds from '../hooks/useGetProductsIds'
 import { CircularProgress } from '@mui/material'
-import { getCartProducts, makePayment } from '../api'
+import { checkoutSessions, getCartProducts, makePayment } from '../api'
 import { ICartProduct } from '../types/cart'
 import { ISale } from '../types/sale'
+import getStripe from '../libs/stripe'
 
 const Cart = () => {
     const [productsIds] = useGetProductsIds()
@@ -48,11 +49,11 @@ const Cart = () => {
         }
 
         console.log(data);
-        await makePayment(data).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
-        for (let productId of productsIds) {
-            localStorage.removeItem("product id " + productId)
-        }
-        setProducts([])
+        const response = await checkoutSessions(data)
+        console.log(response)
+        const stripe = await getStripe()
+        const { error } = await stripe!.redirectToCheckout({ sessionId: response.data.id })
+
     }
 
     return (

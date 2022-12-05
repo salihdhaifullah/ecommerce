@@ -53,8 +53,6 @@ export const createRate = async (productId: number, rateType: {rateType: 1 | 2 |
 
 export const getCartProducts = async (productsIds: number[]) => await API.post(`/cart`, {ids: productsIds});
 
-export const makePayment = async (data: ISale[]) => await API.post(`/payment`, {data: data});
-
 export const getHistoryOrders = async (skip: number, take: number) => await API.get(`history-orders/?skip=${skip}&take=${take}`)
 
 export const getOrders = async (skip: number, take: number) => await API.get(`orders/?skip=${skip}&take=${take}`)
@@ -74,3 +72,5 @@ export const updateProduct = async (id: number, data: IUpdateProduct) => await A
 export const rejectOrder = async (id: number) => await API.patch(`orders/?id=${id}&reject=${true}`)
 
 export const verifyOrder = async (id: number) => await API.patch(`orders/?id=${id}&verify=${true}`)
+
+export const checkoutSessions = async (data: ISale[]) => await API.post("checkout_sessions", data)

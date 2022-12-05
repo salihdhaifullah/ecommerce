@@ -7,11 +7,13 @@ export default function useGetProductsIds (): [number[]] {
         const data: number[] = [];
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
+
             if (key?.includes("product id ")) {           
-                const itemId = Number(JSON.parse(JSON.stringify(localStorage.getItem(key as string) || null)));
+                const itemId = Number(JSON.parse(localStorage.getItem(key) || "null"));
                 console.log(itemId)
-                if (typeof itemId === "number")  data.push(itemId);
+                if (typeof itemId === "number") data.push(itemId);
             }
+            console.log(data)
         }
         setProductsIds(data)
     }, []) 

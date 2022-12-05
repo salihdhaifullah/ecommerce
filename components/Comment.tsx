@@ -34,7 +34,7 @@ const Comment = ({ item, handelDelete, setIsUpdateById }: ICommentProps) => {
     }, [])
 
     return (
-        <section className="justify-center w-full flex flex-col items-center rounded-lg drop-shadow-lg bg-white px-4 p-2">
+        <section className="justify-center w-full flex flex-col items-center rounded-lg shadow-lg bg-white px-4 p-2">
             <div className="flex cursor-pointer relative w-full items-center">
                 {user && item.userId === user?.id && (
                     <MoreVertIcon onClick={() => setIsVisible(!isVisible)} />
@@ -43,7 +43,7 @@ const Comment = ({ item, handelDelete, setIsUpdateById }: ICommentProps) => {
                     {item.user.firstName + " " + item.user.lastName}
                 </p>
                 {isVisible && (
-                    <ul className="absolute flex justify-center items-center min-w-[120px] -bottom-[100px]  bg-gray-100 flex-col p-2 z-[5] drop-shadow-lg  rounded-lg">
+                    <ul className="absolute flex justify-center items-center min-w-[120px] -bottom-[100px]  bg-gray-100 flex-col p-2 z-[5] shadow-lg  rounded-lg">
                         <li onClick={handelDeleteComment} className="flex flex-row justify-between w-full p-2 hover:bg-slate-200 rounded-lg items-center"><p> Delete </p> <DeleteOutlineOutlinedIcon /></li>
                         <li onClick={handelUpdate} className="flex flex-row justify-between w-full p-2 hover:bg-slate-200 rounded-lg items-center"><p> Update </p> <ModeEditIcon /></li>
                     </ul>
@@ -56,7 +56,7 @@ const Comment = ({ item, handelDelete, setIsUpdateById }: ICommentProps) => {
                         width={20}
                         height={20}
                         src={`https://avatars.dicebear.com/api/bottts/${item.user.firstName + " " + item.user.lastName}.svg`}
-                        alt={"User Profile"} className="object-contain rounded-lg drop-shadow-2xl flex w-full h-full" />
+                        alt={"User Profile"} className="object-contain rounded-lg shadow-2xl flex w-full h-full" />
                 </div>
                 <em className='flex place-self-center items-center ml-2 text-sm w-full'>{moment(item.createdAt).format("ll")}</em>
             </main>

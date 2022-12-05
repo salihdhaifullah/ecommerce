@@ -154,7 +154,7 @@ const CreateProduct = () => {
 
                     <TextField
                         className='w-full'
-                        error={title.length < 7}
+                        error={(title.length < 8)}
                         value={title}
                         onChange={(event) => setTitle(event.target.value)}
                         required

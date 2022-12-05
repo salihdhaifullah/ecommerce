@@ -2,11 +2,12 @@ import { CircularProgress } from '@mui/material'
 import Link from 'next/link'
 import { useState } from 'react'
 import useGetProductsIds from '../hooks/useGetProductsIds'
+import getStripe from '../libs/stripe'
 
 interface ITotalCardProps {
     Total: number
     handelPayment: () => Promise<void>;
-} 
+}
 
 const TotalCard = ({ Total, handelPayment }: ITotalCardProps) => {
     const [isLoading, setIsLoading] = useState(false)
@@ -14,10 +15,14 @@ const TotalCard = ({ Total, handelPayment }: ITotalCardProps) => {
 
     const handelPay = async () => {
         setIsLoading(true)
+
         await handelPayment()
+            .then((res) => console.log(res))
+            .catch((err) => console.error(err));
+
         setIsLoading(false)
     }
-    
+
     return (
         <section className='flex flex-col lg:ml-16 justify-center items-center rounded-lg md:mx-12 h-fit  lg:mt-6 shadow-lg bg-white p-8'>
             <p className="flex p-2 text-base font-semibold text-black">

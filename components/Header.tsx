@@ -31,7 +31,7 @@ const Header = () => {
                         <li className="flex justify-center">
                             <div className="  flex  ">
                                 <div className=" relative flex items-center w-full">
-                                    <input type="search" className="relative duration-200 transition-all focus:w-full ease-in-out focus:min-w-[38vw] rounded-2xl focus:drop-shadow-xl flex-auto block w-full px-3 py-1.5 text-base font-normal max-h-fit text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon2" />
+                                    <input type="search" className="relative duration-200 transition-all focus:w-full ease-in-out focus:min-w-[38vw] rounded-2xl focus:shadow-xl flex-auto block w-full px-3 py-1.5 text-base font-normal max-h-fit text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon2" />
 
                                     {false ? (
                                         <button className=" px-3 ml-2 hover:rounded-2xl rounded py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex items-center" type="button" id="button-addon2">
@@ -49,7 +49,7 @@ const Header = () => {
                             </div>
                         </li>
                         <li className={classes.li}>
-                            <motion.img className='w-10 rounded-full ease-in-out cursor-pointer drop-shadow-xl h-10 min-w-[40px] min-h-[40px]'
+                            <motion.img className='w-10 rounded-full ease-in-out cursor-pointer shadow-xl h-10 min-w-[40px] min-h-[40px]'
                                 whileTap={{ scale: 0.6, rotate: 180 }} src={`https://avatars.dicebear.com/api/bottts/${"hello world"}.svg`} alt='profile'
                             />
                         </li>
@@ -75,7 +75,7 @@ const Header = () => {
 
 
                 <li className={classes.li}>
-                    <motion.img className='w-10 rounded-full ease-in-out cursor-pointer drop-shadow-xl h-10 min-w-[40px] min-h-[40px]'
+                    <motion.img className='w-10 rounded-full ease-in-out cursor-pointer shadow-xl h-10 min-w-[40px] min-h-[40px]'
                         whileTap={{ scale: 0.6, rotate: 180 }} src={`https://avatars.dicebear.com/api/bottts/${"hello world"}.svg`} alt='profile' />
                 </li>
 

@@ -1,36 +1,70 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import stripe, { formatAmountForStripe } from '../../../libs/stripe/api'
+import stripe from '../../../libs/stripe/api'
 import Stripe from 'stripe'
+import { ISale } from '../../../types/sale'
+import GetUserIdAndRoleMiddleware from '../../../middleware'
+import prisma from '../../../libs/prisma'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-
     if (req.method === 'POST') {
-        const amount: number = req.body.amount
-        try {
-            // Validate the amount that was passed from the client.
-            if (!(amount >= 0.1 && amount <= 5000)) {
-                throw new Error('Invalid amount.')
-            }
-            // Create Checkout Sessions from body params.
-            const params: Stripe.Checkout.SessionCreateParams = {
-                submit_type: 'donate',
-                payment_method_types: ['card'],
-                line_items: [{ price: 'price_1MAhhhE4wXrKy4QJ1yw8HJdT', quantity: 2 }],
-                mode: 'payment',
-                success_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `${req.headers.origin}/donate-with-checkout`,
-            }
-            const checkoutSession: Stripe.Checkout.Session =
-                await stripe.checkout.sessions.create(params)
 
-            res.status(200).json(checkoutSession)
+        try {
+
+            const data: ISale[] = req.body;
+            const ids: number[] = [];
+            const { error, id: userId } = GetUserIdAndRoleMiddleware(req);
+
+            if (error || !userId) return res.status(400).json({ massage: "No User Found" });
+            if (!data || !data.length) return res.status(400).json({ massage: "No Payment Found" });
+
+            for (let item of data) {
+                ids.push(item.productId)
+            }
+
+            const products = await prisma.product.findMany({
+                where: { id: { in: ids } },
+                select: { id: true, price: true, discount: true, stripePriceId: true }
+            })
+
+            const line_items = [];
+            let totalPrice = 0;
+            const productsSale: { productId: number, numberOfItems: number, totalPrice: number }[] = [];
+
+            for (let product of products) {
+                const quantity = data.find((item) => item.productId === product.id)?.quantity || 1
+
+                line_items.push({ price: product.stripePriceId, quantity })
+                const num = (Number(product.price) - (Number(product.price) * product.discount)) * quantity;
+                const dataSale = { productId: product.id, numberOfItems: quantity, totalPrice: num }
+                productsSale.push(dataSale)
+                totalPrice += num;
+            }
+
+            const params: Stripe.Checkout.SessionCreateParams = {
+                submit_type: 'pay',
+                payment_method_types: ['card'],
+                line_items: line_items,
+                mode: 'payment',
+                success_url: `${req.headers.origin}/cart?success=true`,
+                cancel_url: `${req.headers.origin}/cart`
+            }
+
+            const checkoutSession = await stripe.checkout.sessions.create(params)
+
+            await prisma.sale.create({
+                data: {
+                    userId: userId,
+                    totalPrice: totalPrice,
+                    checkoutSessionId: checkoutSession.id as string,
+                    saleProducts: { createMany: { data: productsSale } }
+                }
+            })
+
+            return res.status(200).json(checkoutSession)
+
         } catch (err) {
-            const errorMessage =
-                err instanceof Error ? err.message : 'Internal server error'
-            res.status(500).json({ statusCode: 500, message: errorMessage })
+            console.log(err)
+            return res.status(500).json({ message: "Internal Server Error" })
         }
-    } else {
-        res.setHeader('Allow', 'POST')
-        res.status(405).end('Method Not Allowed')
     }
 }

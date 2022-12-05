@@ -90,13 +90,13 @@ const CartChild = ({ product, handelDelete, setChange, change, setTotalProductsP
                 animate={{ x: 0, opacity: 1, scale: 1 }}
                 exit={{ opacity: 0.8, x: 600, scale: 1 }}
                 transition={{ duration: 0.8 }}
-                className="w-full my-6 h-fit ease-in-out flex-col duration-100 transition-all drop-shadow-lg flex bg-white rounded-lg">
+                className="w-full my-6 h-fit ease-in-out flex-col duration-100 transition-all shadow-lg flex bg-white rounded-lg">
                 <div className="p-8 w-full h-fit flex flex-row flex-wrap lg:grid xl:grid md:grid relative grid-cols-2 rounded-lg">
 
                     <CancelPresentationIcon onClick={() => handelDelete(product.id)} className='flex ml-[2px] top-0 left-0 mt-[2px] text-[2rem] p-[6px] cursor-pointer absolute hover:from-red-400 hover:text-red-700 transition-all bg-gradient-to-tr from-red-300 to-red-60  text-red-500  rounded-lg ' />
 
                     {product.discount !== 0 && (
-                        <div className="shadow-lg max-w-fit rounded-full  -top-7 left-[5%] drop-shadow-lg absolute h-10 items-center justify-center  z-[4] flex ">
+                        <div className="shadow-lg max-w-fit rounded-full  -top-7 left-[5%] absolute h-10 items-center justify-center  z-[4] flex ">
                             <p className="text-gray-100 md:text-lg p-1 rounded-full bg-red-600  flex justify-between text-semibold text-base">{String(product.discount).split(".")[1]}0%</p>
 
                         </div>

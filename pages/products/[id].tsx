@@ -97,13 +97,9 @@ const ProductPage = ({ product }: {product: IProduct}) => {
                     <ImageSlider images={product.images} setOpenImageSlider={setOpenImageSlider} />
                 </div>
             ) : (
-                <div
+                <div className="mb-6  flex flex-col justify-center items-center mt-20 ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
 
-                    className="mb-6  flex flex-col justify-center items-center mt-20 ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
-
-
-
-                    <div className="h-full relative p-10 flex w-full sm:w-[80%] md:w-[70%]  lg:w-[60%] flex-col rounded-lg drop-shadow-xl shadow-blue-600 bg-white">
+                    <div className="h-full relative p-10 flex w-full sm:w-[80%] md:w-[70%]  lg:w-[60%] flex-col rounded-lg shadow-xl bg-white">
 
                         <div className="flex items-center justify-between  mr-3 w-full">
 
@@ -142,7 +138,7 @@ const ProductPage = ({ product }: {product: IProduct}) => {
 
 
                         {product.discount !== 0 && (
-                            <div className="shadow-lg max-w-fit rounded-full  -top-7 left-[5%] drop-shadow-lg absolute h-10 items-center justify-center  z-[4] flex ">
+                            <div className="shadow-lg max-w-fit rounded-full  -top-7 left-[5%] absolute h-10 items-center justify-center  z-[4] flex ">
                                 <p className="text-gray-100 md:text-lg p-1 rounded-full bg-red-600  flex justify-between text-semibold text-base">{String(product.discount).split(".")[1]}0%</p>
                             </div>
                         )}

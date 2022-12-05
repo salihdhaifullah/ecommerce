@@ -44,7 +44,7 @@ const Comments = ({ id }: { id: number }) => {
 
         setIsLoading(true)
         if (isUpdateById) {
-         await updateComment(id, isUpdateById, data).then(() => {}).catch((error) => {})
+            await updateComment(id, isUpdateById, data).then(() => { }).catch((error) => { })
         } else {
             await createComment(id, data).then((res) => {
             }).catch((err) => {
@@ -64,7 +64,7 @@ const Comments = ({ id }: { id: number }) => {
             exit={{ opacity: 0.8, x: 700, scale: 1 }}
             className="w-full my-6 grid px-10 lg:grid-cols-2 md:grid-cols-2  gap-6  ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
 
-            <div ref={formRef} className="w-full flex h-[50vh] max-h-fit justify-center items-center rounded-lg drop-shadow-lg bg-white">
+            <div ref={formRef} className="w-full flex h-[50vh] max-h-fit justify-center items-center rounded-lg shadow-lg bg-white">
                 <form onSubmit={(e) => handelSubmitComment(e)} className="w-full p-4">
                     <div className="mb-2">
                         <label htmlFor="comment" className="text-lg text-gray-600">{isUpdateById ? "Update comment" : "Add comment"}</label>
@@ -79,15 +79,15 @@ const Comments = ({ id }: { id: number }) => {
                     </div>
                     <div className="flex justify-around item-center">
                         {isLoading ? (
-                            <button className="text-xs text-blue-100 bg-blue-600 rounded drop-shadow-md
-                    hover:bg-white hover:drop-shadow-2xl hover:text-blue-600 hover:rounded-3xl hover:border hover:border-blue-600" disabled>
+                            <button className="text-xs  text-blue-100 bg-blue-600 rounded shadow-lg
+                    hover:bg-white hover:shadow-2xl hover:text-blue-600 hover:rounded-3xl hover:border hover:border-blue-600" disabled>
                                 <CircularProgress />
                             </button>
                         ) : (
                             <button
                                 type="submit"
-                                className="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded drop-shadow-md
-                        hover:bg-white hover:drop-shadow-2xl hover:text-blue-600 hover:rounded-3xl hover:border hover:border-blue-600 transition-all duration-[130ms] ease-in-out">
+                                className="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded shadow-lg
+                        hover:bg-white hover:shadow-lg hover:text-blue-600 hover:rounded-3xl hover:border hover:border-blue-600 transition-all duration-[130ms] ease-in-out">
                                 {isUpdateById ? "Update" : "Comment"}
                             </button>
                         )}
@@ -97,8 +97,8 @@ const Comments = ({ id }: { id: number }) => {
                                 setComment("")
                                 setIsUpdateById(null)
                             }}
-                            className="px-3 py-2 text-sm text-blue-600 border border-blue-500 drop-shadow-md 
-                    hover:bg-blue-600 hover:drop-shadow-2xl hover:text-white hover:rounded-3xl transition-all duration-[130ms] ease-in-out">
+                            className="px-3 py-2 text-sm text-blue-600 border border-blue-500 shadow-md 
+                    hover:bg-blue-600 hover:shadow-2xl hover:text-white hover:rounded-3xl transition-all duration-[130ms] ease-in-out">
                             Cancel
                         </button>
                     </div>

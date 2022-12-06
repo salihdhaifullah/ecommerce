@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import CartChild from '../components/CartChild'
 import EmptyCart from '../components/EmptyCart'
 import TotalCard from '../components/TotalCard'
 import { AnimatePresence } from 'framer-motion'
 import useGetProductsIds from '../hooks/useGetProductsIds'
 import { CircularProgress } from '@mui/material'
-import { checkoutSessions, getCartProducts, makePayment } from '../api'
+import { checkoutSessions, getCartProducts } from '../api'
 import { ICartProduct } from '../types/cart'
 import { ISale } from '../types/sale'
 import getStripe from '../libs/stripe'
+import { Context } from '../context'
 
 const Cart = () => {
     const [productsIds] = useGetProductsIds()
@@ -16,6 +17,8 @@ const Cart = () => {
     const [products, setProducts] = useState<ICartProduct[]>([])
     const [totalProductsPrice, setTotalProductsPrice] = useState<{ id: number, price: number }[]>([])
     const [change, setChange] = useState(false)
+
+    const {removeItem} = useContext(Context);
 
     const init = useCallback(async () => {
         if (productsIds.length === 0) return;
@@ -25,6 +28,7 @@ const Cart = () => {
     const handelDelete = (id: number) => {
         localStorage.removeItem(`product id ${id}`)
         setProducts(products.filter((product) => product.id !== id))
+        removeItem()
     }
 
     useEffect(() => {

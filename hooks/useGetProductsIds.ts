@@ -13,7 +13,6 @@ export default function useGetProductsIds (): [number[]] {
                 console.log(itemId)
                 if (typeof itemId === "number") data.push(itemId);
             }
-            console.log(data)
         }
         setProductsIds(data)
     }, []) 

@@ -33,7 +33,5 @@ export default function Index({ products }: IHomeProps) {
     let data = null;
     await getProducts().then((res) => { data = JSON.parse(JSON.stringify(res.data)) })
   
-    return {
-      props: data,
-    }
+    return { props: data }
   }

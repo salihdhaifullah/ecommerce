@@ -1,38 +1,50 @@
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link';
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import PointOfSaleOutlinedIcon from '@mui/icons-material/PointOfSaleOutlined';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import useGetUser from '../hooks/useGetUser';
+import { useRouter } from 'next/router';
+import { Logout } from '../api';
+import { Context } from '../context';
 
 const SideBar = () => {
     const [open, setOpen] = useState(false)
     const [user] = useGetUser()
-    const isAdmin = true;
-    const products = 2;
-    const newPayments = 5;
+    const [isAdmin, setIsAdmin] = useState(false)
+    const router = useRouter()
+
+    useEffect(() => {
+        setIsAdmin(user?.role === 'ADMIN')
+    }, [user?.role])
+
+    const { items } = useContext(Context);
+
+
+    useEffect(() => {
+        console.log(items)
+    }, [items])
+    
+    const handelLogout = async () => {
+        await Logout()
+        localStorage.clear()
+        await router.push("/")
+        await router.reload()
+    }
 
     return (
         <>
             <div onClick={() => setOpen(!open)} className="block w-8  left-1/2 top-1/2  z-[2] ">
-                {isAdmin ? (
-                    products || newPayments > 0 ? (
-                        <div className="w-5 h-5 z-[100] absolute -top-2 -right-2 rounded-full flex items-center justify-center bg-red-600">
-                            <p className='text-sm text-white font-semibold'>{products + newPayments}</p>
-                        </div>
-                    ) : null
-                ) : (
-                    products > 0 ? (
-                        <div className="w-5 h-5 z-[100] absolute -top-2 -right-2 rounded-full flex items-center justify-center bg-red-600">
-                            <p className='text-sm text-white font-semibold'>{products}</p>
-                        </div>
-                    ) : null
-                )}
+
+                {items > 0 ? (
+                    <div className="w-5 h-5 z-[100] absolute -top-2 -right-2 rounded-full flex items-center justify-center bg-red-600">
+                        <p className='text-sm text-white font-semibold'>{items}</p>
+                    </div>
+                ) : null}
 
                 <span aria-hidden="true" className={`${open && ' -rotate-[130deg] translate-y-[9px] '} block h-[2px] w-8 mb-[7px] bg-current transform transition duration-[400ms] ease-in-out`}></span>
                 <span aria-hidden="true" className={`block  h-[2px] w-8 bg-current transform transition duration-[400ms] ease-in-out ${open && 'opacity-0'} `}></span>
@@ -54,9 +66,9 @@ const SideBar = () => {
                                         <Link href="/cart" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
                                             <AddShoppingCartOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" />
                                             <span className="flex-1 ml-3 whitespace-nowrap">Cart</span>
-                                            {products >= 1 && (
-                                                <span className="inline-flex justify-center items-center p-3 ml-3 w-3 h-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full ">{products}</span>
-                                            )}
+                                            {items > 0 ? (
+                                                <span className="inline-flex justify-center items-center p-3 ml-3 w-3 h-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full ">{items}</span>
+                                            ) : null}
                                         </Link>
                                     </li>
                                     <li>
@@ -93,15 +105,6 @@ const SideBar = () => {
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link href="/admin/orders" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
-                                                    <PointOfSaleOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"></PointOfSaleOutlinedIcon>
-                                                    <span className="flex-1 ml-3 whitespace-nowrap">Orders</span>
-                                                    {newPayments >= 1 && (
-                                                        <span className="inline-flex justify-center items-center p-3 ml-3 w-3 h-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full ">{newPayments}</span>
-                                                    )}
-                                                </Link>
-                                            </li>
-                                            <li>
                                                 <Link href="/admin/history-orders" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
                                                     <HistoryOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"></HistoryOutlinedIcon>
                                                     <span className="flex-1 ml-3 whitespace-nowrap">History Payments</span>
@@ -110,22 +113,21 @@ const SideBar = () => {
                                         </>
                                     )}
                                     <hr />
-                                    <li>
-                                        <Link href="/login" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
-                                            <svg className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd"></path></svg>
-                                            <span className="flex-1 ml-3 whitespace-nowrap">Log In</span>
-                                        </Link>
-                                    </li>
-                                    <li className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
-                                        <LogoutOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" />
-                                        <span>Logout</span>
-                                    </li>
-                                    <li>
-                                        <Link href="/sing-up" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
-                                            <svg className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z" clipRule="evenodd"></path></svg>
-                                            <span className="flex-1 ml-3 whitespace-nowrap">Sign Up</span>
-                                        </Link>
-                                    </li>
+
+                                    {user ? (
+                                        <li onClick={handelLogout} className="flex items-center gap-3 p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
+                                            <LogoutOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" />
+                                            <span>Logout</span>
+                                        </li>
+                                    ) : (
+                                        <li>
+                                            <Link href="/sing-up" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
+                                                <svg className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z" clipRule="evenodd"></path></svg>
+                                                <span className="flex-1 ml-3 whitespace-nowrap">Sign Up</span>
+                                            </Link>
+                                        </li>
+                                    )}
+
                                     <li className="flex justify-center  items-center p-2 md:hidden text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
                                         <div className=" relative flex items-center w-full">
                                             <input type="search" className="relative focus:shadow-2xl flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal max-h-fit text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded-2xl transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon2" />
@@ -136,6 +138,7 @@ const SideBar = () => {
                                             </button>
                                         </div>
                                     </li>
+
                                 </ul>
                             </div>
                         </motion.div>

@@ -39,10 +39,10 @@ const SingUp: NextPage = () => {
     event.preventDefault();
 
     await singUp({ password, firstName, lastName, email })
-    .then(({ data }) => {
+    .then(async ({ data }) => {
       Toast.fire("Successfully SingUp", "", 'success');
       localStorage.setItem("user", JSON.stringify(data.data));
-      router.push("/")
+      await router.push("/products")
       router.reload()
     })
     .catch(({ response }: any) => Toast.fire(response.data.massage || "something want wrong", "", 'error') )

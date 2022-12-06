@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import prisma from '../../libs/prisma';
 import { IProduct } from '../../types/product';
 import { motion } from 'framer-motion';
@@ -14,7 +14,7 @@ import { createRate, getLikes, getRates, likeProduct } from '../../api';
 import useGetUser from '../../hooks/useGetUser';
 import { IRate } from '../../types/rate';
 import ProcessRates from '../../functions/processRates';
-
+import {Context} from '../../context'
 
 const ProductPage = ({ product }: {product: IProduct}) => {
     const [rate, setRate] = useState<number | null>(null);
@@ -56,14 +56,18 @@ const ProductPage = ({ product }: {product: IProduct}) => {
         setIsFound(Boolean(localStorage.getItem(`product id ${product.id}`)))
     }, [product.id])
 
+    const {addItem, removeItem} = useContext(Context);
+
     const handelAdd = () => {
         setIsFound(true)
         localStorage.setItem(`product id ${product.id}`, JSON.stringify(product.id))
+        addItem()
     }
 
     const handelRemove = () => {
         setIsFound(false)
         localStorage.removeItem(`product id ${product.id}`)
+        removeItem()
     }
 
     const handelLike = async () => {

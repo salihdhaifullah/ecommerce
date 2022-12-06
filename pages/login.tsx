@@ -38,10 +38,10 @@ const Login: NextPage = () => {
 
 
     await login({ email, password } as ILogin)
-    .then(({ data }) => {
+    .then(async ({ data }) => {
       Toast.fire("Successfully Login", "", 'success');
       localStorage.setItem("user", JSON.stringify(data.data));
-      router.push("/")
+      await router.push("/products")
       router.reload()
     })
     .catch(({ response }) => Toast.fire(response.data.error || "something want wrong", "", 'error'));

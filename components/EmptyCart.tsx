@@ -9,9 +9,6 @@ const EmptyCart = () => {
 
             <div className='w-full ease-in-out transition-all duration-100 h-full min-h-[50vh] flex flex-col justify-center items-center'>
 
-
-
-
                 <motion.div
                     initial={{ x: 400, opacity: 0, scale: 0.8 }}
                     animate={{ x: 0, opacity: 1, scale: 1 }}
@@ -35,8 +32,8 @@ const EmptyCart = () => {
                     className=" ease-in-out transition-all  mt-20  duration-100  flex flex-col justify-center items-center">
 
                     <div className="flex rounded-lg justify-center items-center">
-                        <Link href='/'>
-                            <p className="flex hover:underline text-blue-400 text-2xl items-center justify-center cursor-pointer hover:text-blue-600" ><HomeOutlinedIcon />Go to Home</p>
+                        <Link href='/products'>
+                            <p className="flex hover:underline text-blue-400 text-2xl items-center justify-center cursor-pointer hover:text-blue-600" ><HomeOutlinedIcon />Go to Shop Page</p>
                         </Link>
                     </div>
                 </motion.div>

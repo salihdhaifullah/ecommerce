@@ -15,7 +15,9 @@ const Comments = ({ id }: { id: number }) => {
     const formRef = useRef<HTMLDivElement>(null)
 
     const init = useCallback(async () => {
-        await getComments(id).then((res) => { setComments(res.data.comments.comments) }).catch((err) => { console.log(err) })
+        await getComments(id)
+        .then((res) => { setComments(res.data.comments.comments) })
+        .catch((err) => { console.log(err) })
     }, [id])
 
     useEffect(() => {
@@ -26,11 +28,9 @@ const Comments = ({ id }: { id: number }) => {
     }, [comments, isUpdateById])
 
     const handelDelete = async (commentId: number) => {
-        await deleteComment(id, commentId).then(() => {
-            init()
-        }).catch((error) => {
-
-        })
+        await deleteComment(id, commentId)
+        .then((res) => { init() })
+        .catch((err) => { console.log(err) })
     }
 
     useEffect(() => {
@@ -44,12 +44,13 @@ const Comments = ({ id }: { id: number }) => {
 
         setIsLoading(true)
         if (isUpdateById) {
-            await updateComment(id, isUpdateById, data).then(() => { }).catch((error) => { })
+            await updateComment(id, isUpdateById, data)
+            .then((res) => { })
+            .catch((err) => { console.log(err) })
         } else {
-            await createComment(id, data).then((res) => {
-            }).catch((err) => {
-                console.log(err)
-            });
+            await createComment(id, data)
+            .then((res) => {})
+            .catch((err) => {console.log(err) });
         }
         setIsUpdateById(null)
         setIsLoading(false)

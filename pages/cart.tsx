@@ -22,7 +22,9 @@ const Cart = () => {
 
     const init = useCallback(async () => {
         if (productsIds.length === 0) return;
-        await getCartProducts(productsIds).then((res) => { setProducts(res.data.products) }).catch((err) => { console.log(err) })
+        await getCartProducts(productsIds)
+        .then((res) => { setProducts(res.data.products) })
+        .catch((err) => { console.log(err) })
     }, [productsIds])
 
     const handelDelete = (id: number) => {

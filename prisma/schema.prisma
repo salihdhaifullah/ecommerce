@@ -19,21 +19,29 @@ model Tag {
   product Product[]
 }
 
+model Likes {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+}
+
 model Product {
-  id              Int       @id @default(autoincrement())
+  id              Int           @id @default(autoincrement())
   title           String
   content         String
   images          String[]
   imageUrl        String
   tags            Tag[]
   comments        Comment[]
-  category        Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category        Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId      Int
-  createdAt       DateTime  @default(now())
-  likes           String[]  @default([])
+  createdAt       DateTime      @default(now())
+  likes           Likes[]
   saleProduct     SaleProduct[]
-  discount        Float     
-  rates           Rate[] 
+  discount        Float
+  rates           Rate[]
   price           Decimal
   pieces          Decimal
   stripeProductId String
@@ -49,22 +57,22 @@ model Rate {
 }
 
 model Sale {
-  id                Int     @id @default(autoincrement())
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                Int           @id @default(autoincrement())
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId            Int
   totalPrice        Decimal
-  verified          Boolean @default(false)
+  verified          Boolean       @default(false)
   checkoutSessionId String
-  saleProducts      SaleProduct[] 
+  saleProducts      SaleProduct[]
 }
 
 model SaleProduct {
-  id            Int @id @default(autoincrement())
-  productId     Int 
+  id            Int     @id @default(autoincrement())
+  productId     Int
   product       Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   numberOfItems Int
   saleId        Int
-  sale          Sale  @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  sale          Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
   totalPrice    Decimal
 }
 
@@ -78,6 +86,7 @@ model User {
   comments  Comment[]
   role      Roles     @default(USER)
   payment   Sale[]
+  likes     Likes[]
 }
 
 model Comment {

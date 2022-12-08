@@ -14,6 +14,7 @@ import { ICreateProduct } from '../../types/product';
 import CircularProgress from '@mui/material/CircularProgress';
 import Toast from '../../functions/sweetAlert';
 import toBase64 from '../../functions/toBase64';
+import { useRouter } from 'next/router';
 
 
 interface ICategory {
@@ -48,6 +49,8 @@ const CreateProduct = () => {
 
     const [isLoading, setIsLoading] = useState(false)
 
+    const router = useRouter()
+
     const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 8 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2 && (image && image.length > 10));
 
     const init = useCallback(async () => {
@@ -56,6 +59,7 @@ const CreateProduct = () => {
                 setTagsOptions(res.data.tags);
                 setCategoriesOptions(res.data.categories);
             })
+            .catch((err) => { console.log(err) })
     }, [])
 
     useEffect(() => {
@@ -80,11 +84,12 @@ const CreateProduct = () => {
 
     const handelUploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
         const files = event?.target?.files
-        if (!files?.length) return;
+        if (!files) return;
+        if (files?.length < 1) return;
         let data: string[] = [];
 
         for (let file of files) {
-            const base64 = await toBase64(file)
+            const base64 = await toBase64(file, 400, 400)
             data.push(base64);
         }
 
@@ -95,7 +100,6 @@ const CreateProduct = () => {
     useEffect(() => {
         setIsLoading(false)
     }, [])
-
 
     const handelSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -126,9 +130,10 @@ const CreateProduct = () => {
                 setPrice(1)
                 setDiscount(0)
                 Toast.fire(res.data.massage || "Success Product Created", "", 'success')
+                router.push("/products/" + res.data.id)
             })
             .catch((err) => { Toast.fire(err.response.data.massage || "some thing want wrong !", "", 'error') })
-            setIsLoading(false)
+        setIsLoading(false)
     }
 
     return (
@@ -267,7 +272,6 @@ const CreateProduct = () => {
                         helperText="place insert a price"
                     />
 
-
                     <TextField
                         id="Pieces"
                         label="Pieces"
@@ -329,7 +333,7 @@ const CreateProduct = () => {
                         <>
                             {isLoading ? (
                                 <Button disabled className="bg-blue-600 text-xs sm:text-sm hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
-                                    <CircularProgress />
+                                    <CircularProgress className="w-4 h-4 text-white" />
                                 </Button>
                             ) : (
                                 <Button type="submit" className="bg-blue-600 text-xs sm:text-sm hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">

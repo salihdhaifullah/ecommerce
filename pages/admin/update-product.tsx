@@ -61,37 +61,33 @@ const UpdateProduct = () => {
 
 
   const init = useCallback(async () => {
-    await getCategoriesAndTags().then((res) => {
+    await getCategoriesAndTags()
+    .then((res) => {
       setTagsOptions(res.data.tags);
       setCategoriesOptions(res.data.categories);
     })
+    .catch((err) => { console.log(err) })
 
     if (!productId) return;
 
-    await getProductToUpdate(productId).then((res) => {
+    await getProductToUpdate(productId)
+    .then((res) => {
       const data = res.data.data;
-      console.log(data)
-      setTitle(data.title);
-      setContent(data.content);
-
       const processedTags: string[] = [];
-
       for (let tag of data.tags) {
         processedTags.push(tag.name)
       }
+      setTitle(data.title);
+      setContent(data.content);
+
 
       setTags(processedTags);
       setDiscount(data.discount);
-
       setPieces(data.pieces);
       setPrice(data.price);
-
-
       setCategory(data.category);
-
-    }).catch((err) => {
-      console.log(err)
     })
+    .catch((err) => { console.log(err) })
 
 
   }, [productId])
@@ -127,7 +123,8 @@ const UpdateProduct = () => {
       discount: discount,
     }
 
-    await updateProduct(productId, endData).then((res) => {
+    await updateProduct(productId, endData)
+    .then((res) => {
       Toast.fire(res.data.massage || "Success Product Updated", "", 'success')
       setTitle("")
       setContent("")

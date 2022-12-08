@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../libs/prisma';
-import GetUserIdAndRoleMiddleware  from '../../middleware';
+import GetUserIdAndRoleMiddleware from '../../middleware';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -9,17 +9,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (typeof productId !== 'number') return res.status(400).json({ massage: "No Product Found" });
 
-        const likes = await prisma.product.findFirst({
-            where: {
-                id: productId,
-            },
-            select: {
-                likes: true,
-            }
+        const likes = await prisma.likes.findMany({
+            where: { productId: productId },
+            select: { userId: true }
         })
 
-        return res.status(200).json({ likes: likes?.likes || [] })
-
+        return res.status(200).json({ likes: likes })
     }
 
     if (req.method === 'PATCH') {
@@ -31,40 +26,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (error || typeof userId !== "number") return res.status(400).json({ massage: "No user Found" });
 
-        const likes = await prisma.product.findFirst({ where: { id: productId }, select: { likes: true, id: true } })
+        const like = await prisma.likes.findFirst({
+            where: { productId: productId, userId: userId },
+            select: { id: true }
+        });
 
-        if (!likes?.id) return res.status(400).json({ massage: "No Product Found" });
+        if (like?.id) await prisma.likes.delete({ where: { id: like.id } })
+        else await prisma.likes.create({ data: { userId: userId, productId: productId } });
 
-        let isLiked = false;
-        let data: string[] = likes.likes;
-
-        if (likes.likes.length > 0 && likes.likes.includes(userId.toString())) isLiked = true;
-
-        if (isLiked) {
-            // unLike the product
-            data = data.filter((id) => id !== userId.toString());
-            await prisma.product.update({
-                where: {
-                    id: productId,
-                },
-                data: {
-                    likes: data,
-                },
-            })
-        } else {
-            // like the product
-            data.push(userId.toString());
-
-            await prisma.product.update({
-                where: {
-                    id: productId,
-                },
-                data: {
-                    likes: data,
-                },
-            });
-
-        }
-        return res.status(200).json({ likes: data || [] }) 
+        return res.status(200).json({ massage: "Success" });
     }
 };

@@ -22,12 +22,14 @@ const CartChild = ({ product, handelDelete, setChange, change, setTotalProductsP
 
     const [user] = useGetUser()
     const [isLikedByUser, setIsLikedByUser] = useState(false)
-    const [likes, setLikes] = useState<string[]>([])
+    const [likes, setLikes] = useState<{userId: number}[]>([])
     const [totalPieces, setTotalPieces] = useState(1)
     const [totalPrice, setTotalPrice] = useState((product.price - (product.price * product.discount)) * totalPieces)
 
     const init = useCallback(async () => {
-        await getLikes(product.id).then((res) => { setLikes(res.data.likes) }).catch((err) => { console.log(err) });
+        await getLikes(product.id)
+        .then((res) => { setLikes(res.data.likes) })
+        .catch((err) => { console.log(err) });
     }, [product.id])
 
     const getTotal = useCallback(() => {
@@ -49,7 +51,7 @@ const CartChild = ({ product, handelDelete, setChange, change, setTotalProductsP
     }, [getTotal])
 
     const isLikedByUserFunction = useCallback(() => {
-        if (user && likes.length > 0 && likes.includes(user.id.toString())) setIsLikedByUser(true)
+        if (user && likes.length > 0 && likes.includes({userId: user.id})) setIsLikedByUser(true)
         else setIsLikedByUser(false)
     }, [likes, user])
 
@@ -73,13 +75,17 @@ const CartChild = ({ product, handelDelete, setChange, change, setTotalProductsP
 
     const handelLike = async () => {
         setIsLikedByUser(true)
-        await likeProduct(product.id).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
+        await likeProduct(product.id)
+        .then((res) => { console.log(res) })
+        .catch((err) => { console.log(err) });
         init()
     }
 
     const handelDislike = async () => {
         setIsLikedByUser(false)
-        await likeProduct(product.id).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
+        await likeProduct(product.id)
+        .then((res) => { console.log(res) })
+        .catch((err) => { console.log(err) });
         init()
     }
 

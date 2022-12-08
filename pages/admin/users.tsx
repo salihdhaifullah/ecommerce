@@ -24,11 +24,9 @@ export default function Users() {
 
 
   const GetUsers = useCallback(async () => {
-    await getUsers((page * rowsPerPage), rowsPerPage).then((res) => {
-      setUsers(res.data.users)
-    }).catch((err) => {
-      console.log(err)
-    })
+    await getUsers((page * rowsPerPage), rowsPerPage)
+    .then((res) => { setUsers(res.data.users) })
+    .catch((err) => { console.log(err) })
   }, [page, rowsPerPage])
 
   useEffect(() => {

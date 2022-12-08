@@ -19,29 +19,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 price: true,
                 pieces: true,
                 createdAt: true,
-                category: {
-                    select: {
-                        name: true,
-                    },
-                },
-            },
+                category: { select: { name: true } }
+            }
         });
 
         return res.status(200).json({products})
-    }
-
-
-    if (req.method === 'POST') {
-
-    }
-
-
-    if (req.method === 'DELETE') {
-
-    }
-
-
-    if (req.method === 'PATCH') {
-
     }
 };

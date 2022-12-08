@@ -36,7 +36,7 @@ function ImageSlider({setOpenImageSlider, images}: IImageSliderProps) {
   };
 
   return (
-    <Box className="bg-white" sx={{ maxWidth: 400, flexGrow: 1 }}>
+    <Box className="bg-white max-w-[400px]">
       <div className="w-full flex h-fit py-1 items-end justify-end ">
         <IconButton onClick={() => setOpenImageSlider(false)}>
           <CloseIcon />

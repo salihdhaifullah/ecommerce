@@ -30,11 +30,9 @@ export default function Products() {
 
 
   const GetProducts = useCallback(async () => {
-    await getProductsTable((page * rowsPerPage), rowsPerPage).then((res) => {
-      setProducts(res.data.products)
-    }).catch((err) => {
-      console.log(err)
-    })
+    await getProductsTable((page * rowsPerPage), rowsPerPage)
+    .then((res) => { setProducts(res.data.products) })
+    .catch((err) => { console.log(err) })
   }, [page, rowsPerPage])
 
   useEffect(() => {
@@ -51,11 +49,9 @@ export default function Products() {
   };
 
   const handelDelete = async (id: number) => {
-    await deleteProduct(id).then((res) => {
-      console.log(res)
-    }).catch((err) => {
-      console.log(err)
-    })
+    await deleteProduct(id)
+    .then((res) => { console.log(res) })
+    .catch((err) => { console.log(err) })
     GetProducts()
   }
 

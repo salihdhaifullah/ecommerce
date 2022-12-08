@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate": "npx prisma migrate dev & npx prisma generate & yarn run dev"
+    "migrate": "npx prisma db push & npx prisma generate & yarn run dev",
+    "stripe": "cd / & powerShell -ExecutionPolicy Bypass -Command \"stripe listen --forward-to localhost:3000/api/stripe-webhook\""
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",

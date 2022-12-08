@@ -7,7 +7,7 @@ const toBase64 = async (file: File, width = 1200, hight = 1200): Promise<string>
             width, 
             hight, 
             "WEBP", 
-            100, 
+            70, 
             0, 
             (uri) => resolve(uri as string),
             "base64"

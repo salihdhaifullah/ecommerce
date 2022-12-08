@@ -38,7 +38,7 @@ const SideBar = () => {
 
     return (
         <>
-            <div onClick={() => setOpen(!open)} className="block w-8  left-1/2 top-1/2  z-[2] ">
+            <div onClick={() => setOpen(!open)} className="block w-8 left-1/2 top-1/2 z-[2] ">
 
                 {items > 0 ? (
                     <div className="w-5 h-5 z-[100] absolute -top-2 -right-2 rounded-full flex items-center justify-center bg-red-600">
@@ -54,13 +54,13 @@ const SideBar = () => {
             <AnimatePresence>
                 {
                     open && (
-                        <motion.div className="w-64 absolute top-[40px] shadow-xl min-h-screen -right-[0px] overflow-auto " aria-label="Sidebar"
+                        <motion.div className="w-64 absolute top-[40px] max-h-fit shadow-xl -right-[0px] overflow-auto " aria-label="Sidebar"
                             initial={{ x: 400, opacity: 0.8, scale: 0.6 }}
                             animate={{ x: 0, opacity: 1, scale: 1 }}
                             exit={{ opacity: 0.8, x: 400, scale: 0.6 }}
                             transition={{ duration: 0.4 }}
                         >
-                            <div className=" overflow-y-auto py-4 px-3 bg-gray-50 rounded">
+                            <div className="overflow-y-auto py-4 px-3 bg-gray-50 rounded">
                                 <ul className="space-y-2">
                                     <li>
                                         <Link href="/cart" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">

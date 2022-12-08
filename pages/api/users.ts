@@ -10,9 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({massage: "Bad Request"});
 
         const users = await prisma.user.findMany({
-            where: {
-                role: 'USER',
-            },
+            where: { role: 'USER' },
             skip: skip,
             take: take,
             select: {
@@ -24,21 +22,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         return res.status(200).json({ users })
-
-    }
-
-
-    if (req.method === 'POST') {
-
-    }
-
-
-    if (req.method === 'DELETE') {
-
-    }
-
-
-    if (req.method === 'PATCH') {
 
     }
 };

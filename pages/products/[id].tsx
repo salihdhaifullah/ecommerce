@@ -14,19 +14,21 @@ import { createRate, getLikes, getRates, likeProduct } from '../../api';
 import useGetUser from '../../hooks/useGetUser';
 import { IRate } from '../../types/rate';
 import ProcessRates from '../../functions/processRates';
-import {Context} from '../../context'
+import { Context } from '../../context'
+import { CircularProgress } from '@mui/material';
 
-const ProductPage = ({ product }: {product: IProduct}) => {
+const ProductPage = ({ product }: { product: IProduct }) => {
     const [rate, setRate] = useState<number | null>(null);
     const [openImageSlider, setOpenImageSlider] = useState(false);
     const [isFound, setIsFound] = useState(false);
     const [isLikedByUser, setIsLikedByUser] = useState(false)
-    const [likes, setLikes] = useState<string[]>([])
+    const [likes, setLikes] = useState<{ userId: number }[]>([])
     const [rates, setRates] = useState<IRate[]>([])
     const [user] = useGetUser()
+    const [isLoadingLike, setIsLoadingLike] = useState(false)
 
     const isLikedByUserFunction = useCallback(() => {
-        if (user && likes.length > 0 && likes.includes(user.id.toString())) setIsLikedByUser(true)
+        if (user && likes.length > 0 && likes.find((item) => item.userId === user.id)) setIsLikedByUser(true)
         else setIsLikedByUser(false)
     }, [likes, user])
 
@@ -34,11 +36,22 @@ const ProductPage = ({ product }: {product: IProduct}) => {
         setRate(ProcessRates(rates))
     }, [rates])
 
-    const init = useCallback(async () => {
-        await getLikes(product.id).then((res) => { setLikes(res.data.likes) }).catch((err) => { console.log(err) });
-        await getRates(product.id).then((res) => { setRates(res.data.rates) }).catch((err) => { console.log(err) });
+    const GetLikes = useCallback(async () => {
+        await getLikes(product.id)
+            .then((res) => { setLikes(res.data.likes) })
+            .catch((err) => { console.log(err) });
     }, [product.id])
 
+    const GetRates = useCallback(async () => {
+        await getRates(product.id)
+            .then((res) => { setRates(res.data.rates) })
+            .catch((err) => { console.log(err) });
+    }, [product.id])
+
+    const init = useCallback(async () => {
+        await GetLikes()
+        await GetRates()
+    }, [GetLikes, GetRates])
 
     useEffect(() => {
         init()
@@ -56,7 +69,7 @@ const ProductPage = ({ product }: {product: IProduct}) => {
         setIsFound(Boolean(localStorage.getItem(`product id ${product.id}`)))
     }, [product.id])
 
-    const {addItem, removeItem} = useContext(Context);
+    const { addItem, removeItem } = useContext(Context);
 
     const handelAdd = () => {
         setIsFound(true)
@@ -71,26 +84,24 @@ const ProductPage = ({ product }: {product: IProduct}) => {
     }
 
     const handelLike = async () => {
-        setIsLikedByUser(true)
-        await likeProduct(product.id).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
-        await getLikes(product.id).then((res) => { setLikes(res.data.likes) }).catch((err) => { console.log(err) });
-    }
-
-    const handelDislike = async () => {
-        setIsLikedByUser(false)
-        await likeProduct(product.id).then((res) => { console.log(res) }).catch((err) => { console.log(err) });
-        await getLikes(product.id).then((res) => { setLikes(res.data.likes) }).catch((err) => { console.log(err) });
+        setIsLoadingLike(true)
+        await likeProduct(product.id)
+            .then((res) => { console.log(res) })
+            .catch((err) => { console.log(err) });
+        await GetLikes()
+        setIsLoadingLike(false)
     }
 
     const handelCreateRate = async (rate: number | null) => {
         if (typeof rate !== 'number') return;
-        await createRate(product.id, { rateType: rate as 2 | 1 | 3 | 4 | 5 }).then((res) => { console.log(res) }).catch((err) => { console.log(err) })
-        await getRates(product.id).then((res) => { setRates(res.data.rates) }).catch((err) => { console.log(err) });
+        await createRate(product.id, { rateType: rate as 2 | 1 | 3 | 4 | 5 })
+            .then((res) => { console.log(res) })
+            .catch((err) => { console.log(err) })
+        await GetRates()
     }
 
     const handelRateChange = (rate: number | null) => {
         setRate(rate)
-        console.log(rate);
         handelCreateRate(rate)
     }
 
@@ -107,27 +118,22 @@ const ProductPage = ({ product }: {product: IProduct}) => {
 
                         <div className="flex items-center justify-between  mr-3 w-full">
 
-                            {isLikedByUser ? (
-                                <motion.button
-                                    whileTap={{ scale: 0.6 }}
-                                    onClick={handelDislike} className="flex-none flex flex-col items-center ease-in-out duration-[50] transition-all justify-center w-10 h-10 rounded-md text-red-600 shadow-md shadow-red-500 border-red-300 border" type="button" aria-label="Like">
+                            <motion.button
+                                whileTap={{ scale: 0.6 }}
+                                onClick={handelLike}
+                                className={`${(isLikedByUser && !isLoadingLike) ? "text-red-600 shadow-md shadow-red-500 border-red-300" : "text-slate-300 border-slate-200"} flex-none flex flex-col items-center ease-in-out duration-[50] transition-all justify-center w-10 h-10 rounded-md border`} type="button" aria-label="Like">
 
-                                    <svg width="20" height="20" fill="currentColor" aria-hidden="true">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                                    </svg>
-                                    <span className="flex text-xs text-gray-400">{likes.length}</span>
-                                </motion.button>
-                            ) : (
-                                <motion.button
-                                    whileTap={{ scale: 0.6 }}
-                                    onClick={handelLike} className="flex-none flex flex-col items-center ease-in-out duration-[50] transition-all justify-center w-10 h-10 rounded-md text-slate-300 border-slate-200 border" type="button" aria-label="Like">
-
-                                    <svg width="20" height="20" fill="currentColor" aria-hidden="true">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                                    </svg>
-                                    <span className="flex text-xs text-gray-400">{likes.length}</span>
-                                </motion.button>
-                            )}
+                                {!isLoadingLike ? (
+                                    <>
+                                        <svg width="20" height="20" fill="currentColor" aria-hidden="true">
+                                            <path fillRule="evenodd" clipRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
+                                        </svg>
+                                        <span className="flex text-xs text-gray-400">{likes.length}</span>
+                                    </>
+                                ) : (
+                                    <CircularProgress className="w-4 h-4" />
+                                )}
+                            </motion.button>
 
                             {isFound ? (
                                 <motion.div whileTap={{ scale: 0.6 }} className="w-8 h-8 rounded-full  bg-gradient-to-tr from-blue-300 to-blue-600   flex items-center justify-center cursor-pointer hover:shadow-md ">
@@ -181,7 +187,9 @@ const ProductPage = ({ product }: {product: IProduct}) => {
                                 <span className='min-h-[1px] min-w-full mt-2  bg-gradient-to-tr from-blue-300 to-blue-600  flex '></span>
                             </h1>
 
-                            <Image width={100} height={100} className='flex mb-6 w-full max-h-[200px] object-contain' src={product.imageUrl} alt={product.title} />
+                            <motion.div whileHover={{ scale: 1.35, rotate: -15 }} className='flex relative my-6 w-[70%] min-h-[200px]'>
+                                <Image width={800} height={800} className='w-full h-full absolute top-0 left-0 object-contain' src={product.imageUrl} alt={product.title} />
+                            </motion.div>
                         </div>
 
                         <p className="text-gray-800 flex text-center">{product.content}</p>

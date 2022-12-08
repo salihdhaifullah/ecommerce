@@ -31,11 +31,9 @@ export default function HistoryOrders() {
   const [historyOrders, setHistoryOrders] = useState<IHistoryOrdersOrderData[]>([])
 
   const GetHistoryOrders = useCallback(async () => {
-    await getHistoryOrders((page * rowsPerPage), rowsPerPage).then((res) => {
-      setHistoryOrders(res.data.orders)
-    }).catch((err) => {
-      console.log(err)
-    })
+    await getHistoryOrders((page * rowsPerPage), rowsPerPage)
+    .then((res) => { setHistoryOrders(res.data.orders) })
+    .catch((err) => { console.log(err) })
   }, [page, rowsPerPage])
 
   useEffect(() => {

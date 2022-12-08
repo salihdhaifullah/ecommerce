@@ -192,10 +192,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             category: { connectOrCreate: { where: { name: category }, create: { name: category } } },
             stripeProductId: product.id,
             stripePriceId: product.default_price as string
-          }
+          },
+          select: { id: true }
         });
     
-        return res.status(200).json({ data, massage: "Product Successfully Created" })
+        return res.status(200).json({ id: data.id, massage: "Product Successfully Created" })
     
       }
 };

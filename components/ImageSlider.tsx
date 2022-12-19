@@ -1,25 +1,16 @@
-import {useState} from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import MobileStepper from '@mui/material/MobileStepper';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
-import CloseIcon from '@mui/icons-material/Close';
+import Image from 'next/image';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-
-interface IImageSliderProps {
-  setOpenImageSlider: (state: boolean) => void;
-  images: string[];
-}
-
-function ImageSlider({setOpenImageSlider, images}: IImageSliderProps) {
-  const theme = useTheme();
+const ImageSlider = ({ images }: { images: string[] }) => {
   const [activeStep, setActiveStep] = useState(0);
   const maxSteps = images.length;
 
@@ -36,63 +27,44 @@ function ImageSlider({setOpenImageSlider, images}: IImageSliderProps) {
   };
 
   return (
-    <Box className="bg-white max-w-[400px]">
-      <div className="w-full flex h-fit py-1 items-end justify-end ">
-        <IconButton onClick={() => setOpenImageSlider(false)}>
-          <CloseIcon />
-        </IconButton>
-      </div>
+    <Box className="bg-white flex-col flex shadow-lg rounded-md border h-fit p-4">
       <AutoPlaySwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         index={activeStep}
         onChangeIndex={handleStepChange}
         enableMouseEvents
+        className="max-w-[400px] max-h-[400px]"
       >
         {images.map((step, index) => (
-          <div key={index}>
+          <div key={index} className="h-full w-full flex justify-center items-center">
             {Math.abs(activeStep - index) <= 2 ? (
-              <Box
-                component="img"
-                sx={{
-                  height: 255,
-                  display: 'block',
-                  maxWidth: 400,
-                  overflow: 'hidden',
-                  width: '100%',
-                }}
+              <Image
+                width={400}
+                height={400}
+                className="h-fit w-fit max-h-[400px] block"
                 src={step}
                 alt="slider image"
               />
             ) : null}
           </div>
         ))}
+
       </AutoPlaySwipeableViews>
+
       <MobileStepper
+      className='mt-4 mb-0'
         steps={maxSteps}
         position="static"
         activeStep={activeStep}
+
         nextButton={
-          <Button
-            size="small"
-            onClick={handleNext}
-            disabled={activeStep === maxSteps - 1}
-          >
-            Next
-            {theme.direction === 'rtl' ? (
-              <KeyboardArrowLeft />
-            ) : (
-              <KeyboardArrowRight />
-            )}
+          <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1} >
+            Next <KeyboardArrowRight />
           </Button>
         }
+
         backButton={
           <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-            {theme.direction === 'rtl' ? (
-              <KeyboardArrowRight />
-            ) : (
-              <KeyboardArrowLeft />
-            )}
-            Back
+            <KeyboardArrowLeft /> Back
           </Button>
         }
       />

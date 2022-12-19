@@ -21,12 +21,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             
             if (!isMatch) return res.status(400).json({ error: `password is incorrect` })
 
-            const token = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY as string, { expiresIn: '2h' })
-
             const fullYear = 1000 * 60 * 60 * 24 * 365;
 
             const refreshToken = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY as string, { expiresIn: fullYear })
-
 
             setCookie("refresh-token", refreshToken, {
                 httpOnly: true,
@@ -38,13 +35,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 req,
                 res
             })
+
             const data = {
                 id: UserData.id,
                 createdAt: UserData.createdAt,
                 email: UserData.email,
                 lastName: UserData.lastName,
                 firstName: UserData.firstName,
-                token,
                 role: UserData.role
             }
 

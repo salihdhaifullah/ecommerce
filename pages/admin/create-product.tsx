@@ -288,7 +288,7 @@ const CreateProduct = () => {
                 <Box className="flex w-full gap-4 flex-wrap sm:flex-nowrap">
                     <div className="w-full">
                         <Button size='small' startIcon={<BackupIcon />} className="text-sm w-full justify-center items-center flex lowercase" variant="contained" component="label">
-                            {image ? "uploaded" : "Upload background image"}
+                            {image ? "uploaded" : "background image"}
                             <input onChange={(event) => handelUploadImage(event)} hidden accept="image/*" type="file" />
                         </Button>
 
@@ -302,10 +302,10 @@ const CreateProduct = () => {
                     <div className="w-full">
 
                         <Button size='small' startIcon={<BackupIcon />} className="text-sm w-full justify-center items-center flex lowercase" variant="contained" component="label">
-                            {images.length ? "uploaded" : "Upload images"}
+                            {images.length ? "uploaded" : "images"}
                             <input id="images" onChange={(event) => handelUploadImages(event)} multiple hidden accept="image/*" type="file" />
                         </Button>
-                        <InputLabel htmlFor="images"> upload images for product (optionally) </InputLabel>
+                        <InputLabel htmlFor="images" className="text-sm"> upload images for product (optionally) </InputLabel>
                     </div>
 
                 </Box>

@@ -32,14 +32,10 @@ interface IPreviewProductProps {
 
 export default function PreviewProduct({ setOpen, open, title, content, tags, category, image, images, pieces, price, discount }: IPreviewProductProps) {
     const [value, setValue] = useState<number | null>(null);
-    const [openImageSlider, setOpenImageSlider] = useState(false);
-
 
     const handelClose = () => {
         setOpen(false);
     }
-
-
 
     return (
 
@@ -47,26 +43,15 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
             <div className="min-w-fit  min-h-fit w-full h-full">
 
                 <DialogTitle className='px-10'>Preview Product</DialogTitle>
-                <DialogContent className='sm:px-20 px-4'>
+                <DialogContent>
 
-                    <motion.div
-                        initial={{ x: 400, opacity: 0, scale: 0.2 }}
-                        animate={{ x: 0, opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0.8, x: 700, scale: 1 }}
-                        className="my-6 flex flex-col justify-center items-center mt-10 ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
+                    <Container className="w-full sm:px-10 px-4 mt-10 h-full flex-wrap flex md:flex-nowrap gap-10">
 
-                        <Container className="h-full relative flex w-full flex-col rounded-lg shadow-2xl p-6 bg-blue-50">
-
-                            {images && images?.length > 0 && openImageSlider && (
-                                <motion.div
-                                    initial={{ y: 100, opacity: 0, scale: 0 }}
-                                    animate={{ y: 0, opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0.8, x: 700, scale: 1 }}
-                                    className='w-full mr-5 h-full ease-in-out duration-100 transition-all absolute z-50 flex justify-center items-center l-0 b-0 t-0 r-0'>
-                                    <ImageSlider images={images} setOpenImageSlider={setOpenImageSlider} />
-                                </motion.div>
-                            )}
-
+                        <motion.div
+                            initial={{ x: 400, opacity: 0, scale: 0.2 }}
+                            animate={{ x: 0, opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0.8, x: 700, scale: 1 }}
+                            className="h-full relative flex w-full shadow-lg p-6 bg-blue-50 flex-col justify-center items-center ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
                             <div className="flex items-center justify-between  mr-3 w-full">
                                 <motion.div whileTap={{ scale: 0.6 }} className="w-8 h-8  duration-75 rounded-full bg-gradient-to-tr  from-red-300 to-red-600 flex items-center justify-center cursor-pointer hover:shadow-md ">
                                     <AddShoppingCartOutlinedIcon className='text-white' />
@@ -132,15 +117,7 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                                 </div>
                             </Box>
 
-                            {images && images?.length > 0 ? (
-                                <div className="w-full flex items-center justify-center py-2">
-                                    <Button variant="outlined" onClick={() => setOpenImageSlider(true)} >
-                                        Look at other images
-                                    </Button>
-                                </div>
-                            ) : null}
-
-                            <Box className="flex justify-between items-center flex-row flex-wrap mt-auto">
+                            <Box className="flex justify-between items-center w-full h-full flex-row flex-wrap mt-auto">
                                 <p className="text-gray-700 ">
                                     items left <span className="text-blue-600 font-semibold text-lg">
                                         {pieces}
@@ -152,8 +129,14 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                                     </span>
                                 </p>
                             </Box>
-                        </Container>
-                    </motion.div>
+                        </motion.div>
+
+                        {images ? (
+                            <Box className='w-full justify-center items-center max-h-[500px] flex'>
+                                <ImageSlider images={images} />
+                            </Box>
+                        ) : null}
+                    </Container>
 
                 </DialogContent>
                 <DialogActions>

@@ -7,14 +7,11 @@ interface IGetUserIdAndRoleMiddleware {
     role: "ADMIN" | "USER" | null;
 }
 
-export default function GetUserIdAndRoleMiddleware(req: NextApiRequest, FromCookie = false): IGetUserIdAndRoleMiddleware {
+export default function GetUserIdAndRoleMiddleware(req: NextApiRequest): IGetUserIdAndRoleMiddleware {
     const data: IGetUserIdAndRoleMiddleware = { error: null, id: null, role: null }
-    let token = "";
+    let token = req.cookies['refresh-token']!;
 
-    if (FromCookie) token = req.cookies['refresh-token']!;
-    else token = req.headers["authorization"]?.split("Bearer ")[1]!;
-    
-    if (!token) return { error: "no token found", id: null, role: null };
+    if (typeof token !== "string") return { error: "no token found", id: null, role: null };
 
     jwt.verify(token, process.env.SECRET_KEY!, (err: any, decodedToken: any) => {
         if (err) return data.error = err

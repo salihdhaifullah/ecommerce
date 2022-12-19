@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import AddTaskIcon from '@mui/icons-material/AddTask';
-import Button from '@mui/material/Button'
 import ImageSlider from '../../components/ImageSlider';
 import Rating from '@mui/material/Rating'
 import Chip from '@mui/material/Chip'
@@ -15,11 +14,10 @@ import useGetUser from '../../hooks/useGetUser';
 import { IRate } from '../../types/rate';
 import ProcessRates from '../../functions/processRates';
 import { Context } from '../../context'
-import { CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Container } from '@mui/material';
 
 const ProductPage = ({ product }: { product: IProduct }) => {
     const [rate, setRate] = useState<number | null>(null);
-    const [openImageSlider, setOpenImageSlider] = useState(false);
     const [isFound, setIsFound] = useState(false);
     const [isLikedByUser, setIsLikedByUser] = useState(false)
     const [likes, setLikes] = useState<{ userId: number }[]>([])
@@ -106,17 +104,18 @@ const ProductPage = ({ product }: { product: IProduct }) => {
     }
 
     return (
-        <>
-            {product.images && openImageSlider ? (
-                <div className='w-full h-full flex justify-center items-center mt-20'>
-                    <ImageSlider images={product.images} setOpenImageSlider={setOpenImageSlider} />
-                </div>
-            ) : (
-                <div className="mb-6  flex flex-col justify-center items-center mt-20 ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
+        <Container className="flex flex-col w-full h-full min-h-[100vh]">
+            <Box className="w-full h-full flex md:inline-flex gap-8">
 
-                    <div className="h-full relative p-10 flex w-full sm:w-[80%] md:w-[70%]  lg:w-[60%] flex-col rounded-lg shadow-xl bg-white">
+                {product.images ? (
+                    <Box className='w-full h-full flex justify-center items-center mt-20'>
+                        <ImageSlider images={product.images} />
+                    </Box>
+                ) : null}
 
-                        <div className="flex items-center justify-between  mr-3 w-full">
+                <Box className="flex flex-col relative p-10 w-full justify-center shadow-xl bg-white items-center mt-20 ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
+
+                        <div className="flex items-center justify-between mr-3 w-full">
 
                             <motion.button
                                 whileTap={{ scale: 0.6 }}
@@ -158,7 +157,6 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                             {product.discount !== 0 ?
                                 (
                                     <>
-
                                         <div className="flex justify-between items-center gap-8 flex-col">
                                             <p className='text-lg text-gray-100 font-semibold flex-row flex'>
                                                 <span className='text-sm text-blue-600'>$</span>
@@ -180,8 +178,6 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                         </div>
 
                         <div className="flex items-center w-full flex-col relative justify-center">
-
-
 
                             <h1 className='text-2xl flex flex-col justify-center items-center text-gray-900 mb-6'>{product.title}
                                 <span className='min-h-[1px] min-w-full mt-2  bg-gradient-to-tr from-blue-300 to-blue-600  flex '></span>
@@ -213,14 +209,6 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                             </div>
                         </div>
 
-                        {product.images && (
-                            <div className="w-full flex items-center justify-center py-2">
-                                <Button variant="outlined" onClick={() => setOpenImageSlider(true)} >
-                                    Look at other images
-                                </Button>
-                            </div>
-                        )}
-
                         <div className="flex justify-between items-center flex-row flex-wrap mt-auto">
                             <p className="text-gray-700 ">
                                 items left <span className="text-blue-600 font-semibold text-lg">
@@ -233,12 +221,11 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                                 </span>
                             </p>
                         </div>
-                    </div>
-                </div>
-            )}
+                </Box>
+            </Box>
 
             <Comments id={product.id} />
-        </>
+        </Container>
     )
 }
 

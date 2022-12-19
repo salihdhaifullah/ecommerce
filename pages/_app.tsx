@@ -1,16 +1,13 @@
-import type { AppProps } from 'next/app'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import NextNProgress from 'nextjs-progressbar';
-import React, { useState, useEffect, useCallback } from 'react';
-import { GetToken, Logout } from '../api';
-import { IUser } from '../types/user';
-import checkExpirationDateJwt from '../functions/checkExpirationDateJwt';
-import '../styles/globals.css'
-import Provider from '../context';
+import type { AppProps } from 'next/app';
 import { NextRouter, useRouter } from 'next/router';
+import NextNProgress from 'nextjs-progressbar';
+import { useState, useEffect, useCallback } from 'react';
+import Provider from '../context';
 import useGetUser from '../hooks/useGetUser';
 import Custom404 from './404'
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import '../styles/globals.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -27,7 +24,6 @@ export default function App({ Component, pageProps }: AppProps) {
     <div className="flex flex-col min-h-[100vh] bg-blue-100">
       {isBrowser ? (
         <Provider>
-          <TokenHandler />
           <NextNProgress />
           <Header />
           <main className="my-10 min-h-[80vh]">
@@ -46,71 +42,4 @@ export default function App({ Component, pageProps }: AppProps) {
       )}
     </div>
   )
-}
-
-
-const getTokenHandler = async (router: NextRouter): Promise<string | undefined> => {
-  return await GetToken()
-    .then((res) => { return res.data.token })
-    .catch(async (err) => {
-      if (router.pathname.includes('/admin')) {
-        await Logout()
-        localStorage.clear()
-        await router.reload()
-        await router.push("/login")
-      }
-    })
 };
-
-
-export function TokenHandler() {
-  const router = useRouter();
-  const [user, setUser] = useState<IUser | null>(null)
-
-  const getUser = useCallback(() => {
-    const data: IUser | null = JSON.parse(localStorage.getItem("user")! || "null");
-    if (data) setUser(data);
-  }, [])
-
-  useEffect(() => {
-    getUser()
-  }, [getUser])
-
-  const [isExpired, setIsExpired] = useState(false);
-
-  const checkErrorAndGetToken = useCallback(async () => {
-    const token = await getTokenHandler(router);
-    if (!token) return;
-    if (!user) return await getUser();
-
-    let userData: IUser = {
-      id: user.id,
-      createdAt: user.createdAt,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      token: token
-    };
-
-    await localStorage.setItem("user", JSON.stringify(userData));
-  }, [getUser, user])
-
-
-  useEffect(() => {
-    if (user) checkErrorAndGetToken()
-  }, [checkErrorAndGetToken])
-
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      setIsExpired(checkExpirationDateJwt(user?.token || null));
-      if (isExpired) await checkErrorAndGetToken()
-
-    }, 1000 * 50); // every 50 Seconds
-    return () => clearInterval(interval);
-
-  }, [checkErrorAndGetToken, isExpired, user?.token])
-
-  return <></>;
-}

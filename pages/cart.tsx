@@ -10,86 +10,92 @@ import { ICartProduct } from '../types/cart'
 import { ISale } from '../types/sale'
 import getStripe from '../libs/stripe'
 import { Context } from '../context'
+import { useRouter } from 'next/router'
+import ThankYou from '../components/ThankYou'
 
 const Cart = () => {
     const [productsIds] = useGetProductsIds()
-    const [total, setTotal] = useState(1)
     const [products, setProducts] = useState<ICartProduct[]>([])
-    const [totalProductsPrice, setTotalProductsPrice] = useState<{ id: number, price: number }[]>([])
-    const [change, setChange] = useState(false)
-
-    const {removeItem} = useContext(Context);
+    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter()
+    const { removeItem, deleteCartItem, cartItems, state } = useContext(Context);
+    const [isSuccess, setIsSuccess] = useState(false)
 
     const init = useCallback(async () => {
-        if (productsIds.length === 0) return;
+        setIsLoading(true);
+
+        if (productsIds.length === 0) {
+            setIsLoading(false)
+            return;
+        };
         await getCartProducts(productsIds)
-        .then((res) => { setProducts(res.data.products) })
-        .catch((err) => { console.log(err) })
+            .then((res) => { setProducts(res.data.products) })
+            .catch((err) => { console.log(err) });
+        setIsLoading(false)
+
     }, [productsIds])
 
     const handelDelete = (id: number) => {
         localStorage.removeItem(`product id ${id}`)
+        deleteCartItem(id)
         setProducts(products.filter((product) => product.id !== id))
         removeItem()
     }
 
     useEffect(() => {
-        setTotal(totalProductsPrice.reduce((accumulator, current) => accumulator + current.price, 0))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [change])
-
-    useEffect(() => {
         init()
     }, [init])
 
+    const HandelSuccess = useCallback(() => {
+        if (router.query.success) {
+            for (let productId of productsIds) { 
+                localStorage.removeItem("product id " + productId)
+                removeItem()
+            }
+            setIsSuccess(true)
+        } else setIsSuccess(false)
+    }, [router])
+
+    useEffect(() => {
+        HandelSuccess()
+    }, [HandelSuccess])
 
     const handelPayment = async () => {
         const data: ISale[] = [];
 
-        for (let item of totalProductsPrice) {
+        for (let item of state.cartItems) {
             const product = products.find((product) => product.id === item.id)
-            if (!product) return;
-            const quantity = item.price / (product.price - (product.price * product.discount))
-            data.push({ productId: item.id, quantity: quantity })
-
+            if (!product) continue;
+            data.push({ productId: item.id, quantity: item.quantity })
         }
 
-        console.log(data);
         const response = await checkoutSessions(data)
-        console.log(response)
         const stripe = await getStripe()
-        const { error } = await stripe!.redirectToCheckout({ sessionId: response.data.id })
-
+        await stripe!.redirectToCheckout({ sessionId: response.data.id })
     }
+
+
 
     return (
         <section className='w-full h-auto flex justify-center items-center min-h-screen bg-Blur rounded-lg py-2 px-6'>
-            {products ? (
-                <>
-                    {products && products?.length > 0 ? (
-                        <div className="w-full h-auto gap-4 grid lg:grid-cols-2 grid-cols-1  min-h-screen">
-                            <div className="w-full h-full gap-4 flex flex-col ">
-                                {products && products.map((item, index) => {
-                                    return (
+            {isLoading ? <CircularProgress /> :
+                isSuccess ? <ThankYou /> :
+                    products.length > 0
+                        ? (
+                            <div className="w-full my-20 h-auto gap-4 grid lg:grid-cols-2 grid-cols-1 min-h-screen">
+                                <div className="w-full h-full gap-10 flex flex-col ">
+                                    {products.map((item, index) => (
                                         <AnimatePresence key={index}>
-                                            <CartChild product={item} setChange={setChange} change={change} totalProductsPrice={totalProductsPrice} setTotalProductsPrice={setTotalProductsPrice} handelDelete={handelDelete} />
+                                            <CartChild product={item} handelDelete={handelDelete} />
                                         </AnimatePresence >
-                                    )
-                                })}
+                                    ))}
+                                </div>
+                                <TotalCard handelPayment={handelPayment} />
                             </div>
-                            <TotalCard handelPayment={handelPayment} Total={total} />
-                        </div>
-                    ) : (
-                        <div className="min-w-[100vh] min-h-[60vh] justify-center items-center w-full h-full gap-4 flex flex-col ">
-                            <EmptyCart />
-                        </div>
-                    )}
-                </>
-            ) : (
-                <CircularProgress />
-            )}
+                        ) : <EmptyCart />}
         </section>
     )
 }
 
 export default Cart;
+

@@ -5,6 +5,12 @@ import { ISale } from '../../../types/sale'
 import GetUserIdAndRoleMiddleware from '../../../middleware'
 import prisma from '../../../libs/prisma'
 
+interface IProductSale {
+    productId: number
+    numberOfItems: number
+    totalPrice: number
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
 
@@ -12,23 +18,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             const data: ISale[] = req.body;
             const ids: number[] = [];
+            const productsSale: IProductSale[] = [];
+            const line_items = [];
+            let totalPrice = 0;
+
             const { error, id: userId } = GetUserIdAndRoleMiddleware(req);
 
             if (error || !userId) return res.status(400).json({ massage: "No User Found" });
             if (!data || !data.length) return res.status(400).json({ massage: "No Payment Found" });
 
-            for (let item of data) {
-                ids.push(item.productId)
-            }
+            for (let item of data) { ids.push(item.productId) }
 
             const products = await prisma.product.findMany({
                 where: { id: { in: ids } },
                 select: { id: true, price: true, discount: true, stripePriceId: true }
             })
 
-            const line_items = [];
-            let totalPrice = 0;
-            const productsSale: { productId: number, numberOfItems: number, totalPrice: number }[] = [];
 
             for (let product of products) {
                 const quantity = data.find((item) => item.productId === product.id)?.quantity || 1

@@ -131,11 +131,11 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                             </Box>
                         </motion.div>
 
-                        {images ? (
+                        {images ? images?.length > 0 ? (
                             <Box className='w-full justify-center items-center max-h-[500px] flex'>
                                 <ImageSlider images={images} />
                             </Box>
-                        ) : null}
+                        ) : null : null}
                     </Container>
 
                 </DialogContent>

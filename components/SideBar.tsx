@@ -23,11 +23,6 @@ const SideBar = () => {
     }, [user?.role])
 
     const { items } = useContext(Context);
-
-
-    useEffect(() => {
-        console.log(items)
-    }, [items])
     
     const handelLogout = async () => {
         await Logout()

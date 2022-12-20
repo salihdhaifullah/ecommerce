@@ -12,7 +12,6 @@ const Header = () => {
         p: 'hover:bg-gray-300 rounded-lg transition-all duration-100 text-base ease-in-out cursor-pointer px-2 py-2 mt-1 flex flex-row items-center content-between justify-between'
     }
 
-
     return (
         <header className={` px-4  md:px-16 w-screen p-[11px] ease-in-out duration-100 transition-all shadow-md shadow-blue-300  fixed z-50 bg-Blur`} >
             <div className="hidden h-full w-full md:flex justify-center ">

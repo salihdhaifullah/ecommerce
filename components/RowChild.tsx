@@ -2,10 +2,9 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import AddTaskIcon from '@mui/icons-material/AddTask';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Context } from '../context';
-import { CircularProgress } from '@mui/material';
 
 interface IRowChild {
     index: number;
@@ -21,10 +20,8 @@ interface IRowChild {
 const RowChild = ({ item, index }: IRowChild) => {
     const router = useRouter();
     const [isFound, setIsFound] = useState(Boolean(localStorage.getItem(`product id ${item.id}`)));
+    const { addItem, removeItem } = useContext(Context);
 
-    const {addItem, removeItem} = useContext(Context);
-
-    
     const handelAdd = () => {
         setIsFound(true)
         localStorage.setItem(`product id ${item.id}`, JSON.stringify(item.id))
@@ -38,7 +35,6 @@ const RowChild = ({ item, index }: IRowChild) => {
     }
 
     return (
-
         <motion.div
             initial={{ y: -(index * 100), opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}

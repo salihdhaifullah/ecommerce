@@ -104,7 +104,6 @@ const CreateProduct = () => {
     const handelSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsLoading(true)
-        if (!isValid) return;
 
         const endData: ICreateProduct = {
             title: title,

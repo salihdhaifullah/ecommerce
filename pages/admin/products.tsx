@@ -7,9 +7,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
 import { deleteProduct, getProductsTable } from '../../api';
 import moment from 'moment';
 import Link from 'next/link';
+import Swal from 'sweetalert2';
+import Toast from '../../functions/sweetAlert';
 
 interface IProductsData {
   createdAt: Date;
@@ -31,8 +34,8 @@ export default function Products() {
 
   const GetProducts = useCallback(async () => {
     await getProductsTable((page * rowsPerPage), rowsPerPage)
-    .then((res) => { setProducts(res.data.products) })
-    .catch((err) => { console.log(err) })
+      .then((res) => { setProducts(res.data.products) })
+      .catch((err) => { console.log(err) })
   }, [page, rowsPerPage])
 
   useEffect(() => {
@@ -49,10 +52,21 @@ export default function Products() {
   };
 
   const handelDelete = async (id: number) => {
-    await deleteProduct(id)
-    .then((res) => { console.log(res) })
-    .catch((err) => { console.log(err) })
-    GetProducts()
+    Swal.fire({
+      title: 'Delete product',
+      text: 'Are you sure you want to delete this product',
+      icon: 'warning',
+      showCancelButton: true,
+      showConfirmButton: true
+    }).then(async (res) => {
+      if (res.value) {
+        await deleteProduct(id)
+          .then((res) => { Toast.fire("Product SuccessFully Deleted", '', 'success') })
+          .catch((err) => { Toast.fire("Some thing Want Wrong !", '', 'error') })
+        GetProducts()
+      }
+    })
+
   }
 
   return (
@@ -77,16 +91,20 @@ export default function Products() {
                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                   <TableCell>{moment(row.createdAt).format("ll")}</TableCell>
                   <Link href={`/products/${row.id}`}>
-                    <TableCell className="link">{row.title}</TableCell>
+                    <TableCell className="link text-blue-500">{row.title}</TableCell>
                   </Link>
                   <TableCell>{row.category.name}</TableCell>
                   <TableCell>{row.likes.length}</TableCell>
                   <TableCell>{row.pieces}</TableCell>
                   <TableCell>{row.price}</TableCell>
                   <Link href={`/admin/update-product/?id=${row.id}`}>
-                    <TableCell className="link">Update</TableCell>
+                    <TableCell>
+                      <Button className="bg-green-500 shadow-md lowercase p-0 text-gray-900 shadow-green-500">Edit</Button>
+                    </TableCell>
                   </Link>
-                  <TableCell onClick={() => handelDelete(row.id)} className="link">Delete</TableCell>
+                  <TableCell>
+                    <Button onClick={() => handelDelete(row.id)} className="bg-red-500 shadow-md lowercase p-0 text-gray-900 shadow-red-500">Delete</Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Custom404() {
     return (
-        <section className="h-full w-full justify-center items-center">
+        <section className="h-full mt-20 w-full justify-center items-center">
             <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
                 <div className="mx-auto max-w-screen-sm text-center">
                     <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-blue-600">404</h1>

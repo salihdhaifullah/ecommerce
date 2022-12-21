@@ -16,22 +16,24 @@ export default function App({ Component, pageProps }: AppProps) {
   const [allowed, setAllowed] = useState(true);
 
   useEffect(() => {
-    if (router.pathname.startsWith("/admin") && user?.role !== "ADMIN") setAllowed(false);
     setIsBrowser(true);
-  }, [router.pathname, user?.role])
+    if (user) {
+      if (user.role === 'ADMIN') setAllowed(true)
+      else if (router.pathname.startsWith("/admin")) setAllowed(false);
+
+    } else setAllowed(false);
+    
+  }, [router.pathname, user])
 
   return (
-    <div className="flex flex-col min-h-[100vh] bg-blue-100">
+    <div className="flex flex-col min-h-[100vh] bg-blue-50">
       {isBrowser ? (
         <Provider>
           <NextNProgress />
           <Header />
-          <main className="my-10 min-h-[80vh]">
-            {allowed ? (
-              <Component {...pageProps} />
-            ) : (
-              <Custom404 />
-            )}
+          <main className="my-10 break-all min-h-[80vh]">
+            {allowed ? <Component {...pageProps} />
+              : <Custom404 />}
           </main>
           <Footer />
         </Provider>

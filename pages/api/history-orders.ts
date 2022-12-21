@@ -10,49 +10,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({ massage: "Bad Request" });
 
         const orders = await prisma.sale.findMany({
-            where: {
-                OR: [
-                    { verified: true },
-                    { rejected: true },
-                ]
-            },
             skip: skip,
             take: take,
             select: {
-                user: {
+                user: { select: { firstName: true, lastName: true } },
+                totalPrice: true,
+                saleProducts: {
                     select: {
-                        firstName: true,
-                        lastName: true,
-                    },
-                },
-                totalprice: true,
-                numberOfItems: true,
-                product: {
-                    select: {
-                        title: true,
-                        id: true,
+                        numberOfItems: true,
+                        product: { select: { title: true, id: true } }
                     },
                 },
                 id: true,
-                verified: true,
+                verified: true
             },
         });
 
         return res.status(200).json({ orders })
-    }
-
-
-    if (req.method === 'POST') {
-
-    }
-
-
-    if (req.method === 'DELETE') {
-
-    }
-
-
-    if (req.method === 'PATCH') {
-
     }
 };

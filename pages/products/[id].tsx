@@ -182,7 +182,9 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                         </motion.div>
                     </div>
 
-                    <p className="text-gray-800 flex text-center">{product.content}</p>
+                    <Box className="text-center text-gray-800 w-fit flex flex-col justify-center items-center">
+                        <p>{product.content}</p>
+                    </Box>
 
                     <hr className="min-h-[1px] min-w-full  bg-gradient-to-tr mt-4 from-blue-300 to-blue-600  flex" />
 

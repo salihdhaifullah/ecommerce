@@ -13,6 +13,7 @@ import moment from 'moment';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
 import Toast from '../../functions/sweetAlert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface IProductsData {
   createdAt: Date;
@@ -30,12 +31,15 @@ export default function Products() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [products, setProducts] = useState<IProductsData[]>([]);
+  const [loading, setLoading] = useState(true);
 
 
   const GetProducts = useCallback(async () => {
+    setLoading(true)
     await getProductsTable((page * rowsPerPage), rowsPerPage)
       .then((res) => { setProducts(res.data.products) })
       .catch((err) => { console.log(err) })
+    setLoading(false)
   }, [page, rowsPerPage])
 
   useEffect(() => {
@@ -70,56 +74,61 @@ export default function Products() {
   }
 
   return (
-    <div className="h-[100vh] lg:px-20 px-10 flex items-center justify-center">
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <TableCell> Created At </TableCell>
-                <TableCell> Title </TableCell>
-                <TableCell> Category </TableCell>
-                <TableCell> Likes </TableCell>
-                <TableCell> Pieces </TableCell>
-                <TableCell> Price </TableCell>
-                <TableCell> Update </TableCell>
-                <TableCell> Delete </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {products.map((row, index) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  <TableCell>{moment(row.createdAt).format("ll")}</TableCell>
-                  <Link href={`/products/${row.id}`}>
-                    <TableCell className="link text-blue-500">{row.title}</TableCell>
-                  </Link>
-                  <TableCell>{row.category.name}</TableCell>
-                  <TableCell>{row.likes.length}</TableCell>
-                  <TableCell>{row.pieces}</TableCell>
-                  <TableCell>{row.price}</TableCell>
-                  <Link href={`/admin/update-product/?id=${row.id}`}>
-                    <TableCell>
-                      <Button className="bg-green-500 shadow-md lowercase p-0 text-gray-900 shadow-green-500">Edit</Button>
-                    </TableCell>
-                  </Link>
-                  <TableCell>
-                    <Button onClick={() => handelDelete(row.id)} className="bg-red-500 shadow-md lowercase p-0 text-gray-900 shadow-red-500">Delete</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={products.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
+    <div className="h-[100vh] lg:px-20 break-keep px-4 flex items-center justify-center">
+      {loading ? <CircularProgress className="w-12 h-12" />
+        : (
+          <Paper className="w-full overflow-auto">
+            <TableContainer>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell> Created At </TableCell>
+                    <TableCell> Title </TableCell>
+                    <TableCell> Category </TableCell>
+                    <TableCell> Likes </TableCell>
+                    <TableCell> Pieces </TableCell>
+                    <TableCell> Price </TableCell>
+                    <TableCell> Update </TableCell>
+                    <TableCell> Delete </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {products.map((row, index) => (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                      <TableCell>{moment(row.createdAt).format("ll")}</TableCell>
+
+                      <TableCell className="link text-blue-500">
+                        <Link href={`/products/${row.id}`}>{row.title}</Link>
+                      </TableCell>
+
+                      <TableCell>{row.category.name}</TableCell>
+                      <TableCell>{row.likes.length}</TableCell>
+                      <TableCell>{row.pieces}</TableCell>
+                      <TableCell>{row.price}</TableCell>
+                      <TableCell>
+                        <Link href={`/admin/update-product/?id=${row.id}`}>
+                          <Button className="bg-green-500 shadow-md lowercase p-0 text-gray-900 shadow-green-500">Edit</Button>
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <Button onClick={() => handelDelete(row.id)} className="bg-red-500 shadow-md lowercase p-0 text-gray-900 shadow-red-500">Delete</Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={products.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        )}
     </div>
   );
 }

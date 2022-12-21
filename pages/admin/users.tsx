@@ -9,6 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { getUsers } from '../../api';
 import moment from 'moment';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface IUsersData {
   createdAt: Date;
@@ -21,12 +22,14 @@ export default function Users() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [users, setUsers] = useState<IUsersData[]>([]);
-
+  const [loading, setLoading] = useState(true);
 
   const GetUsers = useCallback(async () => {
+    setLoading(true)
     await getUsers((page * rowsPerPage), rowsPerPage)
-    .then((res) => { setUsers(res.data.users) })
-    .catch((err) => { console.log(err) })
+      .then((res) => { setUsers(res.data.users) })
+      .catch((err) => { console.log(err) })
+    setLoading(false)
   }, [page, rowsPerPage])
 
   useEffect(() => {
@@ -43,40 +46,43 @@ export default function Users() {
   };
 
   return (
-    <div className="h-[100vh] lg:px-20 px-10 flex items-center justify-center">
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <TableCell> Join At </TableCell>
-                <TableCell> First Name </TableCell>
-                <TableCell> Last Name </TableCell>
-                <TableCell> Email </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((row, index) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  <TableCell>{moment(row.createdAt).format("ll")}</TableCell>
-                  <TableCell>{row.firstName}</TableCell>
-                  <TableCell>{row.lastName}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={users.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
+    <div className="h-[100vh] lg:px-20 break-keep px-4 flex items-center justify-center">
+      {loading ? <CircularProgress className="w-12 h-12" />
+        : (
+          <Paper className="w-full overflow-auto">
+            <TableContainer>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell> Join At </TableCell>
+                    <TableCell> First Name </TableCell>
+                    <TableCell> Last Name </TableCell>
+                    <TableCell> Email </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {users.map((row, index) => (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                      <TableCell>{moment(row.createdAt).format("ll")}</TableCell>
+                      <TableCell>{row.firstName}</TableCell>
+                      <TableCell>{row.lastName}</TableCell>
+                      <TableCell>{row.email}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={users.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        )}
     </div>
   );
 }

@@ -37,9 +37,9 @@ export const likeProduct = async (productId: number) => await API.patch(`/like/?
 
 export const getRates = async (productId: number) => await API.get(`/rate/?id=${productId}`);
 
-export const createRate = async (productId: number, rateType: {rateType: 1 | 2 | 3 | 4 | 5}) => await API.patch(`/rate/?id=${productId}`, rateType)
+export const createRate = async (productId: number, rateType: { rateType: 1 | 2 | 3 | 4 | 5 }) => await API.patch(`/rate/?id=${productId}`, rateType)
 
-export const getCartProducts = async (productsIds: number[]) => await API.post(`/cart`, {ids: productsIds});
+export const getCartProducts = async (productsIds: number[]) => await API.post(`/cart`, { ids: productsIds });
 
 export const getHistoryOrders = async (skip: number, take: number) => await API.get(`history-orders/?skip=${skip}&take=${take}`)
 
@@ -62,3 +62,9 @@ export const rejectOrder = async (id: number) => await API.patch(`orders/?id=${i
 export const verifyOrder = async (id: number) => await API.patch(`orders/?id=${id}&verify=${true}`)
 
 export const checkoutSessions = async (data: ISale[]) => await API.post("checkout_sessions", data)
+
+export const generalSearch = async (search: string) => await API.get(`/search?search=${search}`)
+
+export const SearchByTag = async (tag: string) => await API.get(`/search?tag=${tag}`)
+
+export const SearchByCategory = async (category: string) => await API.get(`/search?category=${category}`)

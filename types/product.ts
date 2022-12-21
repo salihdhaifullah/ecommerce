@@ -10,6 +10,13 @@ export interface ICreateProduct {
     discount: number;
 }
 
+export interface IProductRow {
+    id: number;
+    discount: number;
+    price: number;
+    title: string;
+    imageUrl: string;
+}
 
 export interface IProduct {
     id: number;

@@ -3,6 +3,7 @@ import prisma from '../../libs/prisma';
 import { IProduct } from '../../types/product';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import ImageSlider from '../../components/ImageSlider';
@@ -200,7 +201,9 @@ const ProductPage = ({ product }: { product: IProduct }) => {
 
                         <div className="flex items-center justify-center w-full ">
                             {product.tags.length > 0 && product.tags.map((tag, index) => (
-                                <Chip clickable key={index} label={"#" + tag.name} className="mr-1 link" variant="outlined" />
+                                <Link key={index} href={`/search?tag=${tag.name}`}>
+                                    <Chip clickable label={"#" + tag.name} className="mr-1 link" variant="outlined" />
+                                </Link>
                             ))}
                         </div>
                     </div>
@@ -212,9 +215,11 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                             </span>
                         </p>
                         <p className="text-gray-700 ">
-                            item category <span className="text-blue-600 font-semibold text-lg">
-                                {product.category.name}
-                            </span>
+                            item category <Link href={`/search?category=${product.category.name}`}>
+                                <span className="text-blue-600 hover:underline text-xl font-semibold">
+                                    {product.category.name}
+                                </span>
+                            </Link>
                         </p>
                     </div>
                 </Box>

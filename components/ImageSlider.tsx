@@ -32,7 +32,7 @@ const ImageSlider = ({ images }: { images: string[] }) => {
         index={activeStep}
         onChangeIndex={handleStepChange}
         enableMouseEvents
-        className="max-w-[400px] max-h-[400px]"
+        className="sm:w-[400px] w-[280px] h-[280px] sm:h-[400px]"
       >
         {images.map((step, index) => (
           <div key={index} className="h-full w-full flex justify-center items-center">
@@ -40,7 +40,7 @@ const ImageSlider = ({ images }: { images: string[] }) => {
               <Image
                 width={400}
                 height={400}
-                className="h-fit w-fit max-h-[400px] block"
+                className="object-contain sm:w-[400px] w-[280px] h-[280px] sm:h-[400px] block"
                 src={step}
                 alt="slider image"
               />

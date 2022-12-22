@@ -8,6 +8,7 @@ import { generalSearch, SearchByCategory, SearchByTag } from '../api'
 import { IProductRow } from '../types/product'
 import { CircularProgress } from '@mui/material'
 import { useRouter } from 'next/router'
+import Row from '../components/Row'
 
 const handelSetData = (value: undefined | string | string[]): string => {
   let data = "";
@@ -36,12 +37,15 @@ const Search = () => {
       setIsLoading(true)
       if (search) await generalSearch(search)
         .then((res) => { setProducts(res.data.products) })
+        .catch((err) => { console.log(err) })
 
       else if (tag) await SearchByTag(tag)
         .then((res) => { setProducts(res.data.products.product) })
+        .catch((err) => { console.log(err) })
 
       else if (category) await SearchByCategory(category)
         .then((res) => { setProducts(res.data.products) })
+        .catch((err) => { console.log(err) })
     };
 
     setIsLoading(false)
@@ -64,20 +68,13 @@ const Search = () => {
       <div className="w-full min-h-[75vh] flex my-10 p-16 min-w-full justify-center items-center">
         {isLoading ? <CircularProgress /> : (
           <Grid container spacing={4}>
-            {products.length > 0 ? (
-              <Box className="gap-4 grid w-full grid-cols-1 sm:grid-cols-2 ">
-
-                {products.map((item, index) => (
-                  <div key={index} className="w-full">
-                    <RowChild index={index} item={item} />
-                  </div>
-                ))}
-              </Box>
-            ) : (
-              <div className="w-full flex items-center justify-center">
-                <Typography variant='h4' component='h1'> Sorry No Products Found </Typography>
-              </div>
-            )}
+            {products.length > 0 ?
+              <Row products={products} />
+              : (
+                <div className="w-full flex items-center justify-center">
+                  <Typography variant='h4' component='h1'> Sorry No Products Found </Typography>
+                </div>
+              )}
           </Grid>
         )}
       </div>

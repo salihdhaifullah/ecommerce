@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ICreateComment } from '../types/comment';
-import { ICreateProduct, IUpdateProduct } from '../types/product';
+import { ICreateProduct, IUpdateProduct, SortByType } from '../types/product';
 import { ISale } from '../types/sale';
 import { ILogin, ISingUp } from '../types/user'
 
@@ -21,7 +21,10 @@ export const createProduct = async (data: ICreateProduct) => await API.post("/ad
 
 export const getCategoriesAndTags = async () => await API.get("/admin/product")
 
-export const getProducts = async () => await API.get("/product")
+export const getProducts = async (skip: number, take: number, filter: string | null, sortBy: SortByType) =>
+ await API.get(`/product?sortBy=${sortBy}&skip=${skip}&take=${take}&filter=${filter}`)
+
+export const GetProductsLength = async (filter: string | null) => await API.get(`/product?filter=${filter}&get-length=${true}`)
 
 export const getComments = async (id: number) => await API.get(`/comment/?id=${id}`)
 

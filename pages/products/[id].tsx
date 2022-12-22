@@ -16,6 +16,7 @@ import { IRate } from '../../types/rate';
 import ProcessRates from '../../functions/processRates';
 import { Context } from '../../context'
 import { Box, CircularProgress, Container } from '@mui/material';
+import moment from 'moment';
 
 const ProductPage = ({ product }: { product: IProduct }) => {
     const [rate, setRate] = useState<number | null>(null);
@@ -172,6 +173,9 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                             )}
                     </div>
 
+                    <div className="w-full text-sm font-normal text-gray-600 h-fit flex justify-end py-2 items-center">
+                        <time>Created at {moment(product.createdAt).format("ll")}</time>
+                    </div>
                     <div className="flex items-center w-full flex-col relative justify-center">
 
                         <h1 className='text-2xl flex flex-col justify-center items-center text-gray-900 mb-6'>{product.title}

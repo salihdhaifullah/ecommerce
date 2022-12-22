@@ -73,3 +73,5 @@ export const SearchByTag = async (tag: string, skip: number, take: number) => aw
 export const SearchByCategory = async (category: string, skip: number, take: number) => await API.get(`/search?category=${category}&skip=${skip}&take=${take}`)
 
 export const GetSearchLength = async (type: "category" | "tag" | "search", value: string) => await API.get(`/search?${type}=${value}&get-length=${true}`)
+
+export const getStatus = async () => await API.get("/admin/dashboard/status")

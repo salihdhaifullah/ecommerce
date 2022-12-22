@@ -11,13 +11,14 @@ import useGetUser from '../hooks/useGetUser';
 import { useRouter } from 'next/router';
 import { Logout } from '../api';
 import { Context } from '../context';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const SideBar = () => {
     const [open, setOpen] = useState(false)
     const [user] = useGetUser()
     const [isAdmin, setIsAdmin] = useState(false)
     const router = useRouter()
-    
+
     const handelSearch = async (e: any) => {
         e.preventDefault()
         const search = e?.target[0]?.value;
@@ -31,7 +32,7 @@ const SideBar = () => {
     }, [user?.role])
 
     const { items } = useContext(Context);
-    
+
     const handelLogout = async () => {
         await Logout()
         localStorage.clear()
@@ -111,6 +112,12 @@ const SideBar = () => {
                                                 <Link href="/admin/history-orders" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
                                                     <HistoryOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"></HistoryOutlinedIcon>
                                                     <span className="flex-1 ml-3 whitespace-nowrap">History Payments</span>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link href="/admin/dashboard" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
+                                                    <DashboardIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"></DashboardIcon>
+                                                    <span className="flex-1 ml-3 whitespace-nowrap">Dashboard</span>
                                                 </Link>
                                             </li>
                                         </>

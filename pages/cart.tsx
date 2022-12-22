@@ -12,6 +12,8 @@ import getStripe from '../libs/stripe'
 import { Context } from '../context'
 import { useRouter } from 'next/router'
 import ThankYou from '../components/ThankYou'
+import Toast from '../functions/sweetAlert'
+import Swal from 'sweetalert2'
 
 const Cart = () => {
     const [productsIds] = useGetProductsIds()
@@ -48,7 +50,7 @@ const Cart = () => {
 
     const HandelSuccess = useCallback(() => {
         if (router.query.success) {
-            for (let productId of productsIds) { 
+            for (let productId of productsIds) {
                 localStorage.removeItem("product id " + productId)
                 removeItem()
             }
@@ -69,9 +71,21 @@ const Cart = () => {
             data.push({ productId: item.id, quantity: item.quantity })
         }
 
-        const response = await checkoutSessions(data)
-        const stripe = await getStripe()
-        await stripe!.redirectToCheckout({ sessionId: response.data.id })
+        await checkoutSessions(data).then(async (response) => {
+            const stripe = await getStripe()
+            await stripe!.redirectToCheckout({ sessionId: response.data.id })
+        })
+            .catch(() => {
+                Swal.fire({
+                    title: "You Have To Login To Make This Payment",
+                    icon: "error",
+                    showCancelButton: true,
+                    showConfirmButton: true
+                })
+                    .then(async (res) => { if (res.value) router.push("/sing-up") })
+            })
+
+
     }
 
 

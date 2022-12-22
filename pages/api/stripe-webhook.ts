@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const signature = req.headers["stripe-signature"] as string;
     const signingSecret = process.env.STRIPE_SIGNING_SECRET || "whsec_95c1cb8bf8a555cca91e8571ab37880133586d6369cc0e9c3e8681c4c0993e1c";
     const reqBuffer = await buffer(req);
-
+    
     try {
         const event = stripe.webhooks.constructEvent(reqBuffer, signature, signingSecret);
 

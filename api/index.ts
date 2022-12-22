@@ -66,8 +66,10 @@ export const verifyOrder = async (id: number) => await API.patch(`orders/?id=${i
 
 export const checkoutSessions = async (data: ISale[]) => await API.post("checkout_sessions", data)
 
-export const generalSearch = async (search: string) => await API.get(`/search?search=${search}`)
+export const generalSearch = async (search: string, skip: number, take: number) => await API.get(`/search?search=${search}&skip=${skip}&take=${take}`)
 
-export const SearchByTag = async (tag: string) => await API.get(`/search?tag=${tag}`)
+export const SearchByTag = async (tag: string, skip: number, take: number) => await API.get(`/search?tag=${tag}&skip=${skip}&take=${take}`)
 
-export const SearchByCategory = async (category: string) => await API.get(`/search?category=${category}`)
+export const SearchByCategory = async (category: string, skip: number, take: number) => await API.get(`/search?category=${category}&skip=${skip}&take=${take}`)
+
+export const GetSearchLength = async (type: "category" | "tag" | "search", value: string) => await API.get(`/search?${type}=${value}&get-length=${true}`)

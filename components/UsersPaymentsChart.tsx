@@ -9,7 +9,7 @@ const UsersPaymentsChart = () => {
     labels: ['Payers', 'none Payers'],
     datasets: [
       {
-        label: '# of Users',
+        label: 'of Users',
         data: [9, 35],
         backgroundColor: [
           'rgb(255, 99, 132)',

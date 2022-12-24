@@ -3,6 +3,7 @@ import { ICreateComment } from '../types/comment';
 import { ICreateProduct, IUpdateProduct, SortByType } from '../types/product';
 import { ISale } from '../types/sale';
 import { ILogin, ISingUp } from '../types/user'
+import { ICreateFeedback } from '../types/rate';
 
 let baseURL = 'http://localhost:3000/api'
 let ISSERVER = typeof window === "undefined";
@@ -26,43 +27,23 @@ export const getProducts = async (skip: number, take: number, filter: string | n
 
 export const GetProductsLength = async (filter: string | null) => await API.get(`/product?filter=${filter}&get-length=${true}`)
 
-export const getComments = async (id: number) => await API.get(`/comment/?id=${id}`)
-
-export const createComment = async (id: number, data: ICreateComment) => await API.post(`/comment/?id=${id}`, data)
-
-export const deleteComment = async (productId: number, commentId: number) => await API.delete(`/comment/?id=${productId}&commentId=${commentId}`);
-
-export const updateComment = async (productId: number, commentId: number, data: ICreateComment) => await API.patch(`/comment/?id=${productId}&commentId=${commentId}`, data);
-
 export const getLikes = async (productId: number) => await API.get(`/like/?id=${productId}`);
 
 export const likeProduct = async (productId: number) => await API.patch(`/like/?id=${productId}`);
-
-export const getFeedBacks = async (productId: number) => await API.get(`/rate/?id=${productId}`);
-
-export const createFeedBack = async (productId: number, rateType: { rateType: 1 | 2 | 3 | 4 | 5 }) => await API.patch(`/rate/?id=${productId}`, rateType)
 
 export const getCartProducts = async (productsIds: number[]) => await API.post(`/cart`, { ids: productsIds });
 
 export const getHistoryOrders = async (skip: number, take: number) => await API.get(`history-orders/?skip=${skip}&take=${take}`)
 
-export const getOrders = async (skip: number, take: number) => await API.get(`orders/?skip=${skip}&take=${take}`)
-
 export const getProductsTable = async (skip: number, take: number) => await API.get(`products/?skip=${skip}&take=${take}`)
 
 export const getUsers = async (skip: number, take: number) => await API.get(`users/?skip=${skip}&take=${take}`)
-
-export const getOrdersLength = async () => await API.get("get-orders-length");
 
 export const getProductToUpdate = async (id: number) => await API.get(`admin/product?id=${id}`)
 
 export const deleteProduct = async (id: number) => await API.delete(`admin/product?id=${id}`)
 
 export const updateProduct = async (id: number, data: IUpdateProduct) => await API.patch(`admin/product?id=${id}`, data)
-
-export const rejectOrder = async (id: number) => await API.patch(`orders/?id=${id}&reject=${true}`)
-
-export const verifyOrder = async (id: number) => await API.patch(`orders/?id=${id}&verify=${true}`)
 
 export const checkoutSessions = async (data: ISale[]) => await API.post("checkout_sessions", data)
 
@@ -77,3 +58,13 @@ export const GetSearchLength = async (type: "category" | "tag" | "search", value
 export const getStatus = async () => await API.get("/admin/dashboard/status")
 
 export const getUsersPayers = async () => await API.get("/admin/dashboard/users-payments-chart")
+
+export const getProductsAverageRate = async () => await API.get("/admin/dashboard/products-rate")
+
+export const getFeedBacks = async (productId: number) => await API.get(`/rate/?id=${productId}`);
+
+export const createFeedBack = async (productId: number, data: ICreateFeedback) => await API.post(`/feed-back/?id=${productId}`, data)
+
+export const updateFeedBack = async (feedBackId: number, data: ICreateFeedback) => await API.patch(`/feed-back/?id=${feedBackId}`, data)
+
+export const deleteFeedBack = async (feedBackId: number) => await API.delete(`/feed-back/?id=${feedBackId}`)

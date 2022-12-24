@@ -14,7 +14,6 @@ import Comments from '../../components/FeedBacks';
 import { createFeedBack, getLikes, getFeedBacks, likeProduct } from '../../api';
 import useGetUser from '../../hooks/useGetUser';
 import { IRate } from '../../types/rate';
-import ProcessRates from '../../functions/processRates';
 import { Context } from '../../context'
 import { Box, CircularProgress, Container } from '@mui/material';
 import moment from 'moment';
@@ -32,10 +31,6 @@ const ProductPage = ({ product }: { product: IProduct }) => {
         if (user && likes.length > 0 && likes.find((item) => item.userId === user.id)) setIsLikedByUser(true)
         else setIsLikedByUser(false)
     }, [likes, user])
-
-    const processRatesFunction = useCallback(() => {
-        setRate(ProcessRates(rates))
-    }, [rates])
 
     const GetLikes = useCallback(async () => {
         await getLikes(product.id)

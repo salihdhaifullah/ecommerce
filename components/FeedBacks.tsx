@@ -1,13 +1,13 @@
 import React, { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion';
-import Comment from './Comment';
+import Comment from './FeedBack';
 import { CircularProgress } from '@mui/material';
 import { IComment, ICreateComment } from '../types/comment';
 import { createComment, deleteComment, getComments, updateComment } from '../api';
 
 
 
-const Comments = ({ id }: { id: number }) => {
+const FeedBacks = ({ id }: { id: number }) => {
     const [comment, setComment] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [isUpdateById, setIsUpdateById] = useState<number | null>(null)
@@ -116,4 +116,4 @@ const Comments = ({ id }: { id: number }) => {
     )
 }
 
-export default Comments;
+export default FeedBacks;

@@ -4,7 +4,7 @@ import prisma from '../../../../libs/prisma';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     if (req.method === 'GET') {
-        const sales = prisma.sale.count()
+        const sales = prisma.sale.count({ where: { verified: true } })
         const total = prisma.sale.aggregate({ _sum: { totalPrice: true } })
         const users = prisma.user.count()
 

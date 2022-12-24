@@ -38,9 +38,9 @@ export const getLikes = async (productId: number) => await API.get(`/like/?id=${
 
 export const likeProduct = async (productId: number) => await API.patch(`/like/?id=${productId}`);
 
-export const getRates = async (productId: number) => await API.get(`/rate/?id=${productId}`);
+export const getFeedBacks = async (productId: number) => await API.get(`/rate/?id=${productId}`);
 
-export const createRate = async (productId: number, rateType: { rateType: 1 | 2 | 3 | 4 | 5 }) => await API.patch(`/rate/?id=${productId}`, rateType)
+export const createFeedBack = async (productId: number, rateType: { rateType: 1 | 2 | 3 | 4 | 5 }) => await API.patch(`/rate/?id=${productId}`, rateType)
 
 export const getCartProducts = async (productsIds: number[]) => await API.post(`/cart`, { ids: productsIds });
 
@@ -75,3 +75,5 @@ export const SearchByCategory = async (category: string, skip: number, take: num
 export const GetSearchLength = async (type: "category" | "tag" | "search", value: string) => await API.get(`/search?${type}=${value}&get-length=${true}`)
 
 export const getStatus = async () => await API.get("/admin/dashboard/status")
+
+export const getUsersPayers = async () => await API.get("/admin/dashboard/users-payments-chart")

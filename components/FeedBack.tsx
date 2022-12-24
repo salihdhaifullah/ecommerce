@@ -13,7 +13,7 @@ interface ICommentProps {
     setIsUpdateById: (commentId: number | null) => void;
 }
 
-const Comment = ({ item, handelDelete, setIsUpdateById }: ICommentProps) => {
+const FeedBack = ({ item, handelDelete, setIsUpdateById }: ICommentProps) => {
     const [isVisible, setIsVisible] = useState(false)
     const [user, setUser] = useState<IUser | null>(null)
 
@@ -65,4 +65,4 @@ const Comment = ({ item, handelDelete, setIsUpdateById }: ICommentProps) => {
     )
 }
 
-export default Comment;
+export default FeedBack;

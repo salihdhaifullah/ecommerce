@@ -16,8 +16,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 firstName: true,
                 lastName: true,
                 email: true,
-                createdAt: true
-            },
+                createdAt: true,
+                payment: { select: { totalPrice: true } }
+            }
         });
 
         return res.status(200).json({ users })

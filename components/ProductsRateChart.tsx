@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { getUsersPayers } from '../api';
 
-const UsersPaymentsChart = () => {
+const ProductsRateChart = () => {
 
   const [data, setData] = useState({
     labels: ['Payers', 'none Payers'],
@@ -40,4 +40,4 @@ const UsersPaymentsChart = () => {
     </div>
   )
 }
-export default UsersPaymentsChart;
+export default ProductsRateChart;

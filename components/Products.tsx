@@ -76,7 +76,7 @@ const Products = () => {
   }
 
   return (
-    <div className="h-[100vh] lg:px-20 break-keep px-4 flex flex-col items-center justify-center">
+    <div className="h-[100vh] lg:px-20 whitespace-nowrap px-4 flex flex-col items-center justify-center">
        <Box className="my-20 text-start">
        <Typography variant="h3" className="text-gray-900 font-bold">Products </Typography>
        </Box>

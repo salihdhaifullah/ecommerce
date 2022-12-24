@@ -34,26 +34,28 @@ model Product {
   images          String[]
   imageUrl        String
   tags            Tag[]
-  comments        Comment[]
+  feedBacks       FeedBack[]
+  likes           Likes[]
+  saleProduct     SaleProduct[]
   category        Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId      Int
   createdAt       DateTime      @default(now())
-  likes           Likes[]
-  saleProduct     SaleProduct[]
   discount        Float
-  rates           Rate[]
   price           Decimal
   pieces          Decimal
   stripeProductId String
   stripePriceId   String
 }
 
-model Rate {
+model FeedBack {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int     
   userId    Int
-  rate      RateType
+  @@unique([productId, userId])
+  rate      Int
+  content   String
 }
 
 model Sale {
@@ -83,32 +85,14 @@ model User {
   lastName  String
   firstName String
   password  String
-  comments  Comment[]
   role      Roles     @default(USER)
   payment   Sale[]
   likes     Likes[]
+  isPayUse Boolean @default(false)
 }
 
-model Comment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    Int
-  productId Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-}
 
 enum Roles {
   ADMIN
   USER
-}
-
-enum RateType {
-  star1
-  star2
-  star3
-  star4
-  star5
 }

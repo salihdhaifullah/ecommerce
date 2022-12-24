@@ -9,8 +9,9 @@ import AddTaskIcon from '@mui/icons-material/AddTask';
 import ImageSlider from '../../components/ImageSlider';
 import Rating from '@mui/material/Rating'
 import Chip from '@mui/material/Chip'
-import Comments from '../../components/Comments';
-import { createRate, getLikes, getRates, likeProduct } from '../../api';
+import Button from '@mui/material/Button'
+import Comments from '../../components/FeedBacks';
+import { createFeedBack, getLikes, getFeedBacks, likeProduct } from '../../api';
 import useGetUser from '../../hooks/useGetUser';
 import { IRate } from '../../types/rate';
 import ProcessRates from '../../functions/processRates';
@@ -92,9 +93,9 @@ const ProductPage = ({ product }: { product: IProduct }) => {
         setIsLoadingLike(false)
     }
 
-    const handelCreateRate = async (rate: number | null) => {
+    const handelCreateFeedBack = async (rate: number | null) => {
         if (typeof rate !== 'number') return;
-        await createRate(product.id, { rateType: rate as 2 | 1 | 3 | 4 | 5 })
+        await createFeedBack(product.id, { rateType: rate as 2 | 1 | 3 | 4 | 5 })
             .then((res) => { console.log(res) })
             .catch((err) => { console.log(err) })
         await GetRates()
@@ -107,9 +108,9 @@ const ProductPage = ({ product }: { product: IProduct }) => {
 
     return (
         <Container className="flex flex-col w-full h-full min-h-[100vh]">
-            <Container className="w-full sm:px-10 px-4 my-20 h-full flex-wrap flex md:flex-nowrap gap-10">
+            <Container className="w-full sm:px-10 px-4 my-20 h-full flex-wrap flex lg:flex-nowrap gap-10">
 
-                <Box className="flex flex-col relative p-10 w-full justify-center shadow-lg bg-white items-center ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
+                <Box className="flex min-w-[55%] flex-col relative p-10 w-full justify-center shadow-lg bg-white items-center ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
 
                     <div className="flex items-center justify-between mr-3 w-full">
 
@@ -201,6 +202,9 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                                 onChange={(event, newValue) => handelRateChange(newValue)}
                             />
                             <p>votes: {rates.length}</p>
+                            <Button className="bg-gradient-to-tr text-gray-800 font-semibold from-blue-300 to-blue-700">
+                                Give A FeedBack 
+                            </Button>
                         </div>
 
                         <div className="flex items-center justify-center w-full ">

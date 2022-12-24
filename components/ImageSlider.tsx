@@ -27,12 +27,12 @@ const ImageSlider = ({ images }: { images: string[] }) => {
   };
 
   return (
-    <Box className="bg-white flex-col flex shadow-lg rounded-md border h-fit p-4">
+    <Box className="bg-white flex-col flex shadow-lg rounded-md border max-h-[500px] h-fit p-4">
       <AutoPlaySwipeableViews
         index={activeStep}
         onChangeIndex={handleStepChange}
         enableMouseEvents
-        className="sm:w-[400px] w-[280px] h-[280px] sm:h-[400px]"
+        className="w-full"
       >
         {images.map((step, index) => (
           <div key={index} className="h-full w-full flex justify-center items-center">
@@ -40,7 +40,7 @@ const ImageSlider = ({ images }: { images: string[] }) => {
               <Image
                 width={400}
                 height={400}
-                className="object-contain sm:w-[400px] w-[280px] h-[280px] sm:h-[400px] block"
+                className="object-contain max-h-[400px] max-w-[400px] h-full w-full block"
                 src={step}
                 alt="slider image"
               />

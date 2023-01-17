@@ -1,29 +1,24 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import prisma from '../../libs/prisma';
-import { IProduct } from '../../types/product';
+import prisma from '../../src/libs/prisma'
+import { IProduct } from '../../src/types/product';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import AddTaskIcon from '@mui/icons-material/AddTask';
-import ImageSlider from '../../components/ImageSlider';
-import Rating from '@mui/material/Rating'
+import ImageSlider from '../../src/components/ImageSlider';
 import Chip from '@mui/material/Chip'
-import Button from '@mui/material/Button'
-import Comments from '../../components/FeedBacks';
-import { createFeedBack, getLikes, getFeedBacks, likeProduct } from '../../api';
-import useGetUser from '../../hooks/useGetUser';
-import { IRate } from '../../types/rate';
-import { Context } from '../../context'
+import { createFeedBack, getLikes, getFeedBacks, likeProduct } from '../../src/api';
+import useGetUser from '../../src/hooks/useGetUser';
+import { Context } from '../../src/context'
 import { Box, CircularProgress, Container } from '@mui/material';
 import moment from 'moment';
+import FeedBacks from '../../src/components/FeedBacks';
 
 const ProductPage = ({ product }: { product: IProduct }) => {
-    const [rate, setRate] = useState<number | null>(null);
     const [isFound, setIsFound] = useState(false);
     const [isLikedByUser, setIsLikedByUser] = useState(false)
     const [likes, setLikes] = useState<{ userId: number }[]>([])
-    const [rates, setRates] = useState<IRate[]>([])
     const [user] = useGetUser()
     const [isLoadingLike, setIsLoadingLike] = useState(false)
 
@@ -38,16 +33,9 @@ const ProductPage = ({ product }: { product: IProduct }) => {
             .catch((err) => { console.log(err) });
     }, [product.id])
 
-    const GetRates = useCallback(async () => {
-        await getRates(product.id)
-            .then((res) => { setRates(res.data.rates) })
-            .catch((err) => { console.log(err) });
-    }, [product.id])
-
     const init = useCallback(async () => {
         await GetLikes()
-        await GetRates()
-    }, [GetLikes, GetRates])
+    }, [GetLikes])
 
     useEffect(() => {
         init()
@@ -56,10 +44,6 @@ const ProductPage = ({ product }: { product: IProduct }) => {
     useEffect(() => {
         isLikedByUserFunction()
     }, [isLikedByUserFunction])
-
-    useEffect(() => {
-        processRatesFunction()
-    }, [processRatesFunction])
 
     useEffect(() => {
         setIsFound(Boolean(localStorage.getItem(`product id ${product.id}`)))
@@ -88,18 +72,45 @@ const ProductPage = ({ product }: { product: IProduct }) => {
         setIsLoadingLike(false)
     }
 
-    const handelCreateFeedBack = async (rate: number | null) => {
-        if (typeof rate !== 'number') return;
-        await createFeedBack(product.id, { rateType: rate as 2 | 1 | 3 | 4 | 5 })
-            .then((res) => { console.log(res) })
-            .catch((err) => { console.log(err) })
-        await GetRates()
+    function diagonalDifference(arr: number[][]): number {
+        let sumLtoR = 0;
+        let sumRtoL = 0;
+
+        let LtoR_Position = [0, 0]
+        let RtoL_Position = [(arr[0].length - 1), 0]
+
+        for (let i = 0; i < arr.length; i++) {
+            sumLtoR += arr[LtoR_Position[0]][LtoR_Position[1]]
+            sumRtoL += arr[RtoL_Position[0]][RtoL_Position[1]]
+            LtoR_Position[0] += 1
+            LtoR_Position[1] += 1
+            RtoL_Position[0] -= 1
+            RtoL_Position[1] += 1
+        }
+
+        if (sumLtoR > sumRtoL) return (sumLtoR - sumRtoL)
+        else return (sumRtoL - sumLtoR);
     }
 
-    const handelRateChange = (rate: number | null) => {
-        setRate(rate)
-        handelCreateRate(rate)
+    function staircase(n: number): void {
+        let string = ``
+        let i = 1;
+
+        while (n > 0) {
+            if (n === 1) string += `${' '.repeat(n - 1)}${'#'.repeat(i)}`
+            else string += `${' '.repeat(n - 1)}${'#'.repeat(i)}\n`
+            n--
+            i++
+        }
+
+        console.log(string)
     }
+
+
+
+    useEffect(() => {
+        staircase(6)
+    }, [])
 
     return (
         <Container className="flex flex-col w-full h-full min-h-[100vh]">
@@ -148,18 +159,14 @@ const ProductPage = ({ product }: { product: IProduct }) => {
 
                         {product.discount !== 0 ?
                             (
-                                <>
-                                    <div className="flex justify-between items-center gap-8 flex-col">
-                                        <p className='text-lg text-gray-100 font-semibold flex-row flex'>
-                                            <span className='text-sm text-blue-600'>$</span>
-                                            <span className="line-through mr-3">
-                                                {product.price}
-                                            </span>
-                                            <span className='text-sm text-blue-600'>$</span>
-                                            {Number(product.price - (product.price * product.discount)).toFixed(2)}
-                                        </p>
-                                    </div>
-                                </>
+                                <div className="flex justify-between items-center gap-8 flex-col">
+                                    <p className='text-lg text-gray-100 font-semibold flex-row flex'>
+                                        <span className='text-sm text-blue-600'>$</span>
+                                        <span className="line-through mr-3"> {product.price} </span>
+                                        <span className='text-sm text-blue-600'>$</span>
+                                        {Number(product.price - (product.price * product.discount)).toFixed(2)}
+                                    </p>
+                                </div>
                             ) : (
                                 <div className="flex justify-between items-center gap-8">
                                     <p className='text-lg text-gray-100 font-semibold flex-row flex'>
@@ -189,19 +196,7 @@ const ProductPage = ({ product }: { product: IProduct }) => {
 
                     <hr className="min-h-[1px] min-w-full  bg-gradient-to-tr mt-4 from-blue-300 to-blue-600  flex" />
 
-                    <div className="w-full flex flex-col mb-6 justify-between items-center">
-                        <div className="w-full gap-4 my-6 flex-row flex justify-center items-center">
-                            <Rating
-                                name="rate"
-                                value={rate}
-                                onChange={(event, newValue) => handelRateChange(newValue)}
-                            />
-                            <p>votes: {rates.length}</p>
-                            <Button className="bg-gradient-to-tr text-gray-800 font-semibold from-blue-300 to-blue-700">
-                                Give A FeedBack 
-                            </Button>
-                        </div>
-
+                    <div className="w-full flex flex-col mb-6 justify-center items-center">
                         <div className="flex items-center justify-center w-full ">
                             {product.tags.length > 0 && product.tags.map((tag, index) => (
                                 <Link key={index} href={`/search?tag=${tag.name}`}>
@@ -234,7 +229,8 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                 ) : null}
             </Container>
 
-            <Comments id={product.id} />
+            <FeedBacks productId={product.id} />
+
         </Container>
     )
 }

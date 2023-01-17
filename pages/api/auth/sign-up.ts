@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { genSaltSync, hashSync } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { setCookie } from 'cookies-next';
-import { ISingUp } from '../../../types/user';
+import { ISingUp } from '../../../src/types/user';
 import prisma from '../../../libs/prisma/index';
 
 
@@ -23,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             const salt = genSaltSync(10);
 
             const hashPassword = hashSync(password, salt)
-            
+
             const UserData = await prisma.user.create({
                 data: {
                     firstName: firstName,
@@ -63,7 +63,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         } catch (error) {
             return res.status(500).json({ massage: 'server error' })
         }
-        
+
     }
 }
 

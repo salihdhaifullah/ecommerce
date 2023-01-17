@@ -51,11 +51,13 @@ model FeedBack {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int     
+  productId Int
   userId    Int
-  @@unique([productId, userId])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   rate      Int
   content   String
+
+  @@unique([productId, userId])
 }
 
 model Sale {
@@ -79,18 +81,18 @@ model SaleProduct {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  createdAt DateTime  @default(now())
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  createdAt DateTime   @default(now())
   lastName  String
   firstName String
   password  String
-  role      Roles     @default(USER)
+  role      Roles      @default(USER)
   payment   Sale[]
   likes     Likes[]
-  isPayUse Boolean @default(false)
+  isPayUse  Boolean    @default(false)
+  FeedBack  FeedBack[]
 }
-
 
 enum Roles {
   ADMIN

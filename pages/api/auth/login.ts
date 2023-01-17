@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { compareSync } from 'bcryptjs';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { setCookie } from 'cookies-next';
-import { ILogin } from '../../../types/user';
+import { ILogin } from '../../../src/types/user';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
@@ -14,11 +14,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             if (!UserData) return res.status(400).json({ error: `user with this email ${email} dose not exist` })
 
-            if (!(password.length > 6) && !UserData.password && !(email.length > 8)) 
+            if (!(password.length > 6) && !UserData.password && !(email.length > 8))
             return res.status(400).json({ error: 'unValid Fields' });
 
             const isMatch = compareSync(password, UserData.password)
-            
+
             if (!isMatch) return res.status(400).json({ error: `password is incorrect` })
 
             const fullYear = 1000 * 60 * 60 * 24 * 365;
@@ -49,7 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         } catch (error) {
             return res.status(500).json({ massage: 'server error', error });
-        } 
+        }
 
     };
 }

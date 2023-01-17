@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import stripe from '../../../libs/stripe/api'
 import Stripe from 'stripe'
-import { ISale } from '../../../types/sale'
+import { ISale } from '../../../src/types/sale'
 import GetUserIdAndRoleMiddleware from '../../../middleware'
 import prisma from '../../../libs/prisma'
 

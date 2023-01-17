@@ -1,8 +1,8 @@
-import Status from '../../components/Status';
-import Products from '../../components/Products';
-import UsersPaymentsChart from '../../components/UsersPaymentsChart';
-import Users from '../../components/Users';
-import ProductsRateChart from '../../components/ProductsRateChart';
+import Status from '../../src/components/Status';
+import Products from '../../src/components/Products';
+import UsersPaymentsChart from '../../src/components/UsersPaymentsChart';
+import Users from '../../src/components/Users';
+import ProductsRateChart from '../../src/components/ProductsRateChart';
 
 const Dashboard = () => {
   return (

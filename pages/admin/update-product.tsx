@@ -7,10 +7,10 @@ import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
 import { createFilterOptions } from '@mui/material/Autocomplete';
-import { getCategoriesAndTags, getProductToUpdate, updateProduct } from '../../api';
+import { getCategoriesAndTags, getProductToUpdate, updateProduct } from '../../src/api';
 import Swal from 'sweetalert2';
 import CircularProgress from '@mui/material/CircularProgress';
-import { IUpdateProduct } from '../../types/product';
+import { IUpdateProduct } from '../../src/types/product';
 import { useRouter } from 'next/router';
 import Toast from '../../functions/sweetAlert';
 

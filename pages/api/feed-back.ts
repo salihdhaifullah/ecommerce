@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../libs/prisma';
 import GetUserIdAndRoleMiddleware from '../../middleware';
-import { ICreateFeedback } from '../../types/rate';
+import { ICreateFeedback } from '../../src/types/feedBack';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -11,7 +11,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const productFeedBack = await prisma.product.findFirst({
             where: { id: productId },
-            select: { feedBacks: { select: { rate: true, userId: true, productId: true, content: true, createdAt: true, id: true } } }
+            select: {
+                feedBacks: {
+                    select: {
+                        rate: true,
+                        user: { select: { firstName: true, lastName: true } },
+                        userId: true,
+                        productId: true,
+                        content: true,
+                        createdAt: true,
+                        id: true
+                    }
+                }
+            }
         });
 
         return res.status(200).json({ feedBack: productFeedBack })
@@ -41,7 +53,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 product: { connect: { id: productId } },
                 content: data.content
             },
-            select: { rate: true, userId: true, productId: true, content: true, createdAt: true, id: true }
+            select: {
+                rate: true,
+                user: { select: { firstName: true, lastName: true } },
+                userId: true,
+                productId: true,
+                content: true,
+                createdAt: true,
+                id: true
+            }
         })
 
         return res.status(200).json({ massage: "Success", data: endData })
@@ -57,11 +77,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (error || !userId) return res.status(400).json({ massage: "No user Found" });
         if (!data.content) return res.status(400).json({ massage: "No Content Found" });
 
-        const isFound = await prisma.feedBack.findUnique({ where: { id: FeedBackId}, select: { id: true, userId: true } });
+        const isFound = await prisma.feedBack.findUnique({ where: { id: FeedBackId }, select: { id: true, userId: true } });
 
         if (!isFound?.id) return res.status(404).json({ massage: "Feedback Not Found" });
         if (isFound.userId !== userId) return res.status(403).json({ massage: "unAuthorized To Do This action" });
- 
+
         const endData = await prisma.feedBack.update({
             where: { id: FeedBackId },
             data: {
@@ -69,7 +89,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 userId: userId,
                 content: data.content
             },
-            select: { rate: true, userId: true, productId: true, content: true, createdAt: true, id: true }
+            select: {
+                rate: true,
+                user: { select: { firstName: true, lastName: true } },
+                userId: true,
+                productId: true,
+                content: true,
+                createdAt: true,
+                id: true
+            }
         })
 
         return res.status(200).json({ massage: "Success Updating FeedBack", data: endData })
@@ -82,11 +110,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (typeof FeedBackId !== 'number') return res.status(400).json({ massage: "Product Not Found" });
         if (error || !userId) return res.status(400).json({ massage: "No user Found" });
 
-        const isFound = await prisma.feedBack.findUnique({ where: { id: FeedBackId}, select: { id: true, userId: true } });
+        const isFound = await prisma.feedBack.findUnique({ where: { id: FeedBackId }, select: { id: true, userId: true } });
 
         if (!isFound?.id) return res.status(404).json({ massage: "Feedback Not Found" });
         if (isFound.userId !== userId) return res.status(403).json({ massage: "unAuthorized To Do This action" });
- 
+
         const endData = await prisma.feedBack.delete({ where: { id: FeedBackId } })
 
         return res.status(200).json({ massage: "Success Deleting FeedBack", data: endData })

@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { ICreateComment } from '../types/comment';
 import { ICreateProduct, IUpdateProduct, SortByType } from '../types/product';
 import { ISale } from '../types/sale';
 import { ILogin, ISingUp } from '../types/user'
-import { ICreateFeedback } from '../types/rate';
+import { ICreateFeedback } from '../types/feedBack';
 
 let baseURL = 'http://localhost:3000/api'
 let ISSERVER = typeof window === "undefined";
@@ -61,7 +60,9 @@ export const getUsersPayers = async () => await API.get("/admin/dashboard/users-
 
 export const getProductsAverageRate = async () => await API.get("/admin/dashboard/products-rate")
 
-export const getFeedBacks = async (productId: number) => await API.get(`/rate/?id=${productId}`);
+export const getRates = async (productId: number) => await API.get(`/rate/?id=${productId}`);
+
+export const getFeedBacks = async (productId: number) => await API.get(`/feed-back/?id=${productId}`);
 
 export const createFeedBack = async (productId: number, data: ICreateFeedback) => await API.post(`/feed-back/?id=${productId}`, data)
 

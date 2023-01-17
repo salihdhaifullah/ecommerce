@@ -1,6 +1,6 @@
 import Head from 'next/head'
-import Row from '../../components/Row';
-import { getProducts, getCategoriesAndTags, GetProductsLength } from '../../api';
+import Row from '../../src/components/Row';
+import { getProducts, getCategoriesAndTags, GetProductsLength } from '../../src/api';
 import { useCallback, useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -11,7 +11,7 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import NavigateNextOutlinedIcon from '@mui/icons-material/NavigateNextOutlined';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import { SortByType } from '../../types/product';
+import { SortByType } from '../../src/types/product';
 
 interface IProduct {
   id: number;

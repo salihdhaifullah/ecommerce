@@ -3,7 +3,7 @@ import prisma from '../../../libs/prisma';
 import stripe from '../../../libs/stripe/api';
 import Storage from '../../../libs/supabase';
 import GetUserIdAndRoleMiddleware from '../../../middleware';
-import { ICreateProduct, IUpdateProduct } from '../../../types/product';
+import { ICreateProduct, IUpdateProduct } from '../../../src/types/product';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -86,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!validation) return res.status(400).json({ massage: "Invalid Data" });
 
-    // Start UpdateIng Process 
+    // Start UpdateIng Process
 
     const TagsQuery = [];
 
@@ -144,7 +144,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!validation) return res.status(400).json({ massage: "Invalid Data" });
 
-    // start Creating Process 
+    // start Creating Process
 
     const TagsQuery = [];
     const storage = new Storage;

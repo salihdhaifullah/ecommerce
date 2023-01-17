@@ -11,9 +11,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { NextPage } from 'next';
-import { ILogin } from '../types/user';
+import { ILogin } from '../src/types/user';
 import Swal from 'sweetalert2';
-import { login } from '../api';
+import { login } from '../src/api';
 import CircularProgress from '@mui/material/CircularProgress'
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';

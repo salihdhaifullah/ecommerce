@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../libs/prisma';
-import { SortByType } from '../../types/product';
+import { SortByType } from '../../src/types/product';
 
 
 type TFilterQuery =  { pieces: { gt: number }, category: { name: { contains: string, mode: 'insensitive' } } } | { pieces: { gt: number } }

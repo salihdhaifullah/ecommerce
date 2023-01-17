@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
-import { deleteProduct, getProductsTable } from '../../api';
+import { deleteProduct, getProductsTable } from '../../src/api';
 import moment from 'moment';
 import Link from 'next/link';
 import Swal from 'sweetalert2';

@@ -7,8 +7,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { getHistoryOrders } from '../../api';
-import Details from '../../components/Details';
+import { getHistoryOrders } from '../../src/api';
+import Details from '../../src/components/Details';
 import  CircularProgress  from '@mui/material/CircularProgress';
 
 interface IHistoryOrdersOrderData {

@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { getUsers } from '../../api';
+import { getUsers } from '../../src/api';
 import moment from 'moment';
 import CircularProgress from '@mui/material/CircularProgress';
 

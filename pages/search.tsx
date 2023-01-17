@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import Head from 'next/head'
-import RowChild from '../components/RowChild'
+import RowChild from '../src/components/RowChild'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
-import { generalSearch, GetSearchLength, SearchByCategory, SearchByTag } from '../api'
-import { IProductRow } from '../types/product'
+import { generalSearch, GetSearchLength, SearchByCategory, SearchByTag } from '../src/api'
+import { IProductRow } from '../src/types/product'
 import { CircularProgress } from '@mui/material'
 import { useRouter } from 'next/router'
-import Row from '../components/Row'
+import Row from '../src/components/Row'
 import NavigateNextOutlinedIcon from '@mui/icons-material/NavigateNextOutlined';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
@@ -42,7 +42,7 @@ const Search = () => {
           setProductsPages(pages)
         })
         .catch((err) => { console.error(err) });
-    } 
+    }
     else if (tag) {
       await GetSearchLength("tag", tag)
         .then((res) => {
@@ -51,7 +51,7 @@ const Search = () => {
           setProductsPages(pages)
         })
         .catch((err) => { console.error(err) });
-    } 
+    }
     else if (category) {
       await GetSearchLength("category", category)
         .then((res) => {

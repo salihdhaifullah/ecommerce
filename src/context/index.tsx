@@ -13,7 +13,7 @@ export const Context = createContext(
     removeItem: () => { },
     getCartItems: () => { },
     insertCartItem: (cartItem: ICartItems) => { },
-    deleteCartItem: (id: number) => { } 
+    deleteCartItem: (id: number) => { }
   }
 );
 
@@ -29,7 +29,7 @@ export default function Provider({ children }: { children: ReactNode }) {
     removeItem: () => { },
     getCartItems: () => { },
     insertCartItem: (cartItem: ICartItems) => { },
-    deleteCartItem: (id: number) => { } 
+    deleteCartItem: (id: number) => { }
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);

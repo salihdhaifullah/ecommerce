@@ -1,9 +1,9 @@
 import type { AppProps } from 'next/app';
 import NextNProgress from 'nextjs-progressbar';
 import { useState, useEffect } from 'react';
-import Provider from '../context';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Provider from '../src/context';
+import Header from '../src/components/Header';
+import Footer from '../src/components/Footer';
 import '../styles/globals.css';
 
 export default function App({ Component, pageProps }: AppProps) {

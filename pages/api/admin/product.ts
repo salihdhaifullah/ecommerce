@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../../libs/prisma';
-import stripe from '../../../libs/stripe/api';
-import Storage from '../../../libs/supabase';
-import GetUserIdAndRoleMiddleware from '../../../middleware';
+import prisma from '../../../src/libs/prisma';
+import stripe from '../../../src/libs/stripe/api';
+import Storage from '../../../src/libs/supabase';
+import GetUserIdAndRoleMiddleware from '../../../src/utils/auth'
 import { ICreateProduct, IUpdateProduct } from '../../../src/types/product';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -147,16 +147,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // start Creating Process
 
     const TagsQuery = [];
-    const storage = new Storage;
     const imagesUrls: string[] = [];
 
-    const { Url, error: storageError } = await storage.uploadFile(image);
+    const { Url, error: storageError } = await Storage.uploadFile(image);
     if (storageError) return res.status(400).json({ massage: "Some Thing Want Wrong", error: storageError });
     const imageUrl = Url;
     imagesUrls.push(Url)
 
     for (let image of images) {
-      const { Url, error: storageError } = await storage.uploadFile(image);
+      const { Url, error: storageError } = await Storage.uploadFile(image);
       if (error) return res.status(400).json({ massage: "Some Thing Want Wrong", error: storageError });
       imagesUrls.push(Url);
     }

@@ -7,6 +7,8 @@ import { getLikes, likeProduct } from '../api';
 import useGetUser from '../hooks/useGetUser';
 import { useContext } from 'react';
 import { Context } from '../context';
+import Likes from './Likes';
+import DiscountAndPrice from './DiscountAndPrice';
 
 interface ICartChildProps {
     product: ICartProduct;
@@ -15,25 +17,13 @@ interface ICartChildProps {
 
 const CartChild = ({ product, handelDelete }: ICartChildProps) => {
     const { deleteCartItem, insertCartItem } = useContext(Context);
-    const [user] = useGetUser()
-    const [isLikedByUser, setIsLikedByUser] = useState(false)
-    const [likes, setLikes] = useState<{ userId: number }[]>([])
     const [quantity, setQuantity] = useState(1);
-
-    const GetLikesData = useCallback(async () => {
-        await getLikes(product.id)
-            .then((res) => { setLikes(res.data.likes) })
-            .catch((err) => { console.log(err) });
-    }, [])
 
     const init = useCallback(async () => {
         if (product.pieces < 1) {
             handelDelete(product.id);
             deleteCartItem(product.id)
-        } else {
-            GetLikesData()
-            insertCartItem({ quantity: 1, price: (product.price - (product.price * product.discount)), id: product.id })
-        }
+        } else insertCartItem({ quantity: 1, price: (product.price - (product.price * product.discount)), id: product.id })
     }, [])
 
     useEffect(() => {
@@ -41,15 +31,6 @@ const CartChild = ({ product, handelDelete }: ICartChildProps) => {
     }, [quantity])
 
     useEffect(() => { init() }, [init])
-
-    const isLikedByUserFunction = useCallback(() => {
-        if (likes.find((item) => item.userId === user?.id)) setIsLikedByUser(true)
-        else setIsLikedByUser(false)
-    }, [likes, user])
-
-    useEffect(() => {
-        isLikedByUserFunction()
-    }, [isLikedByUserFunction])
 
     const handelIncrement = () => {
         if (quantity === Number(product.pieces)) return;
@@ -61,21 +42,6 @@ const CartChild = ({ product, handelDelete }: ICartChildProps) => {
         else setQuantity((value) => value - 1)
     }
 
-    const handelLike = async () => {
-        setIsLikedByUser(true)
-        await likeProduct(product.id)
-            .then((res) => { console.log(res) })
-            .catch((err) => { console.log(err) });
-        GetLikesData()
-    }
-
-    const handelDislike = async () => {
-        setIsLikedByUser(false)
-        await likeProduct(product.id)
-            .then((res) => { console.log(res) })
-            .catch((err) => { console.log(err) });
-        GetLikesData()
-    }
 
     return (
         <AnimatePresence>
@@ -89,35 +55,8 @@ const CartChild = ({ product, handelDelete }: ICartChildProps) => {
                 <div className="p-8 w-full h-fit flex flex-col relative rounded-lg">
 
                     <CancelPresentationIcon onClick={() => handelDelete(product.id)} className='flex ml-[2px] top-0 left-0 mt-[2px] text-[2rem] p-[6px] cursor-pointer absolute hover:from-red-400 hover:text-red-700 transition-all bg-gradient-to-tr from-red-300 to-red-60  text-red-500  rounded-lg ' />
+                    <DiscountAndPrice price={product.price} discount={product.discount} />
 
-                    {product.discount !== 0 && (
-                        <div className="shadow-lg max-w-fit rounded-full  -top-7 left-[5%] absolute h-10 items-center justify-center  z-[4] flex ">
-                            <p className="text-gray-100 md:text-lg p-1 rounded-full bg-red-600  flex justify-between text-semibold text-base">{String(product.discount).split(".")[1]}0%</p>
-                        </div>
-                    )}
-
-                    <div className="bg-gray-800 shadow-lg  max-w-fit rounded-lg  -top-7 right-[5%] px-[6px] absolute h-10 items-center justify-center  z-[4] flex ">
-
-                        {product.discount !== 0 ?
-                            (
-                                <div className="flex justify-between items-center gap-8 flex-col">
-                                    <p className='text-lg text-gray-100 font-semibold flex-row flex'>
-                                        <span className='text-sm text-blue-600'>$</span>
-                                        <span className="line-through mr-3">
-                                            {product.price}
-                                        </span>
-                                        <span className='text-sm text-blue-600'>$</span>
-                                        {Number(product.price - (product.price * product.discount)).toFixed(2)}
-                                    </p>
-                                </div>
-                            ) : (
-                                <div className="flex justify-between items-center gap-8">
-                                    <p className='text-lg text-gray-100 font-semibold flex-row flex'>
-                                        <span className='text-sm text-blue-600'>$</span>{product.price}
-                                    </p>
-                                </div>
-                            )}
-                    </div>
                     <div className="flex mb-2 text-center w-full h-fit flex-col justify-center items-center rounded-lg">
                         <p className="text-base w-fit">
                             <span className='text-2xl'>{product.title}</span>
@@ -167,29 +106,11 @@ const CartChild = ({ product, handelDelete }: ICartChildProps) => {
                             </div>
 
                         </div>
+
                         <div className="flex justify-center items-center mr-3 ">
-                            {isLikedByUser ? (
-                                <motion.button
-                                    whileTap={{ scale: 0.6 }}
-                                    onClick={handelDislike} className="flex-none flex flex-col items-center ease-in-out duration-[50] transition-all justify-center w-10 h-10 rounded-md text-red-600 shadow-md shadow-red-500 border-red-300 border" type="button" aria-label="Like">
-
-                                    <svg width="20" height="20" fill="currentColor" aria-hidden="true">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                                    </svg>
-                                    <span className="flex text-xs text-gray-400">{likes.length}</span>
-                                </motion.button>
-                            ) : (
-                                <motion.button
-                                    whileTap={{ scale: 0.6 }}
-                                    onClick={handelLike} className="flex-none flex flex-col items-center ease-in-out duration-[50] transition-all justify-center w-10 h-10 rounded-md text-slate-300 border-slate-200 border" type="button" aria-label="Like">
-
-                                    <svg width="20" height="20" fill="currentColor" aria-hidden="true">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-                                    </svg>
-                                    <span className="flex text-xs text-gray-400">{likes.length}</span>
-                                </motion.button>
-                            )}
+                                <Likes productId={product.id}/>
                         </div>
+
                     </div>
                 </div>
             </motion.div>

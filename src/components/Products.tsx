@@ -12,7 +12,7 @@ import { deleteProduct, getProductsTable } from '../api';
 import moment from 'moment';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
-import Toast from '../functions/sweetAlert';
+import Toast from '../utils/sweetAlert';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';

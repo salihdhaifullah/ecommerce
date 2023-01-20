@@ -12,7 +12,6 @@ import getStripe from '../src/libs/stripe'
 import { Context } from '../src/context'
 import { useRouter } from 'next/router'
 import ThankYou from '../src/components/ThankYou'
-import Toast from '../src/utils/sweetAlert'
 import Swal from 'sweetalert2'
 
 const Cart = () => {

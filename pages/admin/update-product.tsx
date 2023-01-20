@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 import CircularProgress from '@mui/material/CircularProgress';
 import { IUpdateProduct } from '../../src/types/product';
 import { useRouter } from 'next/router';
-import Toast from '../../functions/sweetAlert';
+import Toast from '../../src/utils/sweetAlert';
 
 
 interface ICategory {

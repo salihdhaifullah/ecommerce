@@ -12,7 +12,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { NextPage } from 'next';
 import { ILogin } from '../src/types/user';
-import Swal from 'sweetalert2';
 import { login } from '../src/api';
 import CircularProgress from '@mui/material/CircularProgress'
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -23,7 +22,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import FormControl from '@mui/material/FormControl';
 import { useRouter } from 'next/router';
-import Toast from '../functions/sweetAlert';
+import Toast from '../src/utils/sweetAlert';
 
 const Login: NextPage = () => {
   const [email, setEmail] = useState('');

@@ -12,8 +12,8 @@ import PreviewProduct from '../../src/components/PreviewProduct';
 import { createProduct, getCategoriesAndTags } from '../../src/api';
 import { ICreateProduct } from '../../src/types/product';
 import CircularProgress from '@mui/material/CircularProgress';
-import Toast from '../../functions/sweetAlert';
-import toBase64 from '../../functions/toBase64';
+import Toast from '../../src/utils/sweetAlert';
+import createResizedImage from '../../src/utils/image-resizer';
 import { useRouter } from 'next/router';
 
 
@@ -78,7 +78,8 @@ const CreateProduct = () => {
     const handelUploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event?.target?.files ? event.target.files[0] : null;
         if (!file) return Toast.fire("No File Selected", '', "error");
-        const base64 = await toBase64(file)
+        const base64 = await createResizedImage(file)
+
         setImage(base64);
     }
 
@@ -89,7 +90,7 @@ const CreateProduct = () => {
         let data: string[] = [];
 
         for (let file of files) {
-            const base64 = await toBase64(file, 400, 400)
+            const base64 = await createResizedImage(file)
             data.push(base64);
         }
 

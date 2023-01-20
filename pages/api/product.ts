@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../libs/prisma';
+import prisma from '../../src/libs/prisma';
 import { SortByType } from '../../src/types/product';
 
 

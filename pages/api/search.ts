@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../libs/prisma';
+import prisma from '../../src/libs/prisma';
 
 type TSearchQuery =
     { pieces: { gt: number }, category: { name: { contains: string, mode: 'insensitive' } } }
@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (getLength) {
             const products = await prisma.product.count({where: searchQuery});
             return res.status(200).json({ products });
-        } 
+        }
         else {
             if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({ massage: "Bad Request" });
 
@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     discount: true
                 }
             });
-    
+
             return res.status(200).json({ products });
         }
     }

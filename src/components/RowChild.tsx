@@ -5,6 +5,7 @@ import AddTaskIcon from '@mui/icons-material/AddTask';
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Context } from '../context';
+import AddProduct from './AddProduct';
 
 interface IRowChild {
     index: number;
@@ -19,20 +20,6 @@ interface IRowChild {
 
 const RowChild = ({ item, index }: IRowChild) => {
     const router = useRouter();
-    const [isFound, setIsFound] = useState(Boolean(localStorage.getItem(`product id ${item.id}`)));
-    const { addItem, removeItem } = useContext(Context);
-
-    const handelAdd = () => {
-        setIsFound(true)
-        localStorage.setItem(`product id ${item.id}`, JSON.stringify(item.id))
-        addItem()
-    }
-
-    const handelRemove = () => {
-        setIsFound(false)
-        localStorage.removeItem(`product id ${item.id}`)
-        removeItem()
-    }
 
     return (
         <div className="w-full flex justify-center items-center">
@@ -78,15 +65,7 @@ const RowChild = ({ item, index }: IRowChild) => {
                 </div>
                 <div className="w-full flex flex-wrap items-center justify-between ">
 
-                    {isFound ? (
-                        <motion.div whileTap={{ scale: 0.6 }} className="w-8 h-8 rounded-full  bg-gradient-to-tr from-blue-300 to-blue-600   flex items-center justify-center cursor-pointer hover:shadow-md ">
-                            <AddTaskIcon onClick={handelRemove} className='text-white' />
-                        </motion.div>
-                    ) : (
-                        <motion.div whileTap={{ scale: 0.6 }} className="w-8 h-8  duration-75 rounded-full bg-gradient-to-tr  from-red-300 to-red-600 flex items-center justify-center cursor-pointer hover:shadow-md ">
-                            <AddShoppingCartOutlinedIcon onClick={() => handelAdd()} className='text-white' />
-                        </motion.div>
-                    )}
+                <AddProduct productId={item.id} />
 
                     <p className="text-gray-700 md:text-lg flex justify-between text-semibold text-base">{item.title}</p>
                 </div>

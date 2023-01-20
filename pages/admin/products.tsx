@@ -12,7 +12,7 @@ import { deleteProduct, getProductsTable } from '../../src/api';
 import moment from 'moment';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
-import Toast from '../../functions/sweetAlert';
+import Toast from '../../src/utils/sweetAlert';
 import CircularProgress from '@mui/material/CircularProgress';
 
 interface IProductsData {

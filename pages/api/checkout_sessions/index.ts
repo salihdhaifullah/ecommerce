@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import stripe from '../../../libs/stripe/api'
+import stripe from '../../../src/libs/stripe/api'
 import Stripe from 'stripe'
 import { ISale } from '../../../src/types/sale'
-import GetUserIdAndRoleMiddleware from '../../../middleware'
-import prisma from '../../../libs/prisma'
+import GetUserIdAndRoleMiddleware from '../../../src/utils/auth'
+import prisma from '../../../src/libs/prisma'
 
 interface IProductSale {
     productId: number

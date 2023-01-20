@@ -22,7 +22,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import FormControl from '@mui/material/FormControl';
 import { useRouter } from 'next/router';
-import Toast from '../functions/sweetAlert';
+import Toast from '../src/utils/sweetAlert';
 
 
 const SingUp: NextPage = () => {

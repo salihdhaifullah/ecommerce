@@ -9,7 +9,7 @@ interface IGetUserIdAndRoleMiddleware {
 
 export default function GetUserIdAndRoleMiddleware(req: NextApiRequest): IGetUserIdAndRoleMiddleware {
     const data: IGetUserIdAndRoleMiddleware = { error: null, id: null, role: null }
-    let token = req.cookies['refresh-token']!;
+    let token = req.cookies['token']!;
 
     if (typeof token !== "string") return { error: "no token found", id: null, role: null };
 

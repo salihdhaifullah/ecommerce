@@ -6,19 +6,13 @@ interface IUploadFile {
     Url: string;
 }
 
-function base64toBuffer(base64: string) {
-    return (
-        fetch(base64)
-            .then(async (res) => {
-                const buffer = await res.arrayBuffer()
-                return buffer;
-            })
-    );
+async function base64toBuffer(base64: string) {
+    return await fetch(base64).then(async (res) => await res.arrayBuffer())
 }
 
 class Storage {
 
-    async uploadFile(file: string): Promise<IUploadFile> {
+    static async uploadFile(file: string): Promise<IUploadFile> {
         try {
 
             const fileId = Date.now().toString() + randomUUID() + '.webp';
@@ -35,7 +29,7 @@ class Storage {
         }
     }
 
-    async deleteFile(filePath: string) {
+    static async deleteFile(filePath: string) {
         try {
             await supabase.storage.from("public").remove([filePath])
         } catch (error) {

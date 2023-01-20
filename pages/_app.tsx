@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Provider from '../src/context';
 import Header from '../src/components/Header';
 import Footer from '../src/components/Footer';
-import '../styles/globals.css';
+import '../src/styles/globals.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isBrowser, setIsBrowser] = useState(false);

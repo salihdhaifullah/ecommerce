@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { genSaltSync, hashSync } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { setCookie } from 'cookies-next';
 import { ISingUp } from '../../../src/types/user';
-import prisma from '../../../libs/prisma/index';
+import prisma from '../../../src/libs/prisma/index';
 
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -16,7 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             if (!(password.length > 6) && !(lastName.length > 3) && !(firstName.length > 3) && !(email.length > 8)) return res.status(400).json({ error: 'unValid Fields' })
 
-            if (user?.email) return res.status(400).json({ error: "user already exist try login", user })
+            if (user?.email) return res.status(400).json({ massage: "user already exist try login", user })
 
 
             const isAdmin = (password === process.env.ADMIN_PASSWORD && email === process.env.ADMIN_EMAIL)
@@ -36,18 +35,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             const fullYear = 1000 * 60 * 60 * 24 * 365;
 
-            const refreshToken = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY!, { expiresIn: fullYear })
+            const token = jwt.sign({ id: UserData.id, role: UserData.role }, process.env.SECRET_KEY!, { expiresIn: fullYear })
 
-            setCookie("refresh-token", refreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                maxAge: fullYear, // full year
-                expires: new Date(Date.now() + fullYear),
-                path: "/",
-                req,
-                res
-            })
+            res.setHeader('Set-Cookie', [
+                `token=${token}; HttpOnly; SameSite=strict Expires=${new Date(Date.now() + fullYear)}; Path=/; Max-Age=${fullYear}; Secure=${process.env.NODE_ENV === "production" ? "True" : "False"};`,
+            ]);
 
             const data = {
                 id: UserData.id,

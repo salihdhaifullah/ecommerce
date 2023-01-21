@@ -31,7 +31,7 @@ const FeedBacks = ({ productId }: { productId: number }) => {
 
                 {feedBacks.length < 1
                     ? null
-                    : <div className="flex justify-center items-center gap-6 flex-col h-fit w-full rounded-lg">
+                    : <div className="flex justify-center mt-10 items-center gap-6 flex-col h-fit w-full rounded-lg">
                             {feedBacks.map((item, index) => (<FeedBack item={item} key={index} />))}
                     </div>}
 

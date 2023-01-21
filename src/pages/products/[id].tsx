@@ -55,6 +55,7 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                         <Likes productId={product.id} />
 
                         <AddProduct productId={product.id} />
+
                     </div>
 
                     <DiscountAndPrice price={product.price} discount={product.discount} />

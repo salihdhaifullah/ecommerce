@@ -39,11 +39,12 @@ const CreateFeedBack = ({ init, productId }: { init: () => Promise<void>, produc
         else setRate(input)
     }
 
-    const Form = () => {
-        return (
-            <div className="flex flex-col w-full p-4 justify-center bg-white border-gray-400 rounded-md border shadow-md items-center">
 
-<FeedBackRate productId={productId} />
+    return (
+
+
+        isOpen ? <div className="flex flex-col w-full p-4 justify-center bg-white border-gray-400 rounded-md border shadow-md items-center">
+
 
             <div className="w-full flex justify-center items-center">
                 <form onSubmit={(e) => handelSubmitComment(e)} className="w-full">
@@ -55,8 +56,9 @@ const CreateFeedBack = ({ init, productId }: { init: () => Promise<void>, produc
                             className="w-full min-h-[35vh] p-2 border rounded focus:outline-none focus:ring-gray-300 focus:ring-1"
                             placeholder="Comment"
                             value={content}
+                            autoFocus
                             onChange={(e) => setContent(e.target.value)}
-                        />
+                        ></textarea>
 
                     </div>
 
@@ -73,43 +75,34 @@ const CreateFeedBack = ({ init, productId }: { init: () => Promise<void>, produc
 
                     <div className="flex justify-around item-center">
                         {isLoading ? (
-                            <button className="text-xs  text-blue-100 bg-blue-600 rounded shadow-lg
+                            <Button className="text-xs  text-blue-100 bg-blue-600 rounded shadow-lg
 hover:bg-white hover:shadow-2xl hover:text-blue-600 hover:rounded-3xl hover:border hover:border-blue-600" disabled>
-                                <CircularProgress />
-                            </button>
+                                <CircularProgress className="text-white w-6 h-6"/>
+                            </Button>
                         ) : (
-                            <button
+                            <Button
                                 type="submit"
                                 className="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded shadow-lg
 hover:bg-white hover:shadow-lg hover:text-blue-600 hover:rounded-3xl hover:border hover:border-blue-600 transition-all duration-[130ms] ease-in-out">
                                 Submit
-                            </button>
+                            </Button>
                         )}
 
-                        <button
+                        <Button
                             onClick={HandelCancel}
                             className="px-3 py-2 text-sm text-blue-600 border border-blue-500 shadow-md
 hover:bg-blue-600 hover:shadow-2xl hover:text-white hover:rounded-3xl transition-all duration-[130ms] ease-in-out">
                             Cancel
-                        </button>
+                        </Button>
                     </div>
 
                 </form>
             </div>
+        </div>
+            : <div className="flex flex-col -mt-10 gap-4 w-fit p-4 justify-center bg-white border-gray-400 rounded-md border shadow-md items-center">
+                <FeedBackRate productId={productId} />
+                <Button onClick={() => setIsOpen(true)} className={buttonClass}> Give A FeedBack </Button>
             </div>
-        )
-    }
-
-    return (
-
-            isOpen ? <Form />
-                : (
-                    <div className="flex flex-col gap-4 w-fit p-4 justify-center bg-white border-gray-400 rounded-md border shadow-md items-center">
-
-                        <FeedBackRate productId={productId} />
-                        <Button onClick={() => setIsOpen(true)} className={buttonClass}> Give A FeedBack </Button>
-                    </div>
-                )
     )
 }
 

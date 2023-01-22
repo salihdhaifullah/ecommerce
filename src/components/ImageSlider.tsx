@@ -10,7 +10,7 @@ import Image from 'next/image';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-const ImageSlider = ({ images }: { images: string[] }) => {
+const ImageSlider = ({ images, preview }: { images: string[], preview?: boolean }) => {
   const [activeStep, setActiveStep] = useState(0);
   const maxSteps = images.length;
 
@@ -27,7 +27,7 @@ const ImageSlider = ({ images }: { images: string[] }) => {
   };
 
   return (
-    <Box className="bg-white flex-col flex shadow-lg rounded-md max-h-[500px] h-fit p-4">
+    <Box className={`${preview ? "bg-blue-50 border border-gray-400" : "bg-white"} flex-col flex shadow-lg rounded-md max-h-[500px] h-fit p-4`}>
       <AutoPlaySwipeableViews
         index={activeStep}
         onChangeIndex={handleStepChange}
@@ -50,24 +50,27 @@ const ImageSlider = ({ images }: { images: string[] }) => {
 
       </AutoPlaySwipeableViews>
 
-      <MobileStepper
-      className='mt-4 mb-0'
-        steps={maxSteps}
-        position="static"
-        activeStep={activeStep}
+      {images.length > 1 ? (
+        <MobileStepper
+          className={`mt-4 mb-0 ${preview ? "bg-blue-50" : ""}`}
+          steps={maxSteps}
+          position="static"
+          activeStep={activeStep}
 
-        nextButton={
-          <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1} >
-            Next <KeyboardArrowRight />
-          </Button>
-        }
+          nextButton={
+            <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1} >
+              Next <KeyboardArrowRight />
+            </Button>
+          }
 
-        backButton={
-          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-            <KeyboardArrowLeft /> Back
-          </Button>
-        }
-      />
+          backButton={
+            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+              <KeyboardArrowLeft /> Back
+            </Button>
+          }
+        />
+      ) : null}
+
     </Box>
   );
 }

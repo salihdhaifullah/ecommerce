@@ -27,7 +27,7 @@ interface IPreviewProductProps {
         name: string;
     };
     image: string;
-    images: string[] | null;
+    images: string[];
     pieces: number;
     price: number;
     discount: number;
@@ -49,13 +49,13 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                 <DialogTitle className='px-10'>Preview Product</DialogTitle>
                 <DialogContent>
 
-                    <Container className="w-full sm:px-10 px-4 mt-10 h-full flex-wrap flex md:flex-nowrap gap-10">
+                    <Container className="w-full sm:px-10 px-4 mt-10 h-full flex-wrap justify-center flex md:flex-nowrap gap-10">
 
                         <motion.div
                             initial={{ x: 400, opacity: 0, scale: 0.2 }}
                             animate={{ x: 0, opacity: 1, scale: 1 }}
                             exit={{ opacity: 0.8, x: 700, scale: 1 }}
-                            className="h-full relative flex w-full shadow-lg p-6 bg-blue-50 flex-col justify-center items-center ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
+                            className="h-full relative flex border max-w-[700px] border-gray-400 w-full shadow-lg p-6 bg-blue-50 flex-col justify-center items-center ease-in-out duration-100 transition-all min-h-[50vh] rounded-lg">
 
                             <div className="flex items-center justify-between  mr-3 w-full">
                                 <motion.div whileTap={{ scale: 0.6 }} className="w-8 h-8  duration-75 rounded-full bg-gradient-to-tr  from-red-300 to-red-600 flex items-center justify-center cursor-pointer hover:shadow-md ">
@@ -90,11 +90,10 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
                             <ProductDetails pieces={pieces} category={category.name} />
                         </motion.div>
 
-                        {images ? images?.length > 0 ? (
+
                             <Box className='w-full justify-center items-center max-h-[500px] flex'>
-                                <ImageSlider images={images} />
+                                <ImageSlider preview images={images} />
                             </Box>
-                        ) : null : null}
                     </Container>
 
                 </DialogContent>

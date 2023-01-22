@@ -149,7 +149,7 @@ const CreateProduct = () => {
                     pieces={Number(pieces)}
                     price={Number(price)}
                     discount={discount}
-                    images={images}
+                    images={images.length ? [...images, image] : [image]}
                     content={content}
                 />
             )}

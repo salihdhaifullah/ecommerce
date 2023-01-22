@@ -29,13 +29,12 @@ const FeedBack = ({ item }: { item: IFeedback }) => {
                     <time className="text-sm ml-2 font-normal text-gray-600 h-fit flex justify-start items-center">Created at {moment(item.createdAt).format("ll")}</time>
 
                     <div className="flex w-full justify-end gap-2 flex-row">
-                        <div className="text-base font-normal text-gray-600">Rate</div>
                         <Rating name="rate" value={item.rate} readOnly />
                     </div>
                 </div>
             </main>
 
-            <p className="text-lg p-1 flex place-self-center items-center ml-2 w-full">{item.content}</p>
+            <p className="text-lg mt-1 p-1 flex place-self-center items-center ml-2 w-full">{item.content}</p>
         </section>
     )
 }

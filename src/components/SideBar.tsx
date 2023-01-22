@@ -81,12 +81,6 @@ const SideBar = () => {
                                             <span className="flex-1 ml-3 whitespace-nowrap">Shop</span>
                                         </Link>
                                     </li>
-                                    <li>
-                                        <Link href="/" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
-                                            <HomeOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" />
-                                            <span className="flex-1 ml-3 whitespace-nowrap">Home</span>
-                                        </Link>
-                                    </li>
                                     {isAdmin === true && (
                                         <>
                                             <hr />

@@ -43,7 +43,7 @@ const CreateFeedBack = ({ init, productId }: { init: () => Promise<void>, produc
     return (
 
 
-        isOpen ? <div className="flex flex-col w-full p-4 justify-center bg-white border-gray-400 rounded-md border shadow-md items-center">
+        isOpen ? <div className="flex flex-col w-full p-4 justify-center bg-white rounded-md shadow-md items-center">
 
 
             <div className="w-full flex justify-center items-center">
@@ -63,7 +63,7 @@ const CreateFeedBack = ({ init, productId }: { init: () => Promise<void>, produc
                     </div>
 
                     <div className="text-gray-500 text-center bg-white shadow-lg border w-fit rounded-md mb-4 p-2 flex flex-row justify-center items-center">
-                        <label htmlFor="rating-id">Chose A Rating </label>
+                        <label htmlFor="rating-id">Chose A Rate </label>
                         <Rating
                             id="rating-id"
                             name="rate"
@@ -77,7 +77,7 @@ const CreateFeedBack = ({ init, productId }: { init: () => Promise<void>, produc
                         {isLoading ? (
                             <Button className="text-xs  text-blue-100 bg-blue-600 rounded shadow-lg
 hover:bg-white hover:shadow-2xl hover:text-blue-600 hover:rounded-3xl hover:border hover:border-blue-600" disabled>
-                                <CircularProgress className="text-white w-6 h-6"/>
+                                <CircularProgress className="text-white w-6 h-6" />
                             </Button>
                         ) : (
                             <Button
@@ -99,9 +99,11 @@ hover:bg-blue-600 hover:shadow-2xl hover:text-white hover:rounded-3xl transition
                 </form>
             </div>
         </div>
-            : <div className="flex flex-col -mt-10 gap-4 w-fit p-4 justify-center bg-white border-gray-400 rounded-md border shadow-md items-center">
-                <FeedBackRate productId={productId} />
-                <Button onClick={() => setIsOpen(true)} className={buttonClass}> Give A FeedBack </Button>
+            : <div className="w-full justify-center flex -mt-10 items-center">
+                <div className="flex flex-col gap-4 w-fit p-4 justify-center bg-white rounded-md shadow-md items-center">
+                    <FeedBackRate productId={productId} />
+                    <Button onClick={() => setIsOpen(true)} className={buttonClass}> Give A FeedBack </Button>
+                </div>
             </div>
     )
 }

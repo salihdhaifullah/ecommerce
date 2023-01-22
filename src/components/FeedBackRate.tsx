@@ -17,9 +17,12 @@ const FeedBackRate = ({ productId }: { productId: number }) => {
   }, [init])
 
   return (
-    <Box className="flex flex-row w-full items-start gap-4">
-      <p className="text-gray-400"><CommentIcon />{' '}{23}</p>
-      <Rating name="rate" value={5} readOnly />
+    <Box className="flex text-gray-500 flex-row w-full items-start gap-4">
+      <div className="flex flex-row gap-2">
+        <p>Star</p>
+        <Rating name="rate" value={5} readOnly />
+      </div>
+      <p>Votes {23} </p>
     </Box>
   )
 }

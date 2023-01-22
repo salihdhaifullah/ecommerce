@@ -19,7 +19,7 @@ const Cart = () => {
     const [products, setProducts] = useState<ICartProduct[]>([])
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter()
-    const { removeItem, deleteCartItem, cartItems, state } = useContext(Context);
+    const { removeItem, deleteCartItem } = useContext(Context);
     const [isSuccess, setIsSuccess] = useState(false)
 
     const init = useCallback(async () => {
@@ -48,45 +48,19 @@ const Cart = () => {
     }, [init])
 
     const HandelSuccess = useCallback(() => {
-        if (router.query.success) {
+        if (router.query["success"]) {
             for (let productId of productsIds) {
                 localStorage.removeItem("product id " + productId)
                 removeItem()
             }
             setIsSuccess(true)
         } else setIsSuccess(false)
-    }, [router])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [router.query?.success])
 
     useEffect(() => {
         HandelSuccess()
     }, [HandelSuccess])
-
-    const handelPayment = async () => {
-        const data: ISale[] = [];
-
-        for (let item of state.cartItems) {
-            const product = products.find((product) => product.id === item.id)
-            if (!product) continue;
-            data.push({ productId: item.id, quantity: item.quantity })
-        }
-
-        await checkoutSessions(data).then(async (response) => {
-            const stripe = await getStripe()
-            await stripe!.redirectToCheckout({ sessionId: response.data.id })
-        })
-            .catch(() => {
-                Swal.fire({
-                    title: "You Have To Login To Make This Payment",
-                    icon: "error",
-                    showCancelButton: true,
-                    showConfirmButton: true
-                })
-                    .then(async (res) => { if (res.value) router.push("/sing-up") })
-            })
-
-
-    }
-
 
 
     return (
@@ -103,7 +77,7 @@ const Cart = () => {
                                         </AnimatePresence >
                                     ))}
                                 </div>
-                                <TotalCard handelPayment={handelPayment} />
+                                <TotalCard />
                             </div>
                         ) : <EmptyCart />}
         </section>

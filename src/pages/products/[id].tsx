@@ -80,6 +80,7 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                     <ImageSlider images={product.images} />
                 </Box>
 
+
             </Container>
 
             <FeedBacks productId={product.id} />

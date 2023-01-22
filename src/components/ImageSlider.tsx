@@ -27,7 +27,7 @@ const ImageSlider = ({ images }: { images: string[] }) => {
   };
 
   return (
-    <Box className="bg-white flex-col flex shadow-lg rounded-md border max-h-[500px] h-fit p-4">
+    <Box className="bg-white flex-col flex shadow-lg rounded-md max-h-[500px] h-fit p-4">
       <AutoPlaySwipeableViews
         index={activeStep}
         onChangeIndex={handleStepChange}

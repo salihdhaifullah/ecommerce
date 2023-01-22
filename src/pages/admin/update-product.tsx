@@ -62,32 +62,32 @@ const UpdateProduct = () => {
 
   const init = useCallback(async () => {
     await getCategoriesAndTags()
-    .then((res) => {
-      setTagsOptions(res.data.tags);
-      setCategoriesOptions(res.data.categories);
-    })
-    .catch((err) => { console.log(err) })
+      .then((res) => {
+        setTagsOptions(res.data.tags);
+        setCategoriesOptions(res.data.categories);
+      })
+      .catch((err) => { console.log(err) })
 
     if (!productId) return;
 
     await getProductToUpdate(productId)
-    .then((res) => {
-      const data = res.data.data;
-      const processedTags: string[] = [];
-      for (let tag of data.tags) {
-        processedTags.push(tag.name)
-      }
-      setTitle(data.title);
-      setContent(data.content);
+      .then((res) => {
+        const data = res.data.data;
+        const processedTags: string[] = [];
+        for (let tag of data.tags) {
+          processedTags.push(tag.name)
+        }
+        setTitle(data.title);
+        setContent(data.content);
 
 
-      setTags(processedTags);
-      setDiscount(data.discount);
-      setPieces(data.pieces);
-      setPrice(data.price);
-      setCategory(data.category);
-    })
-    .catch((err) => { console.log(err) })
+        setTags(processedTags);
+        setDiscount(data.discount);
+        setPieces(data.pieces);
+        setPrice(data.price);
+        setCategory(data.category);
+      })
+      .catch((err) => { console.log(err) })
 
 
   }, [productId])
@@ -124,25 +124,25 @@ const UpdateProduct = () => {
     }
 
     await updateProduct(productId, endData)
-    .then((res) => {
-      Toast.fire(res.data.massage || "Success Product Updated", "", 'success')
-      setTitle("")
-      setContent("")
-      setTags([])
-      setCategory(null)
-      setPieces(1)
-      setPrice(1)
-      setDiscount(0)
-      router.back()
-    })
+      .then((res) => {
+        Toast.fire(res.data.massage || "Success Product Updated", "", 'success')
+        setTitle("")
+        setContent("")
+        setTags([])
+        setCategory(null)
+        setPieces(1)
+        setPrice(1)
+        setDiscount(0)
+        router.back()
+      })
       .catch((err) => { Toast.fire(err.response.data.massage || "some thing want wrong", "", 'error') })
 
     setIsLoading(false)
   }
 
   return (
-    <Box>
-      <Box component="form" onSubmit={(event) => handelSubmit(event)} className='sm:p-10 m-10 gap-4 p-8 flex items-center justify-center flex-col rounded-md shadow-md bg-white'>
+    <div className="flex w-full justify-center items-center flex-col">
+      <Box component="form" onSubmit={(event) => handelSubmit(event)} className='sm:p-10 m-10 gap-4 p-8 w-fit flex items-center justify-center flex-col rounded-md shadow-md bg-white'>
         <Box className="flex w-full gap-4 flex-wrap sm:flex-nowrap">
 
           <TextField
@@ -297,7 +297,7 @@ const UpdateProduct = () => {
             <>
               {isLoading ? (
                 <Button disabled className="bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
-                  <CircularProgress />
+                    <CircularProgress className="w-4 h-4 text-white" />
                 </Button>
               ) : (
                 <Button type="submit" className="bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
@@ -313,7 +313,7 @@ const UpdateProduct = () => {
         </div>
 
       </Box>
-    </Box >
+    </div>
   )
 }
 

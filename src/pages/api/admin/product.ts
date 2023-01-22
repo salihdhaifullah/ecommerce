@@ -89,14 +89,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Start UpdateIng Process
 
     const TagsQuery = [];
+    const TagsQuery2 = [];
 
     for (let tag of tags) {
       TagsQuery.push({ where: { name: tag }, create: { name: tag } })
     }
 
-    const productData = await prisma.product.findUnique({ where: { id: productId }, select: { stripeProductId: true, stripePriceId: true } })
+    const productData = await prisma.product.findUnique({ where: { id: productId }, select: { stripeProductId: true, stripePriceId: true, tags: {
+      select: { id: true }
+    } } })
 
     if (!productData?.stripeProductId) return res.status(400).json({ massage: "Product Not Found" });
+
+    for (let tag1 of productData.tags) {
+      TagsQuery2.push({ id: tag1.id })
+    }
 
     const StripePrice = await stripe.prices.create({
       unit_amount: (price * 100) - (discount * price * 100),
@@ -109,7 +116,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const promise2 = prisma.product.update({
       where: { id: productId },
       data: {
-        tags: { connectOrCreate: TagsQuery },
+        tags: {
+          disconnect: TagsQuery2,
+          connectOrCreate: TagsQuery
+        },
         title: title,
         content: content,
         discount: discount,

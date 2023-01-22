@@ -5,6 +5,7 @@ import Rating from '@mui/material/Rating';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ICreateFeedback } from '../types/feedBack';
 import FeedBackRate from './FeedBackRate';
+import useGetUser from './../hooks/useGetUser';
 
 const buttonClass = "text-gray-50 bg-gradient-to-tr w-fit h-fit font-semibold from-blue-300 to-blue-700"
 
@@ -13,6 +14,7 @@ const CreateFeedBack = ({ init, productId }: { init: () => Promise<void>, produc
     const [content, setContent] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
+    const [user] = useGetUser()
 
     const handelSubmitComment = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -102,7 +104,7 @@ hover:bg-blue-600 hover:shadow-2xl hover:text-white hover:rounded-3xl transition
             : <div className="w-full justify-center flex -mt-10 items-center">
                 <div className="flex flex-col gap-4 w-fit p-4 justify-center bg-white rounded-md shadow-md items-center">
                     <FeedBackRate productId={productId} />
-                    <Button onClick={() => setIsOpen(true)} className={buttonClass}> Give A FeedBack </Button>
+                    {user && <Button onClick={() => setIsOpen(true)} className={buttonClass}> Give A FeedBack </Button> }
                 </div>
             </div>
     )

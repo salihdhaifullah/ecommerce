@@ -1,10 +1,6 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
-import AddTaskIcon from '@mui/icons-material/AddTask';
-import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Context } from '../context';
 import AddProduct from './AddProduct';
 
 interface IRowChild {
@@ -23,11 +19,11 @@ const RowChild = ({ item, index }: IRowChild) => {
 
     return (
         <div className="w-full flex justify-center items-center">
-            <motion.div
-                initial={{ y: -(index * 100), opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8 }}
-                key={item.id}
+            <div
+                // initial={{ y: -(index * 100), opacity: 0 }}
+                // animate={{ y: 0, opacity: 1 }}
+                // transition={{ duration: 0.8 }}
+                // key={item.id}
                 className='backdrop-blur-2xl w-fit bg-white min-h-[280px] min-w-[220px] flex flex-col rounded-lg p-4 hover:shadow-xl shadow-lg relative'>
                 <div className="w-full flex flex-col mb-auto items-center justify-between">
                     <div className="w-full flex justify-between items-center">
@@ -69,7 +65,7 @@ const RowChild = ({ item, index }: IRowChild) => {
 
                     <p className="text-gray-700 md:text-lg flex justify-between text-semibold text-base">{item.title}</p>
                 </div>
-            </motion.div >
+            </div >
         </div>
     )
 }

@@ -82,7 +82,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { tags, category, content, title, pieces, price, discount }: IUpdateProduct = req.body;
 
-    const validation: boolean = Boolean((discountOptions.includes(Number(discount))) && pieces >= 1 && price >= 1 && title.length >= 8 && content.length >= 20 && category.length >= 2 && tags.length >= 2);
+    const validation: boolean = Boolean((discountOptions.includes(Number(discount))) && pieces >= 1 && price >= 1 && title.length >= 6 && content.length >= 20 && category.length >= 2 && tags.length >= 2);
 
     if (!validation) return res.status(400).json({ massage: "Invalid Data" });
 
@@ -150,7 +150,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { tags, category, content, title, pieces, price, image, images, discount }: ICreateProduct = req.body;
 
-    const validation: boolean = Boolean((discountOptions.includes(Number(discount))) && pieces >= 1 && price >= 1 && title.length >= 8 && content.length >= 20 && category.length >= 2 && tags.length >= 2 && image.length > 10);
+    const validation: boolean = Boolean((discountOptions.includes(Number(discount))) && pieces >= 1 && price >= 1 && title.length >= 6 && content.length >= 20 && category.length >= 2 && tags.length >= 2 && image.length > 10);
 
     if (!validation) return res.status(400).json({ massage: "Invalid Data" });
 

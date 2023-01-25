@@ -51,7 +51,7 @@ const CreateProduct = () => {
 
     const router = useRouter()
 
-    const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 8 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2 && (image && image.length > 10));
+    const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 6 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2 && (image && image.length > 10));
 
     const init = useCallback(async () => {
         await getCategoriesAndTags()
@@ -159,7 +159,7 @@ const CreateProduct = () => {
 
                     <TextField
                         className='w-full'
-                        error={(title.length < 8)}
+                        error={(title.length < 6)}
                         value={title}
                         onChange={(event) => setTitle(event.target.value)}
                         required
@@ -168,7 +168,7 @@ const CreateProduct = () => {
                         label="title"
                         name="title"
                         autoFocus
-                        helperText="min length is 8 characters"
+                        helperText="min length is 6 characters"
                     />
 
                     <Autocomplete

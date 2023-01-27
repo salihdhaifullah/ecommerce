@@ -18,7 +18,7 @@ const RowChild = ({ item, index }: IRowChild) => {
     const router = useRouter();
 
     return (
-        <div className="w-full flex justify-center items-center">
+        <div className="w-full flex justify-center items-center mx-4">
             <div
                 // initial={{ y: -(index * 100), opacity: 0 }}
                 // animate={{ y: 0, opacity: 1 }}

@@ -21,10 +21,9 @@ export const createProduct = async (data: ICreateProduct) => await API.post("/ad
 
 export const getCategoriesAndTags = async () => await API.get("/admin/product")
 
-export const getProducts = async (skip: number, take: number, filter: string | null, sortBy: SortByType) =>
- await API.get(`/product?sortBy=${sortBy}&skip=${skip}&take=${take}&filter=${filter}`)
+export const getProducts = async () => await API.get(`/product`)
 
-export const GetProductsLength = async (filter: string | null) => await API.get(`/product?filter=${filter}&get-length=${true}`)
+export const GetProductsLength = async (filter: string | null) => await API.get(`/product?get-length=${true}`)
 
 export const getLikes = async (productId: number) => await API.get(`/like/?id=${productId}`);
 

@@ -16,14 +16,18 @@ interface IRowChild {
 }
 
 const RowChild = ({ item, isLoading }: IRowChild) => {
+
     const router = useRouter();
     const [isVisible, setIsVisible] = useState(false)
 
     const ref = useRef<HTMLDivElement | null>(null)
 
     const observer = new IntersectionObserver((entries) => {
-        if (!isLoading && entries[0].isIntersecting) setIsVisible(true)
-        else setIsVisible(false)
+        if (!isLoading && entries[0].isIntersecting) {
+            setIsVisible(true)
+        } else {
+            setIsVisible(false)
+        }
     })
 
     useEffect(() => { if (ref.current) observer.observe(ref.current) }, [ref.current])

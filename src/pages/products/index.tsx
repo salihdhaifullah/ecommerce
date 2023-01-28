@@ -1,25 +1,21 @@
 import Head from 'next/head'
 import Row from '../../components/Row';
 import { getCategoriesAndTags } from '../../api';
-import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Index() {
-  const [isLoadingRow, setLoadingRow] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const LastElement = useRef<HTMLDivElement | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const [categoriesOptions, setCategoriesOptions] = useState<{ name: string }[]>([]);
+  const [isLoadingRow, setLoadingRow] = useState(false)
 
   const GetCategories = useCallback(async () => {
     setIsLoading(true)
     await getCategoriesAndTags()
-      .then((res) => {
-        if (!res.data.categories.length) return;
-        setCategoriesOptions(res.data.categories)
-      })
+      .then((res) => { setCategoriesOptions(res.data.categories || []) })
       .catch((err) => { console.log(err) })
-    setIsLoading(false)
+      .finally(() => { setIsLoading(false) })
   }, [])
 
   useEffect(() => {
@@ -37,9 +33,11 @@ export default function Index() {
     setLoadingRow(false)
   }
 
-  const observer = new IntersectionObserver((entries) => { if (entries[0].isIntersecting && !isLoadingRow) HandelGetLast() })
+  const { current: observer } = useRef(new IntersectionObserver((entries) => { if (entries[0].isIntersecting && !isLoadingRow) HandelGetLast() }))
 
-  useEffect(() => { if (LastElement.current) observer.observe(LastElement.current) }, [LastElement.current])
+  const lastElement = useCallback((node: HTMLDivElement | null) => {
+    if (node !== null) observer.observe(node)
+  }, [observer])
 
   return (
     <>
@@ -58,7 +56,7 @@ export default function Index() {
                   <Row category={category.name} key={index} />
                 ))}
               </div>
-              <div ref={LastElement} className="p-8 w-full min-h-8 flex justify-center items-center">{!isLoadingRow ? null : <CircularProgress className="w-8 h-8" />}</div>
+              <div ref={lastElement} style={{ minHeight: "100px" }} className="w-full flex justify-center items-center">{!isLoadingRow ? null : <CircularProgress className="w-8 h-8" />}</div>
             </div>
             : <Typography variant='h3' className="text-blue-600 text-center">Sorry No Products Found !</Typography>
         }
@@ -66,3 +64,6 @@ export default function Index() {
     </>
   )
 }
+
+
+

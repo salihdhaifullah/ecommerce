@@ -11,12 +11,16 @@ model Category {
   id      Int       @id @default(autoincrement())
   name    String    @unique
   product Product[]
+
+  @@index([name(sort: Desc)])
 }
 
 model Tag {
   id      Int       @id @default(autoincrement())
   name    String    @unique
   product Product[]
+
+  @@index([name(sort: Desc)])
 }
 
 model Likes {
@@ -45,6 +49,8 @@ model Product {
   pieces          Decimal
   stripeProductId String
   stripePriceId   String
+
+  @@index([categoryId(sort: Desc), title, discount, price])
 }
 
 model FeedBack {
@@ -58,6 +64,7 @@ model FeedBack {
   content   String
 
   @@unique([productId, userId])
+  @@index([productId, rate])
 }
 
 model Sale {
@@ -68,6 +75,9 @@ model Sale {
   verified          Boolean       @default(false)
   checkoutSessionId String
   saleProducts      SaleProduct[]
+  createdAt         DateTime      @default(now())
+
+  @@index([verified, userId, createdAt(sort: Desc)])
 }
 
 model SaleProduct {
@@ -92,6 +102,8 @@ model User {
   likes     Likes[]
   isPayUse  Boolean    @default(false)
   FeedBack  FeedBack[]
+
+  @@index([isPayUse, email(sort: Desc)])
 }
 
 enum Roles {

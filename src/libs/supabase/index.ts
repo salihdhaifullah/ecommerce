@@ -15,8 +15,12 @@ class Storage {
     static async uploadFile(file: string): Promise<IUploadFile> {
         try {
 
+            const supaBaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+
+            if (!supaBaseUrl) throw new Error("No SupaBase Url Found");
+
             const fileId = Date.now().toString() + randomUUID() + '.webp';
-            const Url = `https://whigujckvzmtjyeqvnfe.supabase.co/storage/v1/object/public/public/${fileId}`;
+            const Url = `${supaBaseUrl}/storage/v1/object/public/public/${fileId}`;
 
             const Buffer = await base64toBuffer(file)
 

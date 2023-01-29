@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 html,
 body {
   padding: 0;
@@ -13,7 +9,6 @@ body {
   font-family: 'Rubik', sans-serif  !important;
 }
 
-
 .link {
   @apply text-blue-600 hover:text-blue-500 cursor-pointer underline
 }
@@ -23,9 +18,7 @@ body {
   scrollbar-width: none;
 }
 
-.hide_scroll_bar::-webkit-scrollbar {
-  display: none;
-}
+.hide_scroll_bar::-webkit-scrollbar { display: none; }
 
 .underLine {
   @apply  after:content-[""] flex-col flex  after:w-full after:h-[2px] after:rounded-lg after:bg-blue-600
@@ -40,3 +33,6 @@ body {
 
 
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

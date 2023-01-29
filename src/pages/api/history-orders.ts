@@ -9,9 +9,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({ massage: "Bad Request" });
 
+        const filterByDate = ""
         const orders = await prisma.sale.findMany({
             skip: skip,
             take: take,
+            where: {
+
+            },
             select: {
                 user: { select: { firstName: true, lastName: true } },
                 totalPrice: true,

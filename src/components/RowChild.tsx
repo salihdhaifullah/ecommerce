@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import AddProduct from './AddProduct';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 
 interface IRowChild {
     isLoading: boolean;
@@ -16,24 +16,23 @@ interface IRowChild {
 }
 
 const RowChild = ({ item, isLoading }: IRowChild) => {
-
     const router = useRouter();
     const [isVisible, setIsVisible] = useState(false)
 
-    const ref = useRef<HTMLDivElement | null>(null)
-
-    const observer = new IntersectionObserver((entries) => {
+    const {current: observer} = useRef(new IntersectionObserver((entries) => {
         if (!isLoading && entries[0].isIntersecting) {
             setIsVisible(true)
         } else {
             setIsVisible(false)
         }
-    })
+    }))
 
-    useEffect(() => { if (ref.current) observer.observe(ref.current) }, [ref.current])
+    const lastElement = useCallback((node: HTMLDivElement | null) => {
+        if (node !== null) observer.observe(node)
+    }, [observer])
 
     return (
-        <div ref={ref} className={`${!isVisible ? "animate-pulse shadow-xl rounded-lg p-4 bg-white" : "flex justify-center items-center"} min-h-[280px] max-h-[280px] min-w-[220px] mx-4`}>
+        <div ref={lastElement} className={`${!isVisible ? "animate-pulse shadow-xl rounded-lg p-4 bg-white" : "flex justify-center items-center"} min-h-[280px] max-h-[280px] min-w-[220px] mx-4`}>
 
             {isVisible && (
                     <div

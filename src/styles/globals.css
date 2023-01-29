@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
   padding: 0;
@@ -6,7 +10,7 @@ body {
 
 * {
   box-sizing: border-box;
-  font-family: 'Londrina Shadow', cursive !important;
+  font-family: 'Rubik', sans-serif  !important;
 }
 
 
@@ -34,7 +38,5 @@ body {
   after:transition-all after:duration-300 after:ease-in-out hover:after:rounded-md hover:after:scale-y-[1];
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
 

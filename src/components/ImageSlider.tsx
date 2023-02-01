@@ -35,9 +35,9 @@ const ImageSlider = ({ images, preview }: { images: string[], preview?: boolean 
       </div>
 
       {images.length < 2 ? null : (
-        <Box className={`mt-4 mb-0 w-full flex flex-row justify-between px-4 py-2 border rounded-sm ${preview ? "bg-blue-50" : "bg-white"}`}>
+        <Box className={`w-full flex flex-row justify-between break-keep px-4 py-2 border rounded-sm ${preview ? "bg-blue-50 mt-4" : "bg-white"}`}>
 
-          <Button size="small" className="border-blue-600 border" onClick={handleBack} disabled={activeStep === 0}>
+          <Button size="small" className="border-blue-600  border" onClick={handleBack} disabled={activeStep === 0}>
             <KeyboardArrowLeft /> Back
           </Button>
 

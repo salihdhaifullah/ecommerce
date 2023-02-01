@@ -14,7 +14,7 @@ const DiscountAndPrice = ({discount, price}: {discount: number, price: number}) 
                         <div className="flex justify-between items-center gap-8 flex-col">
                             <p className='text-lg text-gray-100 font-semibold flex-row flex'>
                                 <span className='text-sm text-blue-600'>$</span>
-                                <span className="line-through mr-3"> {price.toFixed(2)} </span>
+                                <span className="line-through mr-3"> {Number(price).toFixed(2)} </span>
                                 <span className='text-sm text-blue-600'>$</span>
                                 {Number(price - (price * discount)).toFixed(2)}
                             </p>

@@ -8,7 +8,6 @@ import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import { getCategoriesAndTags, getProductToUpdate, updateProduct } from '../../api';
-import Swal from 'sweetalert2';
 import CircularProgress from '@mui/material/CircularProgress';
 import { IUpdateProduct } from '../../types/product';
 import { useRouter } from 'next/router';
@@ -26,6 +25,7 @@ interface IDiscountsOptions {
 }
 
 const filter = createFilterOptions<ICategory>();
+const filter1 = createFilterOptions<string>();
 
 const discountsOptions: IDiscountsOptions[] = [{ value: 0, name: "none" }, { value: 0.1, name: "10%" }, { value: 0.2, name: "20%" }, { value: 0.3, name: "30%" }, { value: 0.4, name: "40%" }, { value: 0.5, name: "50%" }, { value: 0.6, name: "60%" }, { value: 0.7, name: "70%" }, { value: 0.8, name: "80%" }, { value: 0.9, name: "90%" }];
 
@@ -47,7 +47,6 @@ const UpdateProduct = () => {
 
   const router = useRouter()
   const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 6 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2);
-
 
   const getProductIdQuery = useCallback(() => {
     const id = Number(window.location.href.split("?id=")[1]);
@@ -88,8 +87,6 @@ const UpdateProduct = () => {
         setCategory(data.category);
       })
       .catch((err) => { console.log(err) })
-
-
   }, [productId])
 
   useEffect(() => {
@@ -207,6 +204,16 @@ const UpdateProduct = () => {
           <Autocomplete
             className='w-full'
             multiple
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
+            filterOptions={(options, params) => {
+              const filtered = filter1(options, params);
+              const { inputValue } = params;
+              const isExisting = options.some((option) => inputValue === option);
+              if (inputValue !== '' && !isExisting) filtered.push(inputValue);
+              return filtered;
+            }}
             id="tags"
             options={tagsOptions.map((option) => option.name)}
             freeSolo
@@ -260,7 +267,6 @@ const UpdateProduct = () => {
             helperText="place insert a price"
           />
 
-
           <TextField
             id="Pieces"
             label="Pieces"
@@ -291,25 +297,13 @@ const UpdateProduct = () => {
           />
         </div>
 
-        <div className="w-full inline-flex text-xs sm:text-sm items-start justify-start">
-
-          {isValid ? (
-            <>
-              {isLoading ? (
-                <Button disabled className="bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
-                    <CircularProgress className="w-4 h-4 text-white" />
-                </Button>
-              ) : (
-                <Button type="submit" className="bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
-                  update
-                </Button>
-              )}
-            </>
-          ) : (
-            <Button disabled className="bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600">
-              update
+        <div className="w-full inline-flex text-xs sm:text-sm items-start justify-between">
+            <Button type="submit" disabled={isLoading || !isValid} className={!isValid ? "bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600" : "bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600"}>
+              {isLoading ? <CircularProgress className="w-4 h-4 text-white" /> : "update"}
             </Button>
-          )}
+            <Button disabled={isLoading} onClick={() => router.back()} className={!isLoading ? "bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600" : "bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600"}>
+              Cancel
+            </Button>
         </div>
 
       </Box>

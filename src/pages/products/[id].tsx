@@ -76,7 +76,7 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                 </Box>
 
 
-                <Box className='w-full justify-center items-center max-h-[500px] flex'>
+                <Box className='w-full h-full min-h-[40vh] justify-center items-center  flex'>
                     <ImageSlider images={product.images} />
                 </Box>
 

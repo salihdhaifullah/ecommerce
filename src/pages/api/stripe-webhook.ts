@@ -5,10 +5,20 @@ import prisma from '../../libs/prisma';
 
 export const config = { api: { bodyParser: false } };
 
+const handelGetSigningSecret = (): string => {
+    if (process.env.NODE_ENV === "production") {
+        const kay = process.env.STRIPE_SIGNING_SECRET
+        if (!kay) throw new Error("No STRIPE_SIGNING_SECRET Found");
+        return kay
+    } else {
+        return "whsec_95c1cb8bf8a555cca91e8571ab37880133586d6369cc0e9c3e8681c4c0993e1c"
+    }
+}
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const signature = req.headers["stripe-signature"] as string;
-    const signingSecret = process.env.STRIPE_SIGNING_SECRET || "whsec_95c1cb8bf8a555cca91e8571ab37880133586d6369cc0e9c3e8681c4c0993e1c";
+    const signingSecret = handelGetSigningSecret();
     const reqBuffer = await buffer(req);
 
     try {

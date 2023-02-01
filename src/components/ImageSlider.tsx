@@ -1,14 +1,9 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-import MobileStepper from '@mui/material/MobileStepper';
 import Button from '@mui/material/Button';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import SwipeableViews from 'react-swipeable-views';
-import { autoPlay } from 'react-swipeable-views-utils';
 import Image from 'next/image';
-
-const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const ImageSlider = ({ images, preview }: { images: string[], preview?: boolean }) => {
   const [activeStep, setActiveStep] = useState(0);
@@ -22,57 +17,48 @@ const ImageSlider = ({ images, preview }: { images: string[], preview?: boolean 
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleStepChange = (step: number) => {
-    setActiveStep(step);
-  };
-
   return (
-    <Box className={`${preview ? "bg-blue-50 border border-gray-400" : "bg-white"} flex-col flex shadow-lg rounded-md max-h-[500px] h-fit p-4`}>
-      <AutoPlaySwipeableViews
-        index={activeStep}
-        onChangeIndex={handleStepChange}
-        enableMouseEvents
-        className="w-full"
-      >
+    <Box className={`${preview ? "bg-blue-50 border border-gray-400" : "bg-white"} w-full max-h-[500px] flex-col flex shadow-lg rounded-md  h-fit p-4`}>
+
+      <div className="w-full h-[400px] relative flex flex-row justify-center items-center" >
         {images.map((step, index) => (
-          <div key={index} className="h-full w-full flex justify-center items-center">
-            {Math.abs(activeStep - index) <= 2 ? (
-              <Image
-                width={400}
-                height={400}
-                className="object-contain max-h-[400px] max-w-[400px] h-full w-full block"
-                src={step}
-                alt="slider image"
-              />
-            ) : null}
+          <div key={index} className={(activeStep !== index ? "absolute opacity-0 scale-0 translate-x-[50%]" : "flex opacity-1 scale-1 translate-x-0") + `w-[400px] h-[400px] transition-transform duration-300`}>
+            <Image
+              width={400}
+              height={400}
+              className="object-contain h-full w-full block"
+              src={step}
+              alt="slider image"
+            />
           </div>
         ))}
+      </div>
 
-      </AutoPlaySwipeableViews>
+      {images.length < 2 ? null : (
+        <Box className={`mt-4 mb-0 w-full flex flex-row justify-between px-4 py-2 border rounded-sm ${preview ? "bg-blue-50" : "bg-white"}`}>
 
-      {images.length > 1 ? (
-        <MobileStepper
-          className={`mt-4 mb-0 ${preview ? "bg-blue-50" : ""}`}
-          steps={maxSteps}
-          position="static"
-          activeStep={activeStep}
+          <Button size="small" className="border-blue-600 border" onClick={handleBack} disabled={activeStep === 0}>
+            <KeyboardArrowLeft /> Back
+          </Button>
 
-          nextButton={
-            <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1} >
-              Next <KeyboardArrowRight />
-            </Button>
-          }
+          <div className="w-full flex justify-center items-center">
+            <div className="gap-1 flex flex-row">
+              {[...Array(maxSteps)].map((_, index) => (
+                <div key={index} className={`h-2 w-2 rounded-full border-gray-600 shadow-lg transition-transform  duration-300 ${index === activeStep ? "bg-blue-500" : "bg-gray-300"}`}></div>
+              ))}
+            </div>
+          </div>
 
-          backButton={
-            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-              <KeyboardArrowLeft /> Back
-            </Button>
-          }
-        />
-      ) : null}
+          <Button size="small" className="border-blue-600 border" onClick={handleNext} disabled={activeStep === maxSteps - 1} >
+            Next <KeyboardArrowRight />
+          </Button>
+
+        </Box>
+      )}
 
     </Box>
   );
 }
 
 export default ImageSlider;
+

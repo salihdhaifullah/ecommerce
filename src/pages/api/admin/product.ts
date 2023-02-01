@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../libs/prisma';
 import stripe from '../../../libs/stripe/api';
 import Storage from '../../../libs/supabase';
-import GetUserIdAndRoleMiddleware from '../../../utils/auth'
+import GetUserIdAndRole from '../../../utils/auth'
 import { ICreateProduct, IUpdateProduct } from '../../../types/product';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
   if (req.method === 'DELETE') {
-    const { error, id, role } = GetUserIdAndRoleMiddleware(req);
+    const { error, id, role } = GetUserIdAndRole(req);
 
     if (error) return res.status(500).json({ error: error });
 
@@ -68,7 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'PATCH') {
 
-    const { error, id, role } = GetUserIdAndRoleMiddleware(req);
+    const { error, id, role } = GetUserIdAndRole(req);
 
     if (error) return res.status(500).json({ error: error });
 
@@ -139,7 +139,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
   if (req.method === 'POST') {
-    const { error, id, role } = GetUserIdAndRoleMiddleware(req);
+    const { error, id, role } = GetUserIdAndRole(req);
 
     if (error) return res.status(500).json({ error: error });
 

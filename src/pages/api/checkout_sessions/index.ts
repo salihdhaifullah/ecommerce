@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import stripe from '../../../libs/stripe/api'
 import Stripe from 'stripe'
 import { ISale } from '../../../types/sale'
-import GetUserIdAndRoleMiddleware from '../../../utils/auth'
+import GetUserIdAndRole from '../../../utils/auth'
 import prisma from '../../../libs/prisma'
 
 interface IProductSale {
@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const line_items = [];
             let totalPrice = 0;
 
-            const { error, id: userId } = GetUserIdAndRoleMiddleware(req);
+            const { error, id: userId } = GetUserIdAndRole(req);
 
             if (error || !userId) return res.status(400).json({ massage: "No User Found" });
             if (!data || !data.length) return res.status(400).json({ massage: "No Payment Found" });

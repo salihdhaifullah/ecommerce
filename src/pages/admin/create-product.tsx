@@ -28,8 +28,10 @@ interface IDiscountsOptions {
 }
 
 const filter = createFilterOptions<ICategory>();
+const filter1 = createFilterOptions<string>();
 
 const discountsOptions: IDiscountsOptions[] = [{ value: 0, name: "none" }, { value: 0.1, name: "10%" }, { value: 0.2, name: "20%" }, { value: 0.3, name: "30%" }, { value: 0.4, name: "40%" }, { value: 0.5, name: "50%" }, { value: 0.6, name: "60%" }, { value: 0.7, name: "70%" }, { value: 0.8, name: "80%" }, { value: 0.9, name: "90%" }];
+const disableStyle = "bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600";
 
 const CreateProduct = () => {
     const [title, setTitle] = useState("")
@@ -43,15 +45,10 @@ const CreateProduct = () => {
     const [images, setImages] = useState<string[]>([])
     const [open, setOpen] = useState(false)
     const [isValid, setIsValid] = useState(false)
-
     const [tagsOptions, setTagsOptions] = useState<ICategory[]>([])
     const [categoriesOptions, setCategoriesOptions] = useState<ICategory[]>([])
-
     const [isLoading, setIsLoading] = useState(false)
-
     const router = useRouter()
-
-    const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 6 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2 && (image && image.length > 10));
 
     const init = useCallback(async () => {
         await getCategoriesAndTags()
@@ -62,25 +59,24 @@ const CreateProduct = () => {
             .catch((err) => { console.log(err) })
     }, [])
 
-    useEffect(() => {
-        init()
-    }, [init])
+    useEffect(() => { init() }, [init])
 
     const Validator = useCallback(() => {
-        if (validation) setIsValid(true);
-        else setIsValid(false);
-    }, [validation])
+        const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 6 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2 && image);
+        if (validation) {
+            setIsValid(true)
+        } else {
+            setIsValid(false)
+        }
+    }, [category, content.length, image, pieces, price, tags.length, title.length])
 
-    useEffect(() => {
-        Validator()
-    }, [Validator])
+    useEffect(() => { Validator() }, [Validator])
 
     const handelUploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event?.target?.files ? event.target.files[0] : null;
         if (!file) return Toast.fire("No File Selected", '', "error");
-        const base64 = await createResizedImage(file)
-
-        setImage(base64);
+        await createResizedImage(file)
+            .then((res) => { setImage(res) })
     }
 
     const handelUploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -88,19 +84,14 @@ const CreateProduct = () => {
         if (!files) return;
         if (files?.length < 1) return;
         let data: string[] = [];
-
         for (let file of files) {
-            const base64 = await createResizedImage(file)
-            data.push(base64);
+            await createResizedImage(file)
+                .then((res) => { data.push(res) })
         }
-
         setImages(data);
     }
 
-
-    useEffect(() => {
-        setIsLoading(false)
-    }, [])
+    useEffect(() => { setIsLoading(false) }, [])
 
     const handelSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -153,7 +144,6 @@ const CreateProduct = () => {
                     content={content}
                 />
             )}
-
             <Box component="form" onSubmit={(event) => handelSubmit(event)} className='sm:p-10 m-10 gap-4 p-8 flex items-center justify-center flex-col rounded-md shadow-md bg-white'>
                 <Box className="flex w-full gap-4 flex-wrap sm:flex-nowrap">
 
@@ -202,10 +192,7 @@ const CreateProduct = () => {
                         renderInput={(params) => (
                             <TextField
                                 error={!(category?.name && category?.name.length > 2)}
-
-                                helperText={!(category?.name) ? "Category Is Required" :
-                                    (category?.name.length < 2 && "Min length is 2")}
-
+                                helperText={!(category?.name) ? "Category Is Required" : (category?.name.length < 2 && "Min length is 2")}
                                 {...params}
                                 label="category"
                             />
@@ -219,6 +206,16 @@ const CreateProduct = () => {
                     <Autocomplete
                         className='w-full'
                         multiple
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        filterOptions={(options, params) => {
+                            const filtered = filter1(options, params);
+                            const { inputValue } = params;
+                            const isExisting = options.some((option) => inputValue === option);
+                            if (inputValue !== '' && !isExisting) filtered.push(inputValue);
+                            return filtered;
+                        }}
                         id="tags"
                         options={tagsOptions.map((option) => option.name)}
                         freeSolo
@@ -286,6 +283,7 @@ const CreateProduct = () => {
                 </Box>
 
                 <Box className="flex w-full gap-4 flex-wrap sm:flex-nowrap">
+
                     <div className="w-full">
                         <Button size='small' startIcon={<BackupIcon />} className="text-sm w-full justify-center items-center flex lowercase" variant="contained" component="label">
                             {image ? "uploaded" : "background image"}
@@ -300,7 +298,6 @@ const CreateProduct = () => {
                     </div>
 
                     <div className="w-full">
-
                         <Button size='small' startIcon={<BackupIcon />} className="text-sm w-full justify-center items-center flex lowercase" variant="contained" component="label">
                             {images.length ? "uploaded" : "images"}
                             <input id="images" onChange={(event) => handelUploadImages(event)} multiple hidden accept="image/*" type="file" />
@@ -328,35 +325,13 @@ const CreateProduct = () => {
                 </div>
 
                 <div className="w-full flex mt-2 justify-evenly">
+                    <Button type="submit" disabled={isLoading || !isValid} className={!isValid ? disableStyle : "bg-blue-600 text-xs sm:text-sm hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600"}>
+                        {isLoading ? <CircularProgress className="w-4 h-4 text-white" /> : "submit"}
+                    </Button>
 
-                    {isValid ? (
-                        <>
-                            {isLoading ? (
-                                <Button disabled className="bg-blue-600 text-xs sm:text-sm hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
-                                    <CircularProgress className="w-4 h-4 text-white" />
-                                </Button>
-                            ) : (
-                                <Button type="submit" className="bg-blue-600 text-xs sm:text-sm hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600">
-                                    submit
-                                </Button>
-                            )}
-
-
-                            <Button onClick={() => setOpen(true)} className="bg-green-600 text-xs sm:text-sm hover:bg-green-200 shadow-lg shadow-green-600 text-white hover:text-green-600">
-                                Preview Product
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                            <Button disabled className="bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600">
-                                submit
-                            </Button>
-
-                            <Button disabled className="bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600">
-                                Preview Product
-                            </Button>
-                        </>
-                    )}
+                    <Button disabled={!isValid} onClick={() => setOpen(true)} className={!isValid ? disableStyle : "bg-green-600 text-xs sm:text-sm hover:bg-green-200 shadow-lg shadow-green-600 text-white hover:text-green-600"}>
+                        Preview Product
+                    </Button>
                 </div>
             </Box>
         </Box>

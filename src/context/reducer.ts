@@ -19,8 +19,6 @@ export default function reducer(state: IState, action: IAction) {
   if (action.type === actions.INIT) return {  ...state, items: action?.value || 0}
   else if (action.type === actions.ADD_ITEM) return { ...state, items: state.items + 1 }
   else if (action.type === actions.REMOVE_ITEM) return { ...state, items: state.items - 1 }
-  else if (action.type === actions.GET_CART_ITEMS) return { ...state, cartItems: state.cartItems }
-  
   else if (action.type === actions.INSERT_CART_ITEM) {
     let data = state.cartItems;
     let totalPrice = 0;
@@ -34,7 +32,6 @@ export default function reducer(state: IState, action: IAction) {
     }
     return { ...state, cartItems: data, totalPrice: totalPrice };
   }
-
   else if (action.type === actions.DELETE_CART_ITEM) {
     let totalPrice = 0;
     let data = state.cartItems;
@@ -45,8 +42,7 @@ export default function reducer(state: IState, action: IAction) {
     }
 
    return { ...state, cartItems: data, totalPrice: totalPrice }
-
   }
-  
+
   else throw new Error("Unknown action " + "**" + action.type + "**");
 }

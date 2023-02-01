@@ -1,14 +1,14 @@
 import jwt from "jsonwebtoken";
 import type { NextApiRequest } from 'next'
 
-interface IGetUserIdAndRoleMiddleware {
+interface IGetUserIdAndRole {
     error: any | null
     id: number | null
     role: "ADMIN" | "USER" | null;
 }
 
-export default function GetUserIdAndRoleMiddleware(req: NextApiRequest): IGetUserIdAndRoleMiddleware {
-    const data: IGetUserIdAndRoleMiddleware = { error: null, id: null, role: null }
+export default function GetUserIdAndRole(req: NextApiRequest): IGetUserIdAndRole {
+    const data: IGetUserIdAndRole = { error: null, id: null, role: null }
     let token = req.cookies['token']!;
 
     if (typeof token !== "string") return { error: "no token found", id: null, role: null };

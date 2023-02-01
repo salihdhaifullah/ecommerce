@@ -7,6 +7,7 @@ export interface IUser {
     role: "USER" | "ADMIN"
 }
 
+
 export interface ILogin {
     password: string
     email: string

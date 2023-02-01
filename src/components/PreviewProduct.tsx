@@ -82,7 +82,7 @@ export default function PreviewProduct({ setOpen, open, title, content, tags, ca
 
                                 <div className="flex items-center justify-center w-full ">
                                     {tags.length > 0 && tags.map((tag, index) => (
-                                        <Chip key={index} label={`#${tag}`} className="mr-1 link" variant="outlined" />
+                                        <Chip key={index} label={`#${tag}`} className="mr-1 cursor-pointer link" variant="outlined" />
                                     ))}
                                 </div>
                             </Box>

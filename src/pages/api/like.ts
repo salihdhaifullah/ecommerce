@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../libs/prisma';
-import GetUserIdAndRoleMiddleware from '../../utils/auth';
+import GetUserIdAndRole from '../../utils/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (typeof productId !== 'number') return res.status(400).json({ massage: "No Product Found" });
 
-        const { id: userId, error } = GetUserIdAndRoleMiddleware(req)
+        const { id: userId, error } = GetUserIdAndRole(req)
 
         if (error || typeof userId !== "number") return res.status(400).json({ massage: "No user Found" });
 

@@ -38,8 +38,8 @@ const Login: NextPage = () => {
 
     await login({ email, password } as ILogin)
     .then(async ({ data }) => {
-      Toast.fire("Successfully Login", "", 'success');
       localStorage.setItem("user", JSON.stringify(data.data));
+      Toast.fire("Successfully Login", "", 'success');
       await router.push("/products")
       router.reload()
     })
@@ -63,7 +63,7 @@ const Login: NextPage = () => {
       <CssBaseline />
       <Box
         className='rounded-md bg-white shadow-lg p-8 w-[90%] sm:w-[80%] md:w-[60%] lg:w-[40%] h-full flex justify-center items-center flex-col mt-2'>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+        <Avatar className="bg-blue-600 shadow-md">
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">

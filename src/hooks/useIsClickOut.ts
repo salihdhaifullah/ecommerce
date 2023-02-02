@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 export const useIsClickOut = (): [boolean, (node: HTMLDivElement) => void] => {
     const [state, setState] = useState(false)
@@ -17,8 +17,7 @@ export const useIsClickOut = (): [boolean, (node: HTMLDivElement) => void] => {
         }
 
         document.addEventListener("click", handleClick);
-        // return () => document.removeEventListener("click", handleClick);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        return () => document.removeEventListener("click", handleClick);
     }, [ele]);
 
     return [state, eleCallback]

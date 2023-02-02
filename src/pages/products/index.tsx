@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Row from '../../components/Row';
-import { getCategoriesAndTags } from '../../api';
+import { getCategories, getCategoriesAndTags } from '../../api';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -9,31 +9,26 @@ export default function Index() {
   const [isLoading, setIsLoading] = useState(true)
   const [categoriesOptions, setCategoriesOptions] = useState<{ name: string }[]>([]);
   const [isLoadingRow, setLoadingRow] = useState(false)
+  const [page, setPage] = useState(1)
+  const [isDone, setIsDone] = useState(false)
 
-  const GetCategories = useCallback(async () => {
+  const GetCategoriesCallBack = useCallback(async () => {
     setIsLoading(true)
-    await getCategoriesAndTags()
-      .then((res) => { setCategoriesOptions(res.data.categories || []) })
+    await getCategories(page)
+      .then((res) => {
+        const data = [...categoriesOptions, ...res.data.categories]
+        setCategoriesOptions(data)
+        if (data.length >= res.data.totalCategories) setIsDone(true);
+      })
       .catch((err) => { console.log(err) })
       .finally(() => { setIsLoading(false) })
-  }, [])
+  }, [page])
 
-  useEffect(() => {
-    GetCategories()
-  }, [GetCategories])
+  useEffect(() => { GetCategoriesCallBack() }, [GetCategoriesCallBack])
 
-  const HandelGetLast = async () => {
-    setLoadingRow(true)
-    await new Promise((resolve, reject) => {
-      setTimeout(() => { resolve(1) }, 3 * 1000)
-    })
+  const { current: observer } = useRef(new IntersectionObserver((entries) => { if (entries[0].isIntersecting && !isLoadingRow) setPage((prev) => prev++); }))
 
-    const data = [{ name: "dsdvcasds" + Math.random() * 1000 }, { name: "dsdvsasds" + Math.random() * 1000 }, { name: "dsdvcasds" + Math.random() * 1000 }, { name: "dsdscavds" }]
-    setCategoriesOptions((val) => [...val, ...data])
-    setLoadingRow(false)
-  }
-
-  const { current: observer } = useRef(new IntersectionObserver((entries) => { if (entries[0].isIntersecting && !isLoadingRow) HandelGetLast() }))
+  useEffect(() => { if (isDone) observer.disconnect(); }, [isDone])
 
   const lastElement = useCallback((node: HTMLDivElement | null) => {
     if (node !== null) observer.observe(node)

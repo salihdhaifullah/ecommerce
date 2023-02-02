@@ -10,16 +10,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(200).json({ products })
         }
 
-        const products = await prisma.product.findMany({
-            select: {
-                id: true,
-                imageUrl: true,
-                title: true,
-                price: true,
-                discount: true
-            },
-        });
+        const base = 5;
+        const page = Number(req.query["page"])
+        const category = req.query["category"]
 
-        return res.status(200).json({ products });
+        if (typeof page !== 'number' || page < 1) return res.status(400).json({ massage: "bad Request invalid argument page" })
+        if (typeof category !== "string") return res.status(400).json({ massage: "bad Request invalid argument category" })
+
+        const [products, totalProducts] = await prisma.$transaction([
+            prisma.product.findMany({
+                skip: (base * (page - 1)),
+                take: base,
+                where: { category: { name: category } },
+                select: {
+                    id: true,
+                    imageUrl: true,
+                    title: true,
+                    price: true,
+                    discount: true
+                },
+            }),
+            prisma.product.count({ where: { category: { name: category } } }),
+        ])
+
+        return res.status(200).json({ products, totalProducts });
     }
 }

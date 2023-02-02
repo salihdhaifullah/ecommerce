@@ -27,36 +27,34 @@ const Row = ({ category }: { category: string }) => {
     const [isFirstEleVisible, setIsFirstEleVisible] = useState(true)
     const [isVisible, setIsVisible] = useState(true)
     const [isTouchDevise, setIsTouchDevise] = useState(true)
-    const [isLoadingRow, setIsLoadingRow] = useState(false)
+    const [isDone, setIsDone] = useState(false)
+    const [page, setPage] = useState(1)
 
     useEffect(() => { setIsTouchDevise(window.ontouchstart !== undefined) }, [])
 
     const HandelGetProducts = useCallback(async () => {
         setIsLoading(true)
-        await getProducts()
-            .then((res) => { setProducts(res.data.products) })
+        await getProducts(category, page)
+            .then((res) => {
+                const data = [...products, ...res.data.products]
+                setProducts(data)
+                if (data.length >= res.data.totalProducts) setIsDone(true)
+            })
             .catch((err) => { console.log(err) })
-
-        setIsLoading(false);
-    }, [])
+            .finally(() => { setIsLoading(false) })
+    }, [page])
 
     useEffect(() => { HandelGetProducts() }, [HandelGetProducts])
-
-    const HandelGetLast = async () => {
-        setIsLoadingRow(true)
-        await new Promise((resolve, reject) => { setTimeout(() => { resolve(1) }, 3 * 1000) })
-        setProducts((val) => [...val, ...products])
-        setIsLoadingRow(false)
-    }
 
     const {current: observer} = useRef(new IntersectionObserver((entries) => { setIsVisible(entries[0].isIntersecting) }))
     const {current: lastObserver} = useRef(new IntersectionObserver((entries) => { setIsLastEleVisible(entries[0].isIntersecting) } , {rootMargin: "100px"}))
     const {current: firstObserver} = useRef(new IntersectionObserver((entries) => { setIsFirstEleVisible(entries[0].isIntersecting) }))
 
+
     useEffect(() => {
-        if ((isLastEleVisible  && isVisible) && !(isLoadingRow && isLoading)) HandelGetLast()
+        if ((isLastEleVisible && isVisible) && !isLoading && !isDone) setPage((prev) => prev++);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLastEleVisible, isLoading, isLoadingRow, isVisible])
+    }, [isLastEleVisible, isLoading, isVisible])
 
     const mainElement = useCallback((node: HTMLDivElement | null) => {
         if (node !== null) observer.observe(node)
@@ -76,6 +74,9 @@ const Row = ({ category }: { category: string }) => {
             firstObserver.disconnect()
         }
     }, [isVisible])
+
+    useEffect(() => { if (isDone) lastObserver.disconnect(); }, [isDone])
+
 
     const handelScroll = (direction: "l" | "r") => {
         if (direction === "r") {
@@ -104,7 +105,7 @@ const Row = ({ category }: { category: string }) => {
                             {products.length >= 1 ? products.map((item, index) => (
                                 <RowChild key={index} isLoading={isLoading} item={item} />
                             )) : null}
-                            <div ref={lastElement} className="h-full px-8 flex justify-center items-center">{(isLoadingRow && !isLoading) ? <CircularProgress className="w-8 h-8" /> : null}</div>
+                            <div ref={lastElement} className="h-full px-8 flex justify-center items-center">{isLoading ? <CircularProgress className="w-8 h-8" /> : null}</div>
                         </div>
 
                         {!(!isTouchDevise && !isLastEleVisible) ? null : <motion.button whileTap={{ scale: 0.6 }} onClick={() => handelScroll("r")} className={GetButtonClass("right-4")}> <ArrowForwardIosIcon />  </motion.button>}

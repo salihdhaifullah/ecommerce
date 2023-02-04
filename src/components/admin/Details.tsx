@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import useIsClickOut from '../hooks/useIsClickOut';
-import Line from './Line';
+import useIsClickOut from '../../hooks/useIsClickOut';
+import Line from '../utils/Line';
 import { Dialog, DialogTitle } from '@mui/material';
 
 interface IDetailsProps {

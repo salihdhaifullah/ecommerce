@@ -6,20 +6,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import AddTaskIcon from '@mui/icons-material/AddTask';
-import ImageSlider from '../../components/ImageSlider';
+import ImageSlider from '../../components/utils/ImageSlider';
 import Chip from '@mui/material/Chip'
 import { createFeedBack, getLikes, getFeedBacks, likeProduct } from '../../api';
 import useGetUser from '../../hooks/useGetUser';
 import { Context } from '../../context'
 import { Box, CircularProgress, Container } from '@mui/material';
 import moment from 'moment';
-import FeedBacks from '../../components/FeedBacks';
-import Likes from '../../components/Likes';
-import AddProduct from './../../components/AddProduct';
-import DiscountAndPrice from '../../components/DiscountAndPrice';
-import ProductDetails from '../../components/ProductDetails';
-import ProductContent from '../../components/ProductContent';
-import Line from './../../components/Line';
+import FeedBacks from '../../components/products/FeedBacks';
+import Likes from '../../components/products/Likes';
+import AddProduct from '../../components/products/AddProduct';
+import DiscountAndPrice from '../../components/products/DiscountAndPrice';
+import ProductDetails from '../../components/products/ProductDetails';
+import ProductContent from '../../components/products/ProductContent';
+import Line from '../../components/utils/Line';
 import { GetServerSidePropsContext, GetServerSideProps } from 'next'
 
 

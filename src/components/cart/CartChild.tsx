@@ -2,17 +2,17 @@ import { AnimatePresence, motion } from 'framer-motion'
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import Image from 'next/image'
 import { useCallback, useEffect, useState } from 'react';
-import { ICartProduct } from '../types/cart';
-import { getLikes, likeProduct } from '../api';
-import useGetUser from '../hooks/useGetUser';
+import { ICartProduct } from '../../types/cart';
+import { getLikes, likeProduct } from '../../api';
+import useGetUser from '../../hooks/useGetUser';
 import { useContext } from 'react';
-import { Context } from '../context';
-import Likes from './Likes';
-import DiscountAndPrice from './DiscountAndPrice';
-import ProductContent from './ProductContent';
+import { Context } from '../../context';
+import Likes from '../products/Likes';
+import DiscountAndPrice from '../products/DiscountAndPrice';
+import ProductContent from '../products/ProductContent';
 import Box from '@mui/material/Box';
 import moment from 'moment';
-import AddRemove from './AddRemove';
+import AddRemove from '../products/AddRemove';
 
 
 interface ICartChildProps {

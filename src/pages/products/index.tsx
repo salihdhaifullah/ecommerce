@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Row from '../../components/Row';
+import Row from '../../components/products/Row';
 import { getCategories, getCategoriesAndTags } from '../../api';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import Typography from '@mui/material/Typography';

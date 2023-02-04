@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
-import RowChild from '../components/RowChild'
+import RowChild from '../components/products/RowChild'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { generalSearch } from '../api'

@@ -1,14 +1,13 @@
 import { Button, CircularProgress } from '@mui/material'
 import Link from 'next/link'
 import { useState, useContext } from 'react'
-import useGetProductsIds from '../hooks/useGetProductsIds'
-import { Context } from '../context';
+import { Context } from '../../context';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/router';
-import { ISale } from '../types/sale';
-import getStripe from '../libs/stripe';
-import { checkoutSessions } from './../api/index';
-import Line from './Line';
+import { ISale } from '../../types/sale';
+import getStripe from '../../libs/stripe';
+import { checkoutSessions } from '../../api/index';
+import Line from '../utils/Line';
 
 const TotalCard = () => {
     const [isLoading, setIsLoading] = useState(false)

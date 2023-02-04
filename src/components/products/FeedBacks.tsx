@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { getFeedBacks } from '../api';
+import { getFeedBacks } from '../../api';
 import FeedBack from './FeedBack';
-import { IFeedback } from '../types/feedBack';
+import { IFeedback } from '../../types/feedBack';
 import CreateFeedBack from './CreateFeedBack';
 
 

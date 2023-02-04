@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Context } from './../context/index';
+import { Context } from '../../context/index';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import Likes from './Likes';

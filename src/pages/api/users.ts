@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 lastName: true,
                 email: true,
                 createdAt: true,
-                payment: { select: { totalPrice: true } }
+                payment: { select: { totalPrice: true }, where: { verified: true } }
             }
         });
 

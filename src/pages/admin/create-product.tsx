@@ -8,7 +8,7 @@ import Chip from '@mui/material/Chip';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import { createFilterOptions } from '@mui/material/Autocomplete';
-import PreviewProduct from '../../components/PreviewProduct';
+import PreviewProduct from '../../components/products/PreviewProduct';
 import { createProduct, getCategoriesAndTags } from '../../api';
 import { ICreateProduct } from '../../types/product';
 import CircularProgress from '@mui/material/CircularProgress';

@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
-import CartChild from '../components/CartChild'
-import EmptyCart from '../components/EmptyCart'
-import TotalCard from '../components/TotalCard'
+import CartChild from '../components/cart/CartChild'
+import EmptyCart from '../components/cart/EmptyCart'
+import TotalCard from '../components/cart/TotalCard'
 import { AnimatePresence } from 'framer-motion'
 import useGetProductsIds from '../hooks/useGetProductsIds'
 import { CircularProgress } from '@mui/material'
@@ -11,7 +11,7 @@ import { ISale } from '../types/sale'
 import getStripe from '../libs/stripe'
 import { Context } from '../context'
 import { useRouter } from 'next/router'
-import ThankYou from '../components/ThankYou'
+import ThankYou from '../components/utils/ThankYou'
 import Swal from 'sweetalert2'
 
 const Cart = () => {
@@ -43,9 +43,7 @@ const Cart = () => {
         removeItem()
     }
 
-    useEffect(() => {
-        init()
-    }, [init])
+    useEffect(() => { init() }, [init])
 
     const HandelSuccess = useCallback(() => {
         if (router.query["success"]) {

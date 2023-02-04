@@ -1,7 +1,7 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { useCallback, useEffect, useState, useReducer, createContext, useContext } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
-import { getProductsAverageRate } from '../api';
+import { getProductsAverageRate } from '../../api';
 
 const prosesRates = (input: { avg: 1 | 2 | 3 | 4 | 5 }[]): number[] => {
   const intitule = [0, 0, 0, 0, 0];

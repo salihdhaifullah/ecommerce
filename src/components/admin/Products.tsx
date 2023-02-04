@@ -8,11 +8,11 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
-import { deleteProduct, getProductsTable } from '../api';
+import { deleteProduct, getProductsTable } from '../../api';
 import moment from 'moment';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
-import Toast from '../utils/sweetAlert';
+import Toast from '../../utils/sweetAlert';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -112,11 +112,11 @@ const Products = () => {
                       <TableCell>{row.price}</TableCell>
                       <TableCell>
                         <Link href={`/admin/update-product/?id=${row.id}`}>
-                          <Button className="bg-green-500 shadow-md lowercase p-0 text-gray-900 shadow-green-500">Edit</Button>
+                          <Button className="bg-green-500 shadow-md lowercase p-0 text-white shadow-green-500">Update</Button>
                         </Link>
                       </TableCell>
                       <TableCell>
-                        <Button onClick={() => handelDelete(row.id)} className="bg-red-500 shadow-md lowercase p-0 text-gray-900 shadow-red-500">Delete</Button>
+                        <Button onClick={() => handelDelete(row.id)} className="bg-red-500 shadow-md lowercase p-0 text-white shadow-red-500">Delete</Button>
                       </TableCell>
                     </TableRow>
                   ))}

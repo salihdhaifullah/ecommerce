@@ -2,8 +2,8 @@ import type { AppProps } from 'next/app';
 import NextNProgress from 'nextjs-progressbar';
 import { useState, useEffect } from 'react';
 import Provider from '../context';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '../components/main/Header';
+import Footer from '../components/main/Footer';
 import '../styles/globals.css';
 import Loader from '../components/utils/Loader';
 

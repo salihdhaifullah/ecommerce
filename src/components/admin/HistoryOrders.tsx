@@ -7,45 +7,47 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { getUsers } from '../api';
-import moment from 'moment';
+import { getHistoryOrders } from '../../api';
+import Details from '../../components/admin/Details';
 import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box/Box';
-import Typography from '@mui/material/Typography';
 
-interface IUsersData {
-  createdAt: Date;
-  firstName: string;
-  lastName: string;
-  email: string;
-  payment: { totalPrice: string }[]
+interface IHistoryOrdersOrderData {
+  saleProducts: {
+    product: {
+      title: string;
+      id: number;
+    };
+    numberOfItems: number;
+  }[]
+
+  totalPrice: number;
+  user: {
+    firstName: string;
+    lastName: string;
+  };
+  id: number;
+  verified: boolean;
 }
 
-const getTotal = (input: { totalPrice: string }[]): number => {
-  let total = 0;
-  for (let item of input) {
-    total += Number(item.totalPrice)
-  }
-  return total;
-}
 
-export default function Users() {
+
+export default function HistoryOrders() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [users, setUsers] = useState<IUsersData[]>([]);
+  const [historyOrders, setHistoryOrders] = useState<IHistoryOrdersOrderData[]>([])
   const [loading, setLoading] = useState(true);
 
-  const GetUsers = useCallback(async () => {
+  const GetHistoryOrders = useCallback(async () => {
     setLoading(true)
-    await getUsers((page * rowsPerPage), rowsPerPage)
-      .then((res) => { setUsers(res.data.users) })
+    await getHistoryOrders((page * rowsPerPage), rowsPerPage)
+      .then((res) => { setHistoryOrders(res.data.orders) })
       .catch((err) => { console.log(err) })
     setLoading(false)
   }, [page, rowsPerPage])
 
   useEffect(() => {
-    GetUsers()
-  }, [GetUsers])
+    GetHistoryOrders()
+  }, [GetHistoryOrders])
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -57,32 +59,27 @@ export default function Users() {
   };
 
   return (
-    <div className="h-[100vh] lg:px-20 whitespace-nowrap px-4 flex flex-col items-center justify-center">
-      <Box className="my-20 text-start">
-        <Typography variant="h3" className="text-gray-900 font-bold">Users </Typography>
-      </Box>
+    <div className="h-[100vh] lg:px-20 break-keep px-4 flex items-center justify-center">
       {loading ? <CircularProgress className="w-12 h-12" />
         : (
-          <Paper className="w-full overflow-auto">
+          <Paper className="w-full overflow-auto px-4 pt-4">
             <TableContainer>
-              <Table stickyHeader aria-label="sticky table">
+              <Table stickyHeader aria-label="Table of Orders">
                 <TableHead>
                   <TableRow>
-                    <TableCell> Join At </TableCell>
-                    <TableCell> First Name </TableCell>
-                    <TableCell> Last Name </TableCell>
-                    <TableCell> Email </TableCell>
-                    <TableCell> Total Payments </TableCell>
+                    <TableCell> Details </TableCell>
+                    <TableCell> total Price </TableCell>
+                    <TableCell> User Full Name </TableCell>
+                    <TableCell> State </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {users.map((row, index) => (
+                  {historyOrders.map((row, index) => (
                     <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                      <TableCell>{moment(row.createdAt).format("ll")}</TableCell>
-                      <TableCell>{row.firstName}</TableCell>
-                      <TableCell>{row.lastName}</TableCell>
-                      <TableCell>{row.email}</TableCell>
-                      <TableCell>{getTotal(row.payment) + "$"}</TableCell>
+                      <TableCell><Details details={row.saleProducts} /></TableCell>
+                      <TableCell>{row.totalPrice}</TableCell>
+                      <TableCell>{row.user.firstName + " " + row.user.lastName}</TableCell>
+                      <TableCell>{row.verified ? "Verified" : "Canceled"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -91,7 +88,7 @@ export default function Users() {
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
-              count={users.length}
+              count={historyOrders.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -99,6 +96,11 @@ export default function Users() {
             />
           </Paper>
         )}
+
     </div>
   );
 }
+
+
+
+

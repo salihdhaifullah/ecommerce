@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
-import { Context } from './../context/index';
+import { Context } from '../../context/index';
 import { motion } from 'framer-motion';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';

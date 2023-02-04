@@ -1,7 +1,7 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useCallback, useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
-import { getUsersPayers } from '../api';
+import { getUsersPayers } from '../../api';
 
 const UsersPaymentsChart = () => {
 
@@ -22,7 +22,9 @@ const UsersPaymentsChart = () => {
 
   const init = useCallback(async () => {
     await getUsersPayers()
-      .then((res) => { setData({ labels: ['Payers', 'none Payers'], datasets: [ { label: '# of Users', data: res.data.data, backgroundColor: [ 'rgb(255, 99, 132)', 'rgb(54, 162, 235)' ] } ] }) })
+      .then((res) => {
+        console.log(res)
+        setData({ labels: ['Payers', 'none Payers'], datasets: [ { label: '# of Users', data: res.data.data, backgroundColor: [ 'rgb(255, 99, 132)', 'rgb(54, 162, 235)' ] } ] }) })
       .catch((err) => { console.log(err) })
   }, [])
 

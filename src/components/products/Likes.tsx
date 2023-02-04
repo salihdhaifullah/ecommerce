@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
-import { getLikes, likeProduct } from '../api';
+import { getLikes, likeProduct } from '../../api';
 import { useState } from 'react';
-import useGetUser from '../hooks/useGetUser';
+import useGetUser from '../../hooks/useGetUser';
 import CircularProgress from '@mui/material/CircularProgress';
 import { motion } from 'framer-motion';
 

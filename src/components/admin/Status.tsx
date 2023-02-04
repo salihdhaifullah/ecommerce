@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { IStatus } from '../types/dashboard';
-import { getStatus } from '../api';
+import { IStatus } from '../../types/dashboard';
+import { getStatus } from '../../api';
 import { useCallback, useEffect, useState } from 'react';
 
 const Status = () => {

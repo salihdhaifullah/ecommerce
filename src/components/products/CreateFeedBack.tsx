@@ -1,11 +1,11 @@
 import { useState, FormEvent } from 'react';
-import { createFeedBack } from './../api/index';
+import { createFeedBack } from '../../api/index';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ICreateFeedback } from '../types/feedBack';
+import { ICreateFeedback } from '../../types/feedBack';
 import FeedBackRate from './FeedBackRate';
-import useGetUser from './../hooks/useGetUser';
+import useGetUser from '../../hooks/useGetUser';
 
 const buttonClass = "text-gray-50 bg-gradient-to-tr w-fit h-fit font-semibold from-blue-300 to-blue-700"
 

@@ -1,4 +1,4 @@
-import useGetUser from '../hooks/useGetUser'
+import useGetUser from '../../hooks/useGetUser'
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';

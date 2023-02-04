@@ -1,8 +1,10 @@
-import Status from '../../components/Status';
-import Products from '../../components/Products';
-import UsersPaymentsChart from '../../components/UsersPaymentsChart';
-import Users from '../../components/Users';
-import ProductsRateChart from '../../components/ProductsRateChart';
+import Status from '../../components/admin/Status';
+import Products from '../../components/admin/Products';
+import UsersPaymentsChart from '../../components/admin/UsersPaymentsChart';
+import Users from '../../components/admin/Users';
+import ProductsRateChart from '../../components/admin/ProductsRateChart';
+import Line from '../../components/utils/Line';
+import HistoryOrders from '../../components/admin/HistoryOrders';
 
 const Dashboard = () => {
   return (
@@ -10,9 +12,11 @@ const Dashboard = () => {
       <Status />
       <Products />
       <ProductsRateChart />
-      <hr />
+      <Line />
       <Users />
       <UsersPaymentsChart />
+      <Line />
+      <HistoryOrders />
     </div>
   )
 }

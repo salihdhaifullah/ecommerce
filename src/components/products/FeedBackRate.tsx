@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { getRates } from '../api'
+import { getRates } from '../../api'
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
 import CommentIcon from '@mui/icons-material/Comment';

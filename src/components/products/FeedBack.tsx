@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import moment from 'moment'
-import { IFeedback } from '../types/feedBack';
+import { IFeedback } from '../../types/feedBack';
 import Rating from '@mui/material/Rating';
-import Line from './Line';
+import Line from '../utils/Line';
 
 
 const FeedBack = ({ item }: { item: IFeedback }) => {

@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             const isFoundSale = await prisma.sale.findFirst({
                 where: { checkoutSessionId: paymentIntent.id as string },
-                select: { id: true, saleProducts: { select: { productId: true, numberOfItems: true } } }
+                select: { id: true, userId: true, saleProducts: { select: { productId: true, numberOfItems: true } } }
             })
 
             if (!isFoundSale) return;
@@ -45,8 +45,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             }
 
             const promise = prisma.sale.update({ where: { id: isFoundSale.id }, data: { verified: true } });
+            const promise2 = prisma.user.update({ where: { id: isFoundSale.userId }, data: { isPayUse: true } });
 
             promises.push(promise)
+            promises.push(promise2)
             await Promise.all(promises)
         }
 

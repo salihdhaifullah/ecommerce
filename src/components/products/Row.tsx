@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import RowChild from './RowChild'
-import { getProducts } from '../api';
+import { getProducts } from '../../api';
 import CircularProgress from '@mui/material/CircularProgress';
-import Line from './Line';
+import Line from '../utils/Line';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { motion } from 'framer-motion';

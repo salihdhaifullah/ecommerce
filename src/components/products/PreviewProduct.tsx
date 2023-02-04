@@ -9,12 +9,12 @@ import DialogActions from '@mui/material/DialogActions'
 import Rating from '@mui/material/Rating'
 import Chip from '@mui/material/Chip'
 import { useState, useEffect } from 'react'
-import ImageSlider from './ImageSlider';
+import ImageSlider from '../utils/ImageSlider';
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import ProductContent from './ProductContent';
 import DiscountAndPrice from './DiscountAndPrice';
-import Line from './Line';
+import Line from '../utils/Line';
 import ProductDetails from './ProductDetails';
 
 interface IPreviewProductProps {

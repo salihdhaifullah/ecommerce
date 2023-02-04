@@ -17,24 +17,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         console.log(search)
         if (typeof search === 'string') searchQuery = {
-            OR: [{
-                title: { contains: search, mode: 'insensitive' },
-                OR: [{
-                    content: { contains: search, mode: 'insensitive' },
-                    OR: [{
-                        tags: { every: { name: { contains: tag, mode: 'insensitive' } } },
-                        category: { name: { contains: category, mode: 'insensitive' } }
-                    }]
-                }]
-            }],
-            pieces: { gt: 1 },
+            OR: [
+                { title: { contains: search, mode: 'insensitive' } },
+                { content: { contains: search, mode: 'insensitive' } }
+            ],
+            pieces: { gt: 1 }
         }
-        else if (typeof tag === 'string') searchQuery = { tags: { every: { name: { contains: tag, mode: 'insensitive' } } } }
+        else if (typeof tag === 'string') searchQuery = { pieces: { gt: 1 }, tags: { every: { name: { contains: tag, mode: 'insensitive' } } } }
         else if (typeof category === 'string') searchQuery = { pieces: { gt: 1 }, category: { name: { contains: category, mode: 'insensitive' } } };
 
 
-
-        console.log("FUCK YOU 2")
         if (getLength) {
             const products = await prisma.product.count({ where: searchQuery });
             return res.status(200).json({ products });

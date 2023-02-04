@@ -41,8 +41,8 @@ const RowChild = ({ item, isLoading }: IRowChild) => {
                         // transition={{ duration: 0.8 }}
                         // key={item.id}
                         className='backdrop-blur-2xl bg-white h-[280px] w-[220px] flex flex-col rounded-lg p-4 hover:shadow-xl shadow-lg relative'>
-                        <div className="w-full flex flex-col mb-auto items-center justify-between">
-                            <div className="w-full flex justify-between items-center">
+                        <div className="w-full flex  flex-col mb-auto items-center justify-between">
+                            <div className="w-full break-keep flex justify-between items-center">
                                 {item.discount !== 0 ?
                                     (
                                         <>

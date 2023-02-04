@@ -26,7 +26,7 @@ const FeedBack = ({ item }: { item: IFeedback }) => {
 
                 <div className="flex flex-row gap-4">
 
-                    <time className="text-sm ml-2 font-normal text-gray-600 h-fit flex justify-start items-center">Created at {moment(item.createdAt).format("ll")}</time>
+                    <time className="text-sm ml-2 break-keep font-normal text-gray-600 h-fit flex justify-start items-center">Created at {moment(item.createdAt).format("ll")}</time>
 
                     <div className="flex w-full justify-end gap-2 flex-row">
                         <Rating name="rate" value={item.rate} readOnly />

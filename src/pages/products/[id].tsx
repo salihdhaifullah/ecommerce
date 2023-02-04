@@ -20,6 +20,7 @@ import DiscountAndPrice from '../../components/DiscountAndPrice';
 import ProductDetails from '../../components/ProductDetails';
 import ProductContent from '../../components/ProductContent';
 import Line from './../../components/Line';
+import { GetServerSidePropsContext, GetServerSideProps } from 'next'
 
 
 const Tags = ({ tags }: { tags: { name: string }[] }) => {
@@ -93,20 +94,11 @@ export default ProductPage;
 
 
 
+export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSideProps> {
+    const id = Number(context.query["id"])
 
-export async function getStaticPaths() {
-    const productsIds = await prisma.product.findMany({ select: { id: true } });
-    let paths: { params: { id: string } }[] = [];
-
-    for (let productId of productsIds) { paths.push({ params: { id: productId.id.toString() } }) }
-
-    return { paths, fallback: false };
-}
-
-
-export async function getStaticProps({ params }: { params: { id: string } }) {
     const product = await prisma.product.findUnique({
-        where: { id: Number(params.id) },
+        where: { id: id },
         select: {
             id: true,
             title: true,
@@ -122,7 +114,12 @@ export async function getStaticProps({ params }: { params: { id: string } }) {
         },
     });
 
+    // @ts-ignore
+    if (!product) return { notFound: true };
+
+
     return {
+    // @ts-ignore
         props: { product: JSON.parse(JSON.stringify(product)) || null }
     };
 }

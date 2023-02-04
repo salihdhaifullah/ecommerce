@@ -11,30 +11,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const category: string | any = req.query["category"];
         const skip = Number(req.query["skip"])
         const take = Number(req.query["take"])
-        const getLength = req.query["get-length"];
-
         let searchQuery: Prisma.ProductWhereInput = { pieces: { gt: 1 } }
 
-        console.log(search)
         if (typeof search === 'string') searchQuery = {
-            OR: [
-                { title: { contains: search, mode: 'insensitive' } },
-                { content: { contains: search, mode: 'insensitive' } }
-            ],
+            OR: [ { title: { contains: search, mode: 'insensitive' } }, { content: { contains: search, mode: 'insensitive' } } ],
             pieces: { gt: 1 }
         }
         else if (typeof tag === 'string') searchQuery = { pieces: { gt: 1 }, tags: { every: { name: { contains: tag, mode: 'insensitive' } } } }
         else if (typeof category === 'string') searchQuery = { pieces: { gt: 1 }, category: { name: { contains: category, mode: 'insensitive' } } };
 
+        if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({ massage: "Bad Request" });
 
-        if (getLength) {
-            const products = await prisma.product.count({ where: searchQuery });
-            return res.status(200).json({ products });
-        } else {
-
-            if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({ massage: "Bad Request" });
-
-            const products = await prisma.product.findMany({
+        const [products, totalProducts] = await prisma.$transaction([
+            prisma.product.findMany({
                 where: searchQuery,
                 skip: skip,
                 take: take,
@@ -45,10 +34,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     price: true,
                     discount: true
                 }
-            });
+            }),
+            prisma.product.count({ where: searchQuery }),
+        ])
 
-            return res.status(200).json({ products });
-        }
+        return res.status(200).json({ products, totalProducts });
     }
 };
 

@@ -15,7 +15,7 @@ const FeedBack = ({ item }: { item: IFeedback }) => {
 
             <Line />
 
-            <main className='flex w-full rounded-lg flex-row items-center'>
+            <article className='flex w-full rounded-lg flex-row items-center'>
                 <div className="flex h-9 w-9 rounded-lg justify-center items-center">
                     <Image
                         width={20}
@@ -32,7 +32,7 @@ const FeedBack = ({ item }: { item: IFeedback }) => {
                         <Rating name="rate" value={item.rate} readOnly />
                     </div>
                 </div>
-            </main>
+            </article>
 
             <p className="text-lg mt-1 p-1 flex place-self-center items-center ml-2 w-full">{item.content}</p>
         </section>

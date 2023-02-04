@@ -46,7 +46,6 @@ const UpdateProduct = () => {
   const [productId, setProductId] = useState<number | null>(null)
 
   const router = useRouter()
-  const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 6 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2);
 
   const getProductIdQuery = useCallback(() => {
     const id = Number(window.location.href.split("?id=")[1]);
@@ -93,16 +92,13 @@ const UpdateProduct = () => {
     init()
   }, [init])
 
-  const Validator = useCallback(() => {
-    if (validation) setIsValid(true);
-    else setIsValid(false);
-  }, [validation])
-
-
   useEffect(() => {
-    Validator()
-  }, [Validator])
-
+    if (pieces >= 1 && price >= 1 && title.length >= 6 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2) {
+      setIsValid(true)
+    } else {
+      setIsValid(false);
+    }
+  }, [category, content.length, pieces, price, tags.length, title.length])
 
   const handelSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -298,7 +294,7 @@ const UpdateProduct = () => {
         </div>
 
         <div className="w-full inline-flex text-xs sm:text-sm items-start justify-between">
-            <Button type="submit" disabled={isLoading || !isValid} className={!isValid ? "bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600" : "bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600"}>
+            <Button type="submit" disabled={isLoading || !isValid} className={isValid ? "bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600" : "bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600"}>
               {isLoading ? <CircularProgress className="w-4 h-4 text-white" /> : "update"}
             </Button>
             <Button disabled={isLoading} onClick={() => router.back()} className={!isLoading ? "bg-blue-600 hover:bg-blue-200 shadow-lg shadow-blue-600 text-white hover:text-blue-600" : "bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600"}>

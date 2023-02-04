@@ -3,7 +3,9 @@ import SideBar from "./SideBar"
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-
+import SearchIcon from '@mui/icons-material/Search';
+import Button from '@mui/material/Button';
+import { useState, useEffect } from 'react';
 
 const classes = {
     li: 'text-base text-gray-600 rounded-lg hover:text-blue-600  duration-100 transition-all cursor-pointer ease-in-out',
@@ -12,17 +14,19 @@ const classes = {
 
 
 const Header = () => {
-
     const router = useRouter()
+    const [search, setSearch] = useState("")
+
+    useEffect(() => { setSearch(router.query["search"] as string || "") }, [router.query])
+
     const handelSearch = async (e: any) => {
         e.preventDefault()
-        const search = e?.target[0]?.value;
-        if (typeof search !== "string") return;
+        if (!search) return;
         await router.push(`/search?search=${search}`);
     }
 
     return (
-        <header className={` px-4  md:px-16 w-screen p-[11px] ease-in-out duration-100 transition-all shadow-md shadow-blue-300  fixed z-50 bg-Blur`} >
+        <header className="px-4  md:px-16 w-screen p-[11px] ease-in-out duration-100 transition-all shadow-md shadow-blue-300  fixed z-50 bg-Blur" >
             <div className="hidden h-full w-full md:flex justify-center ">
                 <Link href="/" className="flex items-center gap-2">
                     <Image src="/images/logo.png" width={40} height={40} alt='logo' className='w-9 cursor-pointer object-cover' />
@@ -34,18 +38,14 @@ const Header = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 200 }}
                         className='flex items-center gap-8'>
-
-
                         <li className="flex justify-center">
-                                <form onSubmit={(e) => handelSearch(e)} className=" relative flex items-center w-full">
-                                    <input type="search" className="relative duration-200 transition-all focus:w-full ease-in-out focus:min-w-[38vw] rounded-2xl focus:shadow-xl flex-auto block w-full px-3 py-1.5 text-base font-normal max-h-fit text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" aria-describedby="button-addon2" />
+                            <form onSubmit={(e) => handelSearch(e)} className=" relative flex items-center w-full">
+                                <input value={search} onChange={(e) => setSearch(e.target.value)} type="search" className="relative duration-200 transition-all focus:w-full ease-in-out focus:min-w-[38vw] rounded-2xl focus:shadow-xl flex-auto block w-full px-3 py-1.5 text-base font-normal max-h-fit text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Search" aria-label="Search" />
 
-                                        <button className=" px-3 ml-2 hover:rounded-2xl rounded py-2.5 bg-blue-500 text-white  shadow-md hover:bg-blue-400  transition-all flex items-center" type="button" id="button-addon2">
-                                            <svg aria-hidden="true" focusable="false" data-prefix="fas" className="w-4" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                                <path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
-                                            </svg>
-                                        </button>
-                                </form>
+                                <Button type="submit" className="min-w-0 w-fit min-h-0 h-fit ml-2 rounded hover:rounded-md  bg-blue-500 hover:bg-blue-400 transition-all">
+                                    <SearchIcon className="w-6 h-6 text-white" />
+                                </Button>
+                            </form>
                         </li>
                         <li className={classes.li}>
                             <motion.img className='w-10 rounded-full ease-in-out cursor-pointer shadow-xl h-10 min-w-[40px] min-h-[40px]'

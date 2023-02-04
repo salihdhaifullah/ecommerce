@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ICreateProduct, IUpdateProduct, SortByType } from '../types/product';
+import { ICreateProduct, IUpdateProduct } from '../types/product';
 import { ISale } from '../types/sale';
 import { ILogin, ISingUp } from '../types/user'
 import { ICreateFeedback } from '../types/feedBack';
@@ -33,19 +33,19 @@ export const likeProduct = async (productId: number) => await API.patch(`/like/?
 
 export const getCartProducts = async (productsIds: number[]) => await API.post(`/cart`, { ids: productsIds });
 
-export const getHistoryOrders = async (skip: number, take: number) => await API.get(`history-orders/?skip=${skip}&take=${take}`)
+export const getHistoryOrders = async (skip: number, take: number) => await API.get(`/history-orders/?skip=${skip}&take=${take}`)
 
-export const getProductsTable = async (skip: number, take: number) => await API.get(`products/?skip=${skip}&take=${take}`)
+export const getProductsTable = async (skip: number, take: number) => await API.get(`/products/?skip=${skip}&take=${take}`)
 
-export const getUsers = async (skip: number, take: number) => await API.get(`users/?skip=${skip}&take=${take}`)
+export const getUsers = async (skip: number, take: number) => await API.get(`/users/?skip=${skip}&take=${take}`)
 
-export const getProductToUpdate = async (id: number) => await API.get(`admin/product?id=${id}`)
+export const getProductToUpdate = async (id: number) => await API.get(`/admin/product?id=${id}`)
 
-export const deleteProduct = async (id: number) => await API.delete(`admin/product?id=${id}`)
+export const deleteProduct = async (id: number) => await API.delete(`/admin/product?id=${id}`)
 
-export const updateProduct = async (id: number, data: IUpdateProduct) => await API.patch(`admin/product?id=${id}`, data)
+export const updateProduct = async (id: number, data: IUpdateProduct) => await API.patch(`/admin/product?id=${id}`, data)
 
-export const checkoutSessions = async (data: ISale[]) => await API.post("checkout_sessions", data)
+export const checkoutSessions = async (data: ISale[]) => await API.post("/checkout_sessions", data)
 
 export const generalSearch = async (search: string, skip: number, take: number) => await API.get(`/search?search=${search}&skip=${skip}&take=${take}`)
 

@@ -22,7 +22,7 @@ const DiscountAndPrice = ({discount, price}: {discount: number, price: number}) 
                     ) : (
                         <div className="flex justify-between items-center gap-8">
                             <p className='text-lg text-gray-100 font-semibold flex-row flex'>
-                                <span className='text-sm text-blue-600'>$</span>{price.toFixed(2)}
+                                <span className='text-sm text-blue-600'>$</span>{Number(price).toFixed(2)}
                             </p>
                         </div>
                     )}

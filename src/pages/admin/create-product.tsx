@@ -14,8 +14,6 @@ import { ICreateProduct } from '../../types/product';
 import CircularProgress from '@mui/material/CircularProgress';
 import Toast from '../../utils/sweetAlert';
 import createResizedImage from '../../utils/image-resizer';
-import { useRouter } from 'next/router';
-
 
 interface ICategory {
     inputValue?: string;
@@ -48,7 +46,6 @@ const CreateProduct = () => {
     const [tagsOptions, setTagsOptions] = useState<ICategory[]>([])
     const [categoriesOptions, setCategoriesOptions] = useState<ICategory[]>([])
     const [isLoading, setIsLoading] = useState(false)
-    const router = useRouter()
 
     const init = useCallback(async () => {
         await getCategoriesAndTags()
@@ -121,7 +118,6 @@ const CreateProduct = () => {
                 setPrice(1)
                 setDiscount(0)
                 Toast.fire(res.data.massage || "Success Product Created", "", 'success')
-                router.push("/products/" + res.data.id)
             })
             .catch((err) => { Toast.fire(err.response.data.massage || "some thing want wrong !", "", 'error') })
         setIsLoading(false)

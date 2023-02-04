@@ -19,7 +19,6 @@ const handelSetData = (value: undefined | string | string[]): string => {
   return data;
 }
 
-
 const Search = () => {
   const [products, setProducts] = useState<IProductRow[]>([]);
   const [search, setSearch] = useState("");
@@ -28,7 +27,6 @@ const Search = () => {
   const [category, setCategory] = useState("");
   const [skip, setSkip] = useState(0);
   const [take, setTake] = useState(5);
-  const [activePage, setActivePage] = useState(0);
   const [productsPages, setProductsPages] = useState<number[]>([]);
 
   const router = useRouter();
@@ -64,26 +62,7 @@ const Search = () => {
   }, [category, search, tag])
 
 
-  useEffect(() => {
-    init()
-  }, [init])
-
-  const handelNextPage = () => {
-    const page = (activePage + 1);
-    if (activePage < (productsPages.length - 1)) setActivePage(page);
-    setSkip(page * take);
-  }
-
-  const handelPreviousPage = () => {
-    const page = (activePage - 1);
-    if (activePage > 0) setActivePage(page);
-    setSkip(page * take);
-  }
-
-  const handelToPage = (pageIndex: number) => {
-    setActivePage(pageIndex++);
-    setSkip(pageIndex++ * take);
-  }
+  useEffect(() => { init() }, [init])
 
   useEffect(() => {
     setSearch(handelSetData(router.query.search))
@@ -110,9 +89,7 @@ const Search = () => {
     setIsLoading(false)
   }, [category, search, tag, skip, take])
 
-  useEffect(() => {
-    handelSearch();
-  }, [handelSearch])
+  useEffect(() => { handelSearch() }, [handelSearch])
 
   return (
     <>
@@ -126,59 +103,13 @@ const Search = () => {
       <div className="w-full min-h-[75vh] flex my-10 p-16 min-w-full justify-center items-center">
         {isLoading ? <CircularProgress /> : (
           <Grid container spacing={4}>
-            {products.length > 0 ?
-              <>
-                <Row products={products} />
-
-                <nav aria-label="Page navigation" className="mt-16 min-w-full flex justify-center items-center">
-                  <ul className="flex items-center">
-
-                    {activePage > 0 ? (
-                      <li onClick={handelPreviousPage}>
-                        <div className="flex py-2 px-3 mr-0 text-blue-500 cursor-pointer bg-gray-100  rounded-l-lg border border-blue-600 hover:bg-white ">
-                          <span className="sr-only" title="Previous">Previous</span>
-                          <NavigateBeforeIcon />
-                        </div>
-                      </li>
-                    ) : (
-                      <li>
-                        <div className="flex py-2 px-3 mr-0 text-blue-500 bg-gray-100 rounded-l-lg border border-blue-600">
-                          <span className="sr-only" title="Previous">Previous</span>
-                          <NavigateBeforeIcon />
-                        </div>
-                      </li>
-                    )}
-
-                    {productsPages.map((item: number, index: number) => (
-                      <li key={index}>
-                        <div onClick={() => handelToPage(index)} className={`py-2  bg-gradient-to-tr px-3 ${activePage === index ? " text-gray-100  from-blue-300 to-blue-700 " : "hover:from-blue-300 hover:to-blue-700 from-blue-500 to-blue-600 text-white cursor-pointer "} border border-blue-600  `}>{index + 1}</div>
-                      </li>
-                    ))}
-
-                    {activePage < (productsPages.length - 1) ? (
-                      <li onClick={handelNextPage}>
-                        <div className="flex py-2 px-3 ml-0 text-blue-500 cursor-pointer bg-gray-100  rounded-r-lg border border-blue-600 hover:bg-white ">
-                          <span className="sr-only">Next</span>
-                          <NavigateNextOutlinedIcon />
-                        </div>
-                      </li>
-                    ) : (
-                      <li >
-                        <div className="flex py-2 px-3 ml-0 text-blue-500 bg-gray-100 rounded-r-lg border border-blue-600">
-                          <span className="sr-only">Next</span>
-                          <NavigateNextOutlinedIcon />
-                        </div>
-                      </li>
-                    )}
-
-                  </ul>
-                </nav>
-              </>
-              : (
+            {products.length > 0 ? products.map((item, index) => (
+                  <RowChild key={index} isLoading={isLoading} item={item} />
+                )) : (
                 <div className="w-full flex items-center justify-center">
-                  <Typography variant='h4' component='h1'> Sorry No Products Found </Typography>
+                  <Typography variant='h4' component='h1' className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-blue-400"> Sorry No Products Found </Typography>
                 </div>
-              )}
+            )}
           </Grid>
         )}
       </div>

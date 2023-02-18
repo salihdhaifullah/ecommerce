@@ -77,12 +77,18 @@ const Products = () => {
 
   return (
     <div className="h-[100vh] lg:px-20 whitespace-nowrap px-4 flex flex-col items-center justify-center">
-       <Box className="my-20 text-start">
-       <Typography variant="h3" className="text-gray-900 font-bold">Products </Typography>
-       </Box>
+      <Box className="my-20 text-start">
+        <Typography variant="h3" className="text-gray-900 font-bold">Products </Typography>
+      </Box>
+
       {loading ? <CircularProgress className="w-12 h-12" />
         : (
           <Paper className="w-full overflow-auto">
+            <Box className="flex justify-start m-1 items-start">
+              <Button className="bg-blue-600 shadow-md text-white shadow-blue-600">
+                <Link href="/admin/create-product">Create Product</Link>
+              </Button>
+            </Box>
             <TableContainer>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>

@@ -1,26 +1,23 @@
 import { useEffect, useState, useCallback } from "react";
 
-export const useIsClickOut = (): [boolean, (node: HTMLDivElement) => void] => {
-    const [state, setState] = useState(false)
-    const [ele, setEle] = useState<HTMLDivElement  | null>(null)
+export const useIsClickOut = (setter: (bool: boolean) => void, condition = () => true): [(node: any) => void] => {
+    const [ele, setEle] = useState<HTMLDivElement | null>(null)
     const eleCallback = useCallback((node: HTMLDivElement) => { setEle(node) }, [])
 
     useEffect(() => {
-        const handleClick = (e: any) => {
-            if (ele === null) return;
+        if (ele === null) return;
 
-            if (!ele.contains(e.target)) {
-                setState(false)
-            } else {
-                setState(true)
-            };
+        const handleClick = (e: any) => {
+            if (ele.contains(e.target)) return;
+            if (!condition()) return;
+            setter(false)
         }
 
-        document.addEventListener("click", handleClick);
-        return () => document.removeEventListener("click", handleClick);
+        document.addEventListener("mousedown", handleClick);
+        return () => document.removeEventListener("mousedown", handleClick);
     }, [ele]);
 
-    return [state, eleCallback]
+    return [eleCallback]
 };
 
 export default useIsClickOut;

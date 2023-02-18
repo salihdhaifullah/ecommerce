@@ -33,6 +33,13 @@ body {
 
 .remove_border fieldset {
   border-left-color: transparent !important;
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  @apply  bg-transparent
+}
+
+.add_group fieldset {
+  @apply group-hover:border-black
 }
 
 @tailwind base;

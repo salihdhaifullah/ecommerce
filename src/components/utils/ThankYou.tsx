@@ -10,9 +10,9 @@ const ThankYou = () => {
 
     return (
         <Box className="flex w-full h-full flex-col justify-center items-center">
-            <Box className="flex gap-4 w-full h-full flex-col text-center justify-center items-center">
-                <GppGoodIcon className="text-blue-600 shadow-lg bg-white text-4xl rounded-md" />
-                <Typography variant='h4' component='h1'>Thank You {user ? user.firstName + " " + user.lastName : null} For Paying From Us </Typography>
+            <Box className="flex gap-4 w-full h-full break-keep flex-col text-center justify-center items-center">
+                <GppGoodIcon className="text-blue-600  shadow-lg bg-white text-4xl rounded-md" />
+                <Typography variant='h4' component='h1'>Thank You {user ? user.firstName + " " + user.lastName : null} For Shopping From Us </Typography>
                 <Typography variant='h5' component='h4'>We Hope You Had A Good Experience With Us</Typography>
                 <span className="animate-bounce">💙</span>
             </Box>

@@ -60,3 +60,5 @@ export const getRates = async (productId: number) => await API.get(`/rate/?id=${
 export const getFeedBacks = async (productId: number) => await API.get(`/feed-back/?id=${productId}`);
 
 export const createFeedBack = async (productId: number, data: ICreateFeedback) => await API.post(`/feed-back/?id=${productId}`, data)
+
+export const deliverOrder = async (id: number) => await API.patch(`/admin/orders/?id=${id}`)

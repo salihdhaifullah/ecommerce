@@ -81,6 +81,7 @@ model Sale {
   phoneNumber       String
   country           String
   countryCode       String
+  received          Boolean       @default(false)
   @@index([verified, userId, createdAt(sort: Desc)])
 }
 

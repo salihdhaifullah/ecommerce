@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             //     }
             // },
             select: {
-                user: { select: { firstName: true, lastName: true } },
+                user: { select: { firstName: true, lastName: true, email: true } },
                 saleProducts: {
                     select: {
                         numberOfItems: true,
@@ -32,7 +32,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 },
                 totalPrice: true,
                 id: true,
-                verified: true
+                verified: true,
+                received: true,
+                address1: true,
+                address2: true,
+                phoneNumber: true,
+                country: true,
+                countryCode: true,
             },
         });
 

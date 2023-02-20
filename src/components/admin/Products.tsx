@@ -85,7 +85,7 @@ const Products = () => {
         : (
           <Paper className="w-full overflow-auto">
             <Box className="flex justify-start m-1 items-start">
-              <Button className="bg-blue-600 shadow-md text-white shadow-blue-600">
+              <Button className="bg-blue-600 text-white shadow-md">
                 <Link href="/admin/create-product">Create Product</Link>
               </Button>
             </Box>

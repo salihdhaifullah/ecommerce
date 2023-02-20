@@ -12,12 +12,12 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => { setIsBrowser(true) }, []);
 
   return (
-    <div className="flex flex-col min-h-[100vh] bg-blue-50">
+    <div id="root-model" className="flex overflow-x-hidden flex-col min-h-[100vh] bg-blue-50">
       {isBrowser ? (
         <Provider>
           <NextNProgress />
           <Header />
-          <main className="my-10 break-all min-h-[80vh]">
+          <main className="my-10  break-all min-h-[80vh]">
             <Component {...pageProps} />
           </main>
           <Footer />

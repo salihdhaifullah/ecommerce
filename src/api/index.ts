@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { ICreateProduct, IUpdateProduct } from '../types/product';
-import { ISale } from '../types/sale';
 import { ILogin, ISingUp } from '../types/user'
 import { ICreateFeedback } from '../types/feedBack';
+import { ICheckoutData } from '../types/cart';
 
 let baseURL = 'http://localhost:3000/api'
 let ISSERVER = typeof window === "undefined";
@@ -45,7 +45,7 @@ export const deleteProduct = async (id: number) => await API.delete(`/admin/prod
 
 export const updateProduct = async (id: number, data: IUpdateProduct) => await API.patch(`/admin/product?id=${id}`, data)
 
-export const checkoutSessions = async (data: ISale[]) => await API.post("/checkout_sessions", data)
+export const checkoutSessions = async (data: ICheckoutData) => await API.post("/checkout_sessions", data)
 
 export const generalSearch = async (search: string, skip: number, take: number, type: "search" | "tag" | "category") => await API.get(`/search?${type}=${search}&skip=${skip}&take=${take}`)
 

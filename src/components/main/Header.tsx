@@ -26,7 +26,7 @@ const Header = () => {
     }
 
     return (
-        <header className="px-4  md:px-16 w-screen p-[11px] ease-in-out duration-100 transition-all shadow-md shadow-blue-300  fixed z-50 bg-Blur" >
+        <header className="px-4 md:px-16 w-screen p-[11px] ease-in-out duration-100 transition-all shadow-md shadow-blue-300  fixed z-50 bg-Blur" >
             <div className="hidden h-full w-full md:flex justify-center ">
                 <Link href="/" className="flex items-center gap-2">
                     <Image src="/images/logo.png" width={40} height={40} alt='logo' className='w-9 cursor-pointer object-cover' />

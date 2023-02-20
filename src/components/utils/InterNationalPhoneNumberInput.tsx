@@ -29,34 +29,36 @@ const InterNationalPhoneNumberInput = ({ setter }: { setter: (val: InterNational
     }, [countryDefault, phoneNumber])
 
 
-    const getClass = () => `${isErrorPhoneNumber() ? "border-red-600" : isFocused ? "border-blue-500" : "border-[#0000003b]"} ${isFocused ? "border-[2px] py-[6.5px]" : "group-hover:border-black border"}`
-
     return (
-        <Box className="flex relative group flex-row w-full justify-center items-center">
+        <>
+            <Box className="flex relative flex-row w-full">
 
-            <div className={`${getClass()} rounded-r-none  bg-transparent  z-10 max-w-[150px]  border-r-0 flex flex-row min-h-[56px] -mr-1 mb-[22px] justify-between items-center rounded-sm`}
-                onClick={() => setOpen(!open)} >
-                <KeyboardArrowDownIcon className={`w-9 h-9 text-gray-600 ease-in-out transition-all ${!open ? "rotate-0" : "rotate-180"}`} />
-                <div className='flex flex-row'>
-                    <Image className="w-[30px] h-[20px] mr-2" width={150} height={150} src={`https://flagcdn.com/w20/${countryDefault.code.toLowerCase()}.png`} alt="flag" />
-                    <span>+{countryDefault.phone}</span>
-                </div>
-            </div>
+                <Box className={`${isErrorPhoneNumber() ? "border-red-600 text-red-600" : isFocused ? "border-blue-500" : "border-[#0000003b] hover:border-black"} ${!isFocused ? "" : "border-[2px]"} text-gray-500 border rounded-sm bg-transparent flex flex-row w-full min-h-[56px]`}>
+                    <div className={`w-full z-10 max-w-[150px] flex flex-row justify-between items-center rounded-sm`}
+                        onClick={() => setOpen(!open)} >
+                        <KeyboardArrowDownIcon className={`w-9 h-9 text-gray-600 ease-in-out transition-all ${!open ? "rotate-0" : "rotate-180"}`} />
+                        <div className='flex flex-row'>
+                            <Image className="w-[30px] h-[20px] mr-2" width={150} height={150} src={`https://flagcdn.com/w20/${countryDefault.code.toLowerCase()}.png`} alt="flag" />
+                            <span>+{countryDefault.phone}</span>
+                        </div>
+                    </div>
 
-            <TextField
-                onFocus={(e) => setIsFocused(true)}
-                onBlur={(e) => setIsFocused(false)}
-                className={`h-full w-fit  remove_border ${!isFocused ? "add_group" : ""}`}
-                required
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value.replace(/^0-9/g, ""))}
-                fullWidth
-                type="tel"
-                error={phoneNumber?.length < 5}
-                label="Phone Number"
-                helperText={phoneNumber?.length < 5 ? "min length is 5" : "Phone Number"}
-            />
+                    <TextField
+                        onFocus={(e) => setIsFocused(true)}
+                        onBlur={(e) => setIsFocused(false)}
+                        className="h-full w-fit remove_border "
+                        required
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value.replace(/^0-9/g, ""))}
+                        fullWidth
+                        type="tel"
+                        placeholder='Phone Number'
+                    />
 
+                    <p className=" absolute -bottom-6 left-[50%] text-sm">{phoneNumber?.length < 5 ? "min length is 5" : "Phone Number"}</p>
+
+                </Box>
+            </Box>
 
             {!open ? null : (
                 <ul ref={eleCallBack} className="h-[300px] w-[400px] overflow-y-auto flex flex-col ease-in-out transition-all absolute left-0 z-40 p-2 items-start bg-white rounded-sm shadow-md">
@@ -70,7 +72,7 @@ const InterNationalPhoneNumberInput = ({ setter }: { setter: (val: InterNational
                                         setOpen(!open)
                                     }}
                                     className="flex hover:bg-gray-200 rounded-md cursor-pointer items-center w-full p-2 flex-row">
-                                    <Image className="w-[30px] h-[20px] mr-2"  width={150} height={150} src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`} alt="flag" />
+                                    <Image className="w-[30px] h-[20px] mr-2" width={150} height={150} src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`} alt="flag" />
                                     <span>{option.label} ({option.code}) +{option.phone}</span>
                                 </li>
                                 <Line />
@@ -79,8 +81,7 @@ const InterNationalPhoneNumberInput = ({ setter }: { setter: (val: InterNational
                     })}
                 </ul>
             )}
-
-        </Box>
+        </>
     )
 }
 

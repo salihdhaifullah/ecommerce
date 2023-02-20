@@ -5,7 +5,7 @@ import TotalCard from '../components/cart/TotalCard'
 import { AnimatePresence } from 'framer-motion'
 import useGetProductsIds from '../hooks/useGetProductsIds'
 import { CircularProgress } from '@mui/material'
-import { checkoutSessions, getCartProducts } from '../api'
+import { getCartProducts } from '../api'
 import { ICartProduct } from '../types/cart'
 import { ISale } from '../types/sale'
 import getStripe from '../libs/stripe'
@@ -36,14 +36,14 @@ const Cart = () => {
 
     }, [productsIds])
 
+    useEffect(() => { init() }, [init])
+
     const handelDelete = (id: number) => {
         localStorage.removeItem(`product id ${id}`)
         deleteCartItem(id)
         setProducts(products.filter((product) => product.id !== id))
         removeItem()
     }
-
-    useEffect(() => { init() }, [init])
 
     const HandelSuccess = useCallback(() => {
         if (router.query["success"]) {
@@ -56,10 +56,7 @@ const Cart = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query?.success])
 
-    useEffect(() => {
-        HandelSuccess()
-    }, [HandelSuccess])
-
+    useEffect(() => { HandelSuccess() }, [HandelSuccess])
 
     return (
         <section className='w-full h-auto flex justify-center items-center min-h-screen bg-Blur rounded-lg py-2 px-6'>

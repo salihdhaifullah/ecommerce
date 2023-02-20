@@ -76,7 +76,11 @@ model Sale {
   checkoutSessionId String
   saleProducts      SaleProduct[]
   createdAt         DateTime      @default(now())
-
+  address1          String
+  address2          String
+  phoneNumber       String
+  country           String
+  countryCode       String
   @@index([verified, userId, createdAt(sort: Desc)])
 }
 

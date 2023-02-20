@@ -4,6 +4,7 @@ import Stripe from 'stripe'
 import { ISale } from '../../../types/sale'
 import GetUserIdAndRole from '../../../utils/auth'
 import prisma from '../../../libs/prisma'
+import { ICheckoutData } from '../../../types/cart'
 
 interface IProductSale {
     productId: number
@@ -16,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         try {
 
-            const data: ISale[] = req.body;
+            const data: ICheckoutData = req.body;
             const ids: number[] = [];
             const productsSale: IProductSale[] = [];
             const line_items = [];
@@ -25,9 +26,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const { error, id: userId } = GetUserIdAndRole(req);
 
             if (error || !userId) return res.status(400).json({ massage: "No User Found" });
-            if (!data || !data.length) return res.status(400).json({ massage: "No Payment Found" });
+            if (!data || !data.items?.length) return res.status(400).json({ massage: "No Payment Found" });
+            if (!data.details || !data.details.address1 || !data.details.address2) return res.status(400).json({ massage: "No Address Found" });
+            if (!data.details.phoneData?.country || !data.details.phoneData.phoneCode || !data.details.phoneData.phoneNumber) return res.status(400).json({ massage: "No phoneNumber Found" });
 
-            for (let item of data) { ids.push(item.productId) }
+            for (let item of data.items) { ids.push(item.productId) }
 
             const products = await prisma.product.findMany({
                 where: { id: { in: ids } },
@@ -36,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
             for (let product of products) {
-                const quantity = data.find((item) => item.productId === product.id)?.quantity || 1
+                const quantity = data.items.find((item) => item.productId === product.id)?.quantity || 1
 
                 line_items.push({ price: product.stripePriceId, quantity })
                 const num = (Number(product.price) - (Number(product.price) * product.discount)) * quantity;
@@ -61,7 +64,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     userId: userId,
                     totalPrice: totalPrice,
                     checkoutSessionId: checkoutSession.id as string,
-                    saleProducts: { createMany: { data: productsSale } }
+                    saleProducts: { createMany: { data: productsSale } },
+                    address1: data.details.address1,
+                    address2: data.details.address2,
+                    phoneNumber: data.details.phoneData.phoneNumber,
+                    country: data.details.phoneData.country,
+                    countryCode: data.details.phoneData.phoneCode
                 }
             })
 

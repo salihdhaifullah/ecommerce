@@ -32,12 +32,19 @@ body {
 }
 
 .remove_border fieldset {
-  border-left-color: transparent !important;
+  /* border-left-color: transparent !important;
   border-top-left-radius: 0px !important;
-  border-bottom-left-radius: 0px !important;
-  @apply  bg-transparent
+  border-bottom-left-radius: 0px !important; */
+  border: 0px transparent !important;
+  /* border-width: 0px !important; */
+  /* @apply  bg-transparent */
 }
 
+.center {
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
 .add_group fieldset {
   @apply group-hover:border-black
 }

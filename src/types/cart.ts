@@ -1,3 +1,6 @@
+import { ISale } from "./sale";
+import { InterNationalPhoneNumberInputData } from "./utils";
+
 export interface ICartProduct {
     id: number,
     title: string,
@@ -7,4 +10,16 @@ export interface ICartProduct {
     discount: number,
     price: number,
     pieces: number,
+}
+
+export interface IOrderDetails {
+    address1: string;
+    address2: string;
+    phoneData: InterNationalPhoneNumberInputData | null;
+}
+
+
+export interface ICheckoutData {
+    items: ISale[]
+    details: IOrderDetails
 }

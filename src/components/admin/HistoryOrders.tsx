@@ -49,9 +49,19 @@ const Row = ({ row, GetHistoryOrders }: { row: IHistoryOrdersOrderData, GetHisto
       .finally(() => { setIsLoading(false) })
   }
 
+  const data = {
+    address1: row.address1,
+    address2: row.address2,
+    phoneNumber: row.phoneNumber,
+    country: row.country,
+    countryCode: row.countryCode,
+    email: row.user.email,
+    saleProducts: row.saleProducts
+  }
+
   return (
     <TableRow hover role="checkbox" tabIndex={-1}>
-      <TableCell><Details details={row.saleProducts} /></TableCell>
+      <TableCell><Details details={data} /></TableCell>
       <TableCell>{row.totalPrice}</TableCell>
       <TableCell>{row.user.firstName + " " + row.user.lastName}</TableCell>
       <TableCell>{row.verified ? "Verified" : "Canceled"}</TableCell>
@@ -94,8 +104,6 @@ export default function HistoryOrders() {
     setPage(0);
   };
 
-
-
   return (
     <div className="h-[100vh] lg:px-20 break-keep px-4 flex items-center justify-center">
       {loading ? <CircularProgress className="w-12 h-12" />
@@ -136,7 +144,3 @@ export default function HistoryOrders() {
     </div>
   );
 }
-
-
-
-

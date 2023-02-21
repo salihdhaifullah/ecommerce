@@ -23,6 +23,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import FormControl from '@mui/material/FormControl';
 import { useRouter } from 'next/router';
 import Toast from '../utils/sweetAlert';
+import Demo from '../components/utils/Demo';
 
 
 const SingUp: NextPage = () => {
@@ -61,6 +62,8 @@ const SingUp: NextPage = () => {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
+
+
 
   return (
     <Container component="main" className='w-full h-full mt-20 flex justify-center items-center'>
@@ -155,6 +158,7 @@ const SingUp: NextPage = () => {
             ) : "Sing up"}
           </Button>
 
+          <Demo />
           <Grid container>
             <Grid item>
               <Link href='login'>

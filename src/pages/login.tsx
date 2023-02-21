@@ -23,6 +23,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import FormControl from '@mui/material/FormControl';
 import { useRouter } from 'next/router';
 import Toast from '../utils/sweetAlert';
+import Demo from '../components/utils/Demo';
 
 const Login: NextPage = () => {
   const [email, setEmail] = useState('');
@@ -121,6 +122,7 @@ const Login: NextPage = () => {
               <CircularProgress size={28} className='text-white ' />
             ) : "Login"}
           </Button>
+          <Demo />
           <Grid container>
             <Grid item>
               <Link href='sing-up'>

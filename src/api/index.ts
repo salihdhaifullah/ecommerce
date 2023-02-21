@@ -62,3 +62,5 @@ export const getFeedBacks = async (productId: number) => await API.get(`/feed-ba
 export const createFeedBack = async (productId: number, data: ICreateFeedback) => await API.post(`/feed-back/?id=${productId}`, data)
 
 export const deliverOrder = async (id: number) => await API.patch(`/admin/orders/?id=${id}`)
+
+export const demoAccount = async () => await API.get("/auth/demo")

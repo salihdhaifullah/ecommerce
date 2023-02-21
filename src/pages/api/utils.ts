@@ -4,10 +4,14 @@ import prisma from '../../libs/prisma';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     if (req.method === 'GET') {
-        const base = 5;
         const page = Number(req.query["page"])
 
-        if (typeof page !== 'number' || page < 1) return res.status(400).json({ massage: "bad Request invalid argument" })
+        if (!page || typeof page !== 'number' || page < 1) {
+            const categories =  await prisma.category.findMany({ where: { product: { some: {} } }, select: { name: true } })
+            return res.status(200).json({ categories })
+        }
+
+        const base = 5;
 
         const [categories, totalCategories] = await prisma.$transaction([
             prisma.category.findMany({

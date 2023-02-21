@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
-import { deleteProduct, getProductsTable } from '../../api';
+import { deleteProduct, getCategories, getProductsTable } from '../../api';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
 import Toast from '../../utils/sweetAlert';
@@ -18,7 +18,7 @@ import Box from '@mui/material/Box';
 import dateFormat from '../../utils/dateFormat';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import DoneIcon from '@mui/icons-material/Done';
-import  DialogTitle from '@mui/material/DialogTitle';
+import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import Chip from '@mui/material/Chip';
 
@@ -43,18 +43,29 @@ const Products = () => {
   const [titleFilter, setTitleFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [sort, setSort] = useState({ date: false, likes: false, pieces: false, price: false })
+  const [categories, setCategories] = useState<{ name: string }[]>([])
 
   const GetProducts = useCallback(async () => {
     setLoading(true)
     await getProductsTable((page * rowsPerPage), rowsPerPage)
       .then((res) => { setProducts(res.data.products) })
       .catch((err) => { console.log(err) })
-    setLoading(false)
+      .finally(() => { setLoading(false) })
   }, [page, rowsPerPage])
 
   useEffect(() => {
     GetProducts()
   }, [GetProducts])
+
+  const getCategoriesOptions = useCallback(async () => {
+    await getCategories()
+      .then((res) => setCategories(res.data.categories))
+      .catch((err) => { console.log(err) })
+  }, [])
+
+  useEffect(() => {
+    getCategoriesOptions()
+  }, [getCategoriesOptions])
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -83,13 +94,6 @@ const Products = () => {
 
   }
 
-  const handelTitleFilter = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitleFilter(e.target.value)
-  }
-  const handelCategoryFilter = (e: ChangeEvent<HTMLInputElement>) => {
-    setCategoryFilter(e.target.value)
-  }
-
   return (
     <div className="h-[100vh] lg:px-20 whitespace-nowrap px-4 flex flex-col items-center justify-center">
       <Box className="my-20 text-start">
@@ -110,21 +114,27 @@ const Products = () => {
                 <Dialog onClose={() => setOpen(false)} open={open}>
                   <DialogTitle>Sort And Filter</DialogTitle>
                   <Box className="p-4 flex flex-col gap-4">
-                  <section className="gap-4 max-w-[400px] flex-col">
-                    <div className="flex flex-row flex-wrap gap-2">
-                      <Chip clickable label="date" variant="outlined" icon={sort.date ? <DoneIcon className="text-green-500 w-6 h-6 "/> : undefined} onClick={() => setSort({...sort, date: !sort.date })} />
-                      <Chip clickable label="likes" variant="outlined" icon={sort.likes ? <DoneIcon className="text-green-500 w-6 h-6 "/> : undefined} onClick={() => setSort({...sort, likes: !sort.likes })} />
-                      <Chip clickable label="pieces" variant="outlined" icon={sort.pieces ? <DoneIcon className="text-green-500 w-6 h-6 "/> : undefined} onClick={() => setSort({...sort, pieces: !sort.pieces })} />
-                      <Chip clickable label="price" variant="outlined" icon={sort.price ? <DoneIcon className="text-green-500 w-6 h-6 "/> : undefined} onClick={() => setSort({...sort, price: !sort.price })} />
-                    </div>
-                  </section>
+                    <section className="gap-4 max-w-[400px] flex-col">
+                      <div className="flex flex-row flex-wrap gap-2">
+                        <Chip clickable label="date" variant="outlined" icon={sort.date ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, date: !sort.date })} />
+                        <Chip clickable label="likes" variant="outlined" icon={sort.likes ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, likes: !sort.likes })} />
+                        <Chip clickable label="pieces" variant="outlined" icon={sort.pieces ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, pieces: !sort.pieces })} />
+                        <Chip clickable label="price" variant="outlined" icon={sort.price ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, price: !sort.price })} />
+                      </div>
+                    </section>
 
-                  <section className="h-full justify-start flex items-center gap-4 flex-col">
+                    <section className="h-full justify-start flex items-center gap-4 flex-col">
                       <label htmlFor='title' className="sr-only ">title</label>
-                      <input id="title" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='title' value={titleFilter} onChange={handelTitleFilter} />
-                      <label htmlFor='category' className="sr-only ">category</label>
-                      <input id="category" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='category' value={categoryFilter} onChange={handelCategoryFilter} />
-                  </section>
+                      <input id="title" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='title' value={titleFilter} onChange={(e) =>  setTitleFilter(e.target.value)} />
+                      <div className="flex flex-row w-[300px]">
+                        <label htmlFor="category" className="text-sm w-[180px] text-center font-medium text-gray-700">category</label>
+                        <select id="category" onChange={(e) => setCategoryFilter(e.target.value)} value={categoryFilter} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                          {categories.map((category, index) => (
+                          <option value={category.name} key={index}>{category.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </section>
                   </Box>
                 </Dialog>
 

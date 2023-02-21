@@ -21,7 +21,7 @@ export const createProduct = async (data: ICreateProduct) => await API.post("/ad
 
 export const getCategoriesAndTags = async () => await API.get("/admin/product")
 
-export const getCategories = async (page: number) => await API.get(`/utils?categories=true&page=${page}`)
+export const getCategories = async (page?: number) => await API.get(`/utils?categories=true&page=${page}`)
 
 export const getProducts = async (category: string, page: number) => await API.get(`/product?category=${category}&page=${page}`)
 

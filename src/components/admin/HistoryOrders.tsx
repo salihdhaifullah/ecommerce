@@ -10,8 +10,13 @@ import TableRow from '@mui/material/TableRow';
 import { deliverOrder, getHistoryOrders } from '../../api';
 import Details from '../../components/admin/Details';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Button } from '@mui/material';
+import { Button, Chip } from '@mui/material';
 import dateFormat from '../../utils/dateFormat';
+import Box from '@mui/material/Box';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DoneIcon from '@mui/icons-material/Done';
 
 
 interface IHistoryOrdersOrderData {
@@ -43,12 +48,13 @@ interface IHistoryOrdersOrderData {
 const Row = ({ row }: { row: IHistoryOrdersOrderData }) => {
   const [isLoading, setIsLoading] = useState(false)
 
+
   const handelDeliver = async (id: number) => {
     setIsLoading(true)
 
     await deliverOrder(id)
       .then((res) => { row.received = true })
-      .catch((err) => {})
+      .catch((err) => { })
       .finally(() => { setIsLoading(false) })
   }
 
@@ -76,7 +82,7 @@ const Row = ({ row }: { row: IHistoryOrdersOrderData }) => {
             {isLoading ? <CircularProgress className="text-white p-2 w-8 h-8" />
               : <span title="Unreceived Products">Deliver</span>}
           </Button>
-        ) : <div>UnVerified</div> }
+        ) : <div>UnVerified</div>}
       </TableCell>
     </TableRow>
   )
@@ -87,6 +93,11 @@ export default function HistoryOrders() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [historyOrders, setHistoryOrders] = useState<IHistoryOrdersOrderData[]>([])
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false)
+  const [userNameFilter, setUserNameFilter] = useState("")
+  const [sort, setSort] = useState({ date: false, totalPrice: false })
+  const [paymentFilter, setPaymentFilter] = useState("")
+  const [deliverFilter, setDeliverFilter] = useState("")
 
   const GetHistoryOrders = useCallback(async () => {
     setLoading(true)
@@ -114,6 +125,46 @@ export default function HistoryOrders() {
       {loading ? <CircularProgress className="w-12 h-12" />
         : (
           <Paper className="w-full overflow-auto px-4 pt-4">
+            <Box className="w-full flex flex-row justify-start m-1 mr-2 gap-2 items-center">
+
+              <FilterListIcon onClick={() => setOpen(true)} className="text-gray-600 cursor-pointer hover:bg-slate-100  rounded-md p-2  w-12 h-12" />
+
+              <Dialog onClose={() => setOpen(false)} open={open}>
+                <DialogTitle>Sort And Filter</DialogTitle>
+                <Box className="p-4 flex flex-col gap-4">
+                  <section className="gap-4 max-w-[400px] flex-col">
+                    <div className="flex flex-row flex-wrap gap-2">
+                      <Chip clickable label="date" variant="outlined" icon={sort.date ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, date: !sort.date })} />
+                      <Chip clickable label="total-price" variant="outlined" icon={sort.totalPrice ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, totalPrice: !sort.totalPrice })} />
+                    </div>
+                  </section>
+
+                  <section className="h-full justify-start flex items-center gap-4 flex-col">
+                    <label htmlFor='user-name' className="sr-only ">user name</label>
+                    <input id="user-name" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='user name' value={userNameFilter} onChange={(e) => setUserNameFilter(e.target.value)} />
+
+                    <div className="flex flex-row w-[300px]">
+                    <label htmlFor="payment-state" className="text-sm w-[180px] text-center font-medium text-gray-700">payment state</label>
+                    <select id="payment-state" value={paymentFilter} onChange={(e) => setPaymentFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                      <option value="Verified">Verified</option>
+                      <option value="Canceled">Canceled</option>
+                    </select>
+                    </div>
+
+                    <div className="flex flex-row w-[300px]">
+                      <label htmlFor="deliver-state" className="text-sm w-[180px] text-center font-medium text-gray-700">deliver state</label>
+                      <select id="deliver-state" value={deliverFilter} onChange={(e) => setDeliverFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value="UnVerified">UnVerified</option>
+                        <option value="UnDelivered">UnDelivered</option>
+                        <option value="Received">Received</option>
+                      </select>
+                    </div>
+
+                  </section>
+                </Box>
+              </Dialog>
+
+            </Box>
             <TableContainer>
               <Table stickyHeader aria-label="Table of Orders">
                 <TableHead>

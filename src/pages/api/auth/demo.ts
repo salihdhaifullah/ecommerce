@@ -1,14 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { genSaltSync, hashSync } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { setCookie } from 'cookies-next';
-import prisma from '../../../libs/prisma/index';
+import prisma from '../../../libs/prisma';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "GET") {
 
         try {
-            let refreshToken = ""
             const fullYear = 1000 * 60 * 60 * 24 * 365;
 
             const demo = {
@@ -16,7 +14,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 firstName: "demo",
                 lastName: "demo",
                 password: "demo",
-                role: "ADMIN"
             }
 
             const user = await prisma.user.findFirst({
@@ -42,7 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                         lastName: demo.lastName,
                         email: demo.email,
                         password: hashPassword,
-                        role: demo.role
+                        role: "ADMIN"
                     }
                 })
 
@@ -52,7 +49,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     `token=${token}; HttpOnly; SameSite=strict Expires=${new Date(Date.now() + fullYear)}; Path=/; Max-Age=${fullYear}; Secure=${process.env.NODE_ENV === "production" ? "True" : "False"};`,
                 ]);
 
-                return res.status(200).json({ data: UserData, massage: "login success as demo" })
+                const data = {
+                    id: UserData.id,
+                    createdAt: UserData.createdAt,
+                    email: UserData.email,
+                    lastName: UserData.lastName,
+                    firstName: UserData.firstName,
+                    role: UserData.role
+                }
+
+                return res.status(200).json({ data, massage: "login success as demo" })
 
             } else {
                 const token = jwt.sign({ id: user.id, role: user.role }, process.env.SECRET_KEY!, { expiresIn: fullYear })

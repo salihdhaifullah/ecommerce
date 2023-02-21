@@ -17,6 +17,7 @@ import Chip from '@mui/material/Chip';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import DoneIcon from '@mui/icons-material/Done';
+import LoaderCircle from '../utils/LoaderCircle';
 
 interface IUsersData {
   createdAt: Date;
@@ -45,12 +46,13 @@ export default function Users() {
   const [emailFilter, setEmailFilter] = useState("")
 
   const GetUsers = useCallback(async () => {
+    if (open) return;
     setLoading(true)
-    await getUsers((page * rowsPerPage), rowsPerPage)
+    await getUsers((page * rowsPerPage), rowsPerPage, nameFilter, emailFilter, sort.date, sort.totalPayment)
       .then((res) => { setUsers(res.data.users) })
       .catch((err) => { console.log(err) })
-    setLoading(false)
-  }, [page, rowsPerPage])
+      .finally(() => { setLoading(false) })
+  }, [emailFilter, nameFilter, open, page, rowsPerPage, sort.date, sort.totalPayment])
 
   useEffect(() => {
     GetUsers()
@@ -70,70 +72,71 @@ export default function Users() {
       <Box className="my-20 text-start">
         <Typography variant="h3" className="text-gray-900 font-bold">Users </Typography>
       </Box>
-      {loading ? <CircularProgress className="w-12 h-12" />
-        : (
-          <Paper className="w-full overflow-auto">
 
-            <Box className="w-full flex flex-row justify-start m-1 mr-2 gap-2 items-center">
+      <Paper className="w-full overflow-auto">
 
-              <FilterListIcon onClick={() => setOpen(true)} className="text-gray-600 cursor-pointer hover:bg-slate-100  rounded-md p-2  w-12 h-12" />
+        <Box className="w-full flex flex-row justify-start m-1 mr-2 gap-2 items-center">
 
-              <Dialog onClose={() => setOpen(false)} open={open}>
-                <DialogTitle>Sort And Filter</DialogTitle>
-                <Box className="p-4 flex flex-col gap-4">
-                  <section className="gap-4 max-w-[400px] flex-col">
-                    <div className="flex flex-row flex-wrap gap-2">
-                      <Chip clickable label="date" variant="outlined" icon={sort.date ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, date: !sort.date })} />
-                      <Chip clickable label="total-payment" variant="outlined" icon={sort.totalPayment ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, totalPayment: !sort.totalPayment })} />
-                    </div>
-                  </section>
+          <FilterListIcon onClick={() => setOpen(true)} className="text-gray-600 cursor-pointer hover:bg-slate-100  rounded-md p-2  w-12 h-12" />
 
-                  <section className="h-full justify-start flex items-center gap-4 flex-col">
-                    <label htmlFor='name' className="sr-only ">name</label>
-                    <input id="name" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='name' value={nameFilter} onChange={(e) => setNameFilter(e.target.value)} />
-                    <label htmlFor='email' className="sr-only ">email</label>
-                    <input id="email" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='email' value={emailFilter} onChange={(e) => setEmailFilter(e.target.value)} />
-                  </section>
-                </Box>
-              </Dialog>
+          <Dialog onClose={() => setOpen(false)} open={open}>
+            <DialogTitle>Sort And Filter</DialogTitle>
+            <Box className="p-4 flex flex-col gap-4">
+              <section className="gap-4 max-w-[400px] flex-col">
+                <div className="flex flex-row flex-wrap gap-2">
+                  <Chip clickable label="date" variant="outlined" icon={sort.date ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, date: !sort.date })} />
+                  <Chip clickable label="total-payment" variant="outlined" icon={sort.totalPayment ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, totalPayment: !sort.totalPayment })} />
+                </div>
+              </section>
 
+              <section className="h-full justify-start flex items-center gap-4 flex-col">
+                <label htmlFor='name' className="sr-only ">name</label>
+                <input id="name" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='name' value={nameFilter} onChange={(e) => setNameFilter(e.target.value)} />
+                <label htmlFor='email' className="sr-only ">email</label>
+                <input id="email" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='email' value={emailFilter} onChange={(e) => setEmailFilter(e.target.value)} />
+              </section>
             </Box>
+          </Dialog>
 
-            <TableContainer>
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell> Join At </TableCell>
-                    <TableCell> First Name </TableCell>
-                    <TableCell> Last Name </TableCell>
-                    <TableCell> Email </TableCell>
-                    <TableCell> Total Payments </TableCell>
+        </Box>
+
+        {loading ? <LoaderCircle /> : (
+          <TableContainer>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  <TableCell> Join At </TableCell>
+                  <TableCell> First Name </TableCell>
+                  <TableCell> Last Name </TableCell>
+                  <TableCell> Email </TableCell>
+                  <TableCell> Total Payments </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {users.map((row, index) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    <TableCell>{dateFormat(row.createdAt)}</TableCell>
+                    <TableCell>{row.firstName}</TableCell>
+                    <TableCell>{row.lastName}</TableCell>
+                    <TableCell>{row.email}</TableCell>
+                    <TableCell>{getTotal(row.payment) + "$"}</TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {users.map((row, index) => (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                      <TableCell>{dateFormat(row.createdAt)}</TableCell>
-                      <TableCell>{row.firstName}</TableCell>
-                      <TableCell>{row.lastName}</TableCell>
-                      <TableCell>{row.email}</TableCell>
-                      <TableCell>{getTotal(row.payment) + "$"}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
-              component="div"
-              count={users.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
+
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={users.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
     </div>
   );
 }

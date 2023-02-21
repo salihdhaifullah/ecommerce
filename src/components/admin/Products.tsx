@@ -21,6 +21,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import Chip from '@mui/material/Chip';
+import LoaderCircle from '../utils/LoaderCircle';
 
 interface IProductsData {
   createdAt: Date;
@@ -46,12 +47,13 @@ const Products = () => {
   const [categories, setCategories] = useState<{ name: string }[]>([])
 
   const GetProducts = useCallback(async () => {
+    if (open) return;
     setLoading(true)
-    await getProductsTable((page * rowsPerPage), rowsPerPage)
+    await getProductsTable((page * rowsPerPage), rowsPerPage, categoryFilter, titleFilter, sort.date, sort.likes, sort.pieces, sort.price)
       .then((res) => { setProducts(res.data.products) })
       .catch((err) => { console.log(err) })
       .finally(() => { setLoading(false) })
-  }, [page, rowsPerPage])
+  }, [categoryFilter, open, page, rowsPerPage, sort.date, sort.likes, sort.pieces, sort.price, titleFilter])
 
   useEffect(() => {
     GetProducts()
@@ -100,8 +102,7 @@ const Products = () => {
         <Typography variant="h3" className="text-gray-900 font-bold">Products </Typography>
       </Box>
 
-      {loading ? <CircularProgress className="w-12 h-12" />
-        : (
+
           <Paper className="w-full overflow-auto">
             <Box className="flex justify-start w-full m-1 items-center">
               <Button className="bg-blue-600 min-w-[150px] text-white shadow-md">
@@ -125,12 +126,12 @@ const Products = () => {
 
                     <section className="h-full justify-start flex items-center gap-4 flex-col">
                       <label htmlFor='title' className="sr-only ">title</label>
-                      <input id="title" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='title' value={titleFilter} onChange={(e) =>  setTitleFilter(e.target.value)} />
+                      <input id="title" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='title' value={titleFilter} onChange={(e) => setTitleFilter(e.target.value)} />
                       <div className="flex flex-row w-[300px]">
                         <label htmlFor="category" className="text-sm w-[180px] text-center font-medium text-gray-700">category</label>
                         <select id="category" onChange={(e) => setCategoryFilter(e.target.value)} value={categoryFilter} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                           {categories.map((category, index) => (
-                          <option value={category.name} key={index}>{category.name}</option>
+                            <option value={category.name} key={index}>{category.name}</option>
                           ))}
                         </select>
                       </div>
@@ -140,46 +141,48 @@ const Products = () => {
 
               </Box>
             </Box>
-            <TableContainer>
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell> Created At </TableCell>
-                    <TableCell> Title </TableCell>
-                    <TableCell> Category </TableCell>
-                    <TableCell> Likes </TableCell>
-                    <TableCell> Pieces </TableCell>
-                    <TableCell> Price </TableCell>
-                    <TableCell> Update </TableCell>
-                    <TableCell> Delete </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {products.map((row, index) => (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                      <TableCell>{dateFormat(row.createdAt)}</TableCell>
-
-                      <TableCell className="link text-blue-500">
-                        <Link href={`/products/${row.id}`}>{row.title}</Link>
-                      </TableCell>
-
-                      <TableCell>{row.category.name}</TableCell>
-                      <TableCell>{row.likes.length}</TableCell>
-                      <TableCell>{row.pieces}</TableCell>
-                      <TableCell>{row.price}</TableCell>
-                      <TableCell>
-                        <Link href={`/admin/update-product/?id=${row.id}`}>
-                          <Button className="bg-green-500 shadow-md lowercase p-0 text-white shadow-green-500">Update</Button>
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <Button onClick={() => handelDelete(row.id)} className="bg-red-500 shadow-md lowercase p-0 text-white shadow-red-500">Delete</Button>
-                      </TableCell>
+            {loading ? <LoaderCircle /> : (
+              <TableContainer>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell> Created At </TableCell>
+                      <TableCell> Title </TableCell>
+                      <TableCell> Category </TableCell>
+                      <TableCell> Likes </TableCell>
+                      <TableCell> Pieces </TableCell>
+                      <TableCell> Price </TableCell>
+                      <TableCell> Update </TableCell>
+                      <TableCell> Delete </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableHead>
+                  <TableBody>
+                    {products.map((row, index) => (
+                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                        <TableCell>{dateFormat(row.createdAt)}</TableCell>
+
+                        <TableCell className="link text-blue-500">
+                          <Link href={`/products/${row.id}`}>{row.title}</Link>
+                        </TableCell>
+
+                        <TableCell>{row.category.name}</TableCell>
+                        <TableCell>{row.likes.length}</TableCell>
+                        <TableCell>{row.pieces}</TableCell>
+                        <TableCell>{row.price}</TableCell>
+                        <TableCell>
+                          <Link href={`/admin/update-product/?id=${row.id}`}>
+                            <Button className="bg-green-500 shadow-md lowercase p-0 text-white shadow-green-500">Update</Button>
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                          <Button onClick={() => handelDelete(row.id)} className="bg-red-500 shadow-md lowercase p-0 text-white shadow-red-500">Delete</Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
@@ -190,7 +193,6 @@ const Products = () => {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
-        )}
     </div>
   );
 }

@@ -17,6 +17,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DoneIcon from '@mui/icons-material/Done';
+import LoaderCircle from '../utils/LoaderCircle';
 
 
 interface IHistoryOrdersOrderData {
@@ -100,12 +101,13 @@ export default function HistoryOrders() {
   const [deliverFilter, setDeliverFilter] = useState("")
 
   const GetHistoryOrders = useCallback(async () => {
+    if (open) return;
     setLoading(true)
-    await getHistoryOrders((page * rowsPerPage), rowsPerPage)
+    await getHistoryOrders((page * rowsPerPage), rowsPerPage, userNameFilter, paymentFilter, deliverFilter, sort.date, sort.totalPrice)
       .then((res) => { setHistoryOrders(res.data.orders) })
       .catch((err) => { console.log(err) })
-    setLoading(false)
-  }, [page, rowsPerPage])
+      .finally(() => { setLoading(false) })
+  }, [deliverFilter, open, page, paymentFilter, rowsPerPage, sort.date, sort.totalPrice, userNameFilter])
 
   useEffect(() => {
     GetHistoryOrders()
@@ -122,81 +124,83 @@ export default function HistoryOrders() {
 
   return (
     <div className="h-[100vh] lg:px-20 break-keep px-4 flex items-center justify-center">
-      {loading ? <CircularProgress className="w-12 h-12" />
-        : (
-          <Paper className="w-full overflow-auto px-4 pt-4">
-            <Box className="w-full flex flex-row justify-start m-1 mr-2 gap-2 items-center">
 
-              <FilterListIcon onClick={() => setOpen(true)} className="text-gray-600 cursor-pointer hover:bg-slate-100  rounded-md p-2  w-12 h-12" />
+      <Paper className="w-full overflow-auto px-4 pt-4">
+        <Box className="w-full flex flex-row justify-start m-1 mr-2 gap-2 items-center">
 
-              <Dialog onClose={() => setOpen(false)} open={open}>
-                <DialogTitle>Sort And Filter</DialogTitle>
-                <Box className="p-4 flex flex-col gap-4">
-                  <section className="gap-4 max-w-[400px] flex-col">
-                    <div className="flex flex-row flex-wrap gap-2">
-                      <Chip clickable label="date" variant="outlined" icon={sort.date ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, date: !sort.date })} />
-                      <Chip clickable label="total-price" variant="outlined" icon={sort.totalPrice ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, totalPrice: !sort.totalPrice })} />
-                    </div>
-                  </section>
+          <FilterListIcon onClick={() => setOpen(true)} className="text-gray-600 cursor-pointer hover:bg-slate-100  rounded-md p-2  w-12 h-12" />
 
-                  <section className="h-full justify-start flex items-center gap-4 flex-col">
-                    <label htmlFor='user-name' className="sr-only ">user name</label>
-                    <input id="user-name" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='user name' value={userNameFilter} onChange={(e) => setUserNameFilter(e.target.value)} />
+          <Dialog onClose={() => setOpen(false)} open={open}>
+            <DialogTitle>Sort And Filter</DialogTitle>
+            <Box className="p-4 flex flex-col gap-4">
+              <section className="gap-4 max-w-[400px] flex-col">
+                <div className="flex flex-row flex-wrap gap-2">
+                  <Chip clickable label="date" variant="outlined" icon={sort.date ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, date: !sort.date })} />
+                  <Chip clickable label="total-price" variant="outlined" icon={sort.totalPrice ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, totalPrice: !sort.totalPrice })} />
+                </div>
+              </section>
 
-                    <div className="flex flex-row w-[300px]">
-                    <label htmlFor="payment-state" className="text-sm w-[180px] text-center font-medium text-gray-700">payment state</label>
-                    <select id="payment-state" value={paymentFilter} onChange={(e) => setPaymentFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                      <option value="Verified">Verified</option>
-                      <option value="Canceled">Canceled</option>
-                    </select>
-                    </div>
+              <section className="h-full justify-start flex items-center gap-4 flex-col">
+                <label htmlFor='user-name' className="sr-only ">user name</label>
+                <input id="user-name" className="border w-full border-gray-400 focus:ring-2 p-1 rounded-md focus:border-0 ring-blue-500 outline-none hover:border-black " placeholder='user name' value={userNameFilter} onChange={(e) => setUserNameFilter(e.target.value)} />
 
-                    <div className="flex flex-row w-[300px]">
-                      <label htmlFor="deliver-state" className="text-sm w-[180px] text-center font-medium text-gray-700">deliver state</label>
-                      <select id="deliver-state" value={deliverFilter} onChange={(e) => setDeliverFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        <option value="UnVerified">UnVerified</option>
-                        <option value="UnDelivered">UnDelivered</option>
-                        <option value="Received">Received</option>
-                      </select>
-                    </div>
+                <div className="flex flex-row w-[300px]">
+                  <label htmlFor="payment-state" className="text-sm w-[180px] text-center font-medium text-gray-700">payment state</label>
+                  <select id="payment-state" value={paymentFilter} onChange={(e) => setPaymentFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option value="Verified">Verified</option>
+                    <option value="Canceled">Canceled</option>
+                  </select>
+                </div>
 
-                  </section>
-                </Box>
-              </Dialog>
+                <div className="flex flex-row w-[300px]">
+                  <label htmlFor="deliver-state" className="text-sm w-[180px] text-center font-medium text-gray-700">deliver state</label>
+                  <select id="deliver-state" value={deliverFilter} onChange={(e) => setDeliverFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option value="UnVerified">UnVerified</option>
+                    <option value="UnDelivered">UnDelivered</option>
+                    <option value="Received">Received</option>
+                  </select>
+                </div>
 
+              </section>
             </Box>
-            <TableContainer>
-              <Table stickyHeader aria-label="Table of Orders">
-                <TableHead>
-                  <TableRow>
-                    <TableCell> <div className="w-[100px]">Created-At</div> </TableCell>
-                    <TableCell> <div className="w-[100px]">Details</div> </TableCell>
-                    <TableCell> <div className="w-[100px]">total-Price</div> </TableCell>
-                    <TableCell> <div className="w-[100px]">User-Name</div> </TableCell>
-                    <TableCell> <div className="w-[120px]">Payment State</div> </TableCell>
-                    <TableCell> <div className="w-[100px]">Deliver State</div> </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {historyOrders.map((row, index) => (
-                    <Fragment key={index}>
-                      <Row row={row} />
-                    </Fragment>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 100]}
-              component="div"
-              count={historyOrders.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
+          </Dialog>
+
+        </Box>
+        {loading ? <LoaderCircle /> : (
+        <TableContainer>
+        <Table stickyHeader aria-label="Table of Orders">
+          <TableHead>
+            <TableRow>
+              <TableCell> <div className="w-[100px]">Created-At</div> </TableCell>
+              <TableCell> <div className="w-[100px]">Details</div> </TableCell>
+              <TableCell> <div className="w-[100px]">total-Price</div> </TableCell>
+              <TableCell> <div className="w-[100px]">User-Name</div> </TableCell>
+              <TableCell> <div className="w-[120px]">Payment State</div> </TableCell>
+              <TableCell> <div className="w-[100px]">Deliver State</div> </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {historyOrders.map((row, index) => (
+                <Fragment key={index}>
+                  <Row row={row} />
+                </Fragment>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
         )}
+
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={historyOrders.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+
 
     </div>
   );

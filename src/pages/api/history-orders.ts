@@ -39,6 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 phoneNumber: true,
                 country: true,
                 countryCode: true,
+                createdAt: true
             },
         });
 

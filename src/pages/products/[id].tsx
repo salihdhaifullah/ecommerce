@@ -12,7 +12,6 @@ import { createFeedBack, getLikes, getFeedBacks, likeProduct } from '../../api';
 import useGetUser from '../../hooks/useGetUser';
 import { Context } from '../../context'
 import { Box, CircularProgress, Container } from '@mui/material';
-import moment from 'moment';
 import FeedBacks from '../../components/products/FeedBacks';
 import Likes from '../../components/products/Likes';
 import AddProduct from '../../components/products/AddProduct';
@@ -21,6 +20,7 @@ import ProductDetails from '../../components/products/ProductDetails';
 import ProductContent from '../../components/products/ProductContent';
 import Line from '../../components/utils/Line';
 import { GetServerSidePropsContext, GetServerSideProps } from 'next'
+import dateFormat from '../../utils/dateFormat';
 
 
 const Tags = ({ tags }: { tags: { name: string }[] }) => {
@@ -62,7 +62,7 @@ const ProductPage = ({ product }: { product: IProduct }) => {
                     <DiscountAndPrice price={product.price} discount={product.discount} />
 
                     <div className="w-full text-sm font-normal text-gray-600 h-fit flex justify-end py-2 items-center">
-                        <time>Created at {moment(product.createdAt).format("ll")}</time>
+                        <time>Created at {dateFormat(product.createdAt)}</time>
                     </div>
 
                     <ProductContent title={product.title} image={product.imageUrl} />

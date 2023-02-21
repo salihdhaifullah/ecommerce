@@ -11,6 +11,8 @@ import { deliverOrder, getHistoryOrders } from '../../api';
 import Details from '../../components/admin/Details';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Button } from '@mui/material';
+import dateFormat from '../../utils/dateFormat';
+
 
 interface IHistoryOrdersOrderData {
   saleProducts: {
@@ -35,16 +37,17 @@ interface IHistoryOrdersOrderData {
   phoneNumber: string;
   country: string;
   countryCode: string;
+  createdAt: Date;
 }
 
-const Row = ({ row, GetHistoryOrders }: { row: IHistoryOrdersOrderData, GetHistoryOrders: () => void }) => {
+const Row = ({ row }: { row: IHistoryOrdersOrderData }) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handelDeliver = async (id: number) => {
     setIsLoading(true)
 
     await deliverOrder(id)
-      .then((res) => { GetHistoryOrders() })
+      .then((res) => { row.received = true })
       .catch((err) => {})
       .finally(() => { setIsLoading(false) })
   }
@@ -61,14 +64,16 @@ const Row = ({ row, GetHistoryOrders }: { row: IHistoryOrdersOrderData, GetHisto
 
   return (
     <TableRow hover role="checkbox" tabIndex={-1}>
+      <TableCell>{dateFormat(row.createdAt)}</TableCell>
       <TableCell><Details details={data} /></TableCell>
       <TableCell>{row.totalPrice}</TableCell>
       <TableCell>{row.user.firstName + " " + row.user.lastName}</TableCell>
       <TableCell>{row.verified ? "Verified" : "Canceled"}</TableCell>
       <TableCell>
+
         {row.received ? "Received" : row.verified ? (
-          <Button onClick={() => handelDeliver(row.id)} className="bg-green-500 shadow-md lowercase p-0 text-white shadow-green-500">
-            {isLoading ? <CircularProgress className="text-white w-6 h-6" />
+          <Button onClick={() => handelDeliver(row.id)} className="bg-green-500 p-0  shadow-md lowercase text-white shadow-green-500">
+            {isLoading ? <CircularProgress className="text-white p-2 w-8 h-8" />
               : <span title="Unreceived Products">Deliver</span>}
           </Button>
         ) : <div>UnVerified</div> }
@@ -113,6 +118,7 @@ export default function HistoryOrders() {
               <Table stickyHeader aria-label="Table of Orders">
                 <TableHead>
                   <TableRow>
+                    <TableCell> <div className="w-[100px]">Created-At</div> </TableCell>
                     <TableCell> <div className="w-[100px]">Details</div> </TableCell>
                     <TableCell> <div className="w-[100px]">total-Price</div> </TableCell>
                     <TableCell> <div className="w-[100px]">User-Name</div> </TableCell>
@@ -123,7 +129,7 @@ export default function HistoryOrders() {
                 <TableBody>
                   {historyOrders.map((row, index) => (
                     <Fragment key={index}>
-                      <Row row={row} GetHistoryOrders={GetHistoryOrders}/>
+                      <Row row={row} />
                     </Fragment>
                   ))}
                 </TableBody>

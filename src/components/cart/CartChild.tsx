@@ -11,8 +11,8 @@ import Likes from '../products/Likes';
 import DiscountAndPrice from '../products/DiscountAndPrice';
 import ProductContent from '../products/ProductContent';
 import Box from '@mui/material/Box';
-import moment from 'moment';
 import AddRemove from '../products/AddRemove';
+import dateFormat from '../../utils/dateFormat';
 
 
 interface ICartChildProps {
@@ -49,7 +49,7 @@ const CartChild = ({ product, handelDelete }: ICartChildProps) => {
                     <DiscountAndPrice price={product.price} discount={product.discount} />
 
                     <div className="w-full text-sm font-normal text-gray-600 h-fit flex justify-end py-2 items-center">
-                        <time>Created at {moment(product.createdAt).format("ll")}</time>
+                        <time>Created at {dateFormat(product.createdAt)}</time>
                     </div>
 
                     <ProductContent title={product.title} image={product.imageUrl} />

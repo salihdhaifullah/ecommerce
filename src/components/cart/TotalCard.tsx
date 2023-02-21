@@ -13,8 +13,6 @@ import ReactDOM from "react-dom"
 import { useCallback } from 'react';
 import { ICheckoutData, IOrderDetails } from '../../types/cart';
 
-
-
 const Model = ({ setOpen }: { setOpen: (bool: boolean) => void }) => {
     const [ele, setEle] = useState<HTMLDivElement | null>(null)
     const eleCallback = useCallback((node: HTMLDivElement) => { setEle(node) }, [])

@@ -8,10 +8,10 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { getUsers } from '../../api';
-import moment from 'moment';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box/Box';
 import Typography from '@mui/material/Typography';
+import dateFormat from '../../utils/dateFormat';
 
 interface IUsersData {
   createdAt: Date;
@@ -78,7 +78,7 @@ export default function Users() {
                 <TableBody>
                   {users.map((row, index) => (
                     <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                      <TableCell>{moment(row.createdAt).format("ll")}</TableCell>
+                      <TableCell>{dateFormat(row.createdAt)}</TableCell>
                       <TableCell>{row.firstName}</TableCell>
                       <TableCell>{row.lastName}</TableCell>
                       <TableCell>{row.email}</TableCell>

@@ -36,8 +36,8 @@ export const getCartProducts = async (productsIds: number[]) => await API.post(`
 export const getHistoryOrders = async (skip: number, take: number, userName?: string, paymentState?: string, deliverState?: string, date?: boolean, totalPrice?: boolean
     ) => await API.get(`/admin/dashboard/history-orders/?skip=${skip}&take=${take}&user-name=${userName || ""}&payment-state=${paymentState || ""}&deliver-state=${deliverState || ""}$date=${date || ""}&total-price=${totalPrice || ""}`)
 
-export const getProductsTable = async (skip: number, take: number, category?: string, title?: string, date?: boolean, likes?: boolean, pieces?: boolean, price?: boolean
-    ) => await API.get(`/admin/dashboard/products/?skip=${skip}&take=${take}&category=${category || ""}&title=${title || ""}&date=${date || ""}&likes=${likes || ""}&pieces=${pieces || ""}&price=${price}`)
+export const getProductsTable = async (skip: number, take: number, category?: string, title?: string, sort?: "date" | "likes" | "pieces" | "price",
+    ) => await API.get(`/admin/dashboard/products/?skip=${skip}&take=${take}&category=${category || ""}&title=${title || ""}&sort=${sort || ""}`)
 
 export const getUsers = async (skip: number, take: number, name?: string, email?: string, date?: boolean, totalPayment?: boolean
     ) => await API.get(`/admin/dashboard/users/?skip=${skip}&take=${take}&name=${name || ""}&email=${email || ""}&date=${date || ""}&total-payment=${totalPayment || ""}`)

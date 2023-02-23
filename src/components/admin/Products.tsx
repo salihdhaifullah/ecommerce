@@ -43,17 +43,17 @@ const Products = () => {
   const [open, setOpen] = useState(false);
   const [titleFilter, setTitleFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
-  const [sort, setSort] = useState({ date: false, likes: false, pieces: false, price: false })
+  const [sort, setSort] = useState<"date" | "likes" | "pieces" | "price" | undefined>(undefined)
   const [categories, setCategories] = useState<{ name: string }[]>([])
 
   const GetProducts = useCallback(async () => {
     if (open) return;
     setLoading(true)
-    await getProductsTable((page * rowsPerPage), rowsPerPage, categoryFilter, titleFilter, sort.date, sort.likes, sort.pieces, sort.price)
+    await getProductsTable((page * rowsPerPage), rowsPerPage, categoryFilter, titleFilter, sort)
       .then((res) => { setProducts(res.data.products) })
       .catch((err) => { console.log(err) })
       .finally(() => { setLoading(false) })
-  }, [categoryFilter, open, page, rowsPerPage, sort.date, sort.likes, sort.pieces, sort.price, titleFilter])
+  }, [categoryFilter, open, page, rowsPerPage, sort, titleFilter])
 
   useEffect(() => {
     GetProducts()
@@ -105,10 +105,8 @@ const Products = () => {
 
           <Paper className="w-full overflow-auto">
             <Box className="flex justify-start w-full m-1 items-center">
-              <Button className="bg-blue-600 min-w-[150px] text-white shadow-md">
-                <Link href="/admin/create-product" className="w-full">Create Product</Link>
-              </Button>
-              <Box className="w-full h-full flex flex-row justify-end mr-2 gap-2 items-center">
+
+              <Box className="w-full h-full flex flex-row justify-start gap-2 items-center">
 
                 <FilterListIcon onClick={() => setOpen(true)} className="text-gray-600 cursor-pointer hover:bg-slate-100  rounded-md p-2  w-12 h-12" />
 
@@ -117,10 +115,10 @@ const Products = () => {
                   <Box className="p-4 flex flex-col gap-4">
                     <section className="gap-4 max-w-[400px] flex-col">
                       <div className="flex flex-row flex-wrap gap-2">
-                        <Chip clickable label="date" variant="outlined" icon={sort.date ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, date: !sort.date })} />
-                        <Chip clickable label="likes" variant="outlined" icon={sort.likes ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, likes: !sort.likes })} />
-                        <Chip clickable label="pieces" variant="outlined" icon={sort.pieces ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, pieces: !sort.pieces })} />
-                        <Chip clickable label="price" variant="outlined" icon={sort.price ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, price: !sort.price })} />
+                        <Chip clickable label="date" variant="outlined" icon={sort === "date" ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => sort === "date" ? setSort(undefined) : setSort("date")} />
+                        <Chip clickable label="likes" variant="outlined" icon={sort === "likes" ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => sort === "likes" ? setSort(undefined) : setSort("likes")} />
+                        <Chip clickable label="pieces" variant="outlined" icon={sort === "pieces" ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => sort === "pieces" ? setSort(undefined) : setSort("pieces")} />
+                        <Chip clickable label="price" variant="outlined" icon={sort === "price" ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => sort === "price" ? setSort(undefined) : setSort("price")} />
                       </div>
                     </section>
 
@@ -130,6 +128,7 @@ const Products = () => {
                       <div className="flex flex-row w-[300px]">
                         <label htmlFor="category" className="text-sm w-[180px] text-center font-medium text-gray-700">category</label>
                         <select id="category" onChange={(e) => setCategoryFilter(e.target.value)} value={categoryFilter} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value={""}>-all-</option>
                           {categories.map((category, index) => (
                             <option value={category.name} key={index}>{category.name}</option>
                           ))}
@@ -140,10 +139,13 @@ const Products = () => {
                 </Dialog>
 
               </Box>
+              <Button className="bg-blue-600 mr-2 min-w-[150px] text-white shadow-md">
+                <Link href="/admin/create-product" className="w-full">Create Product</Link>
+              </Button>
             </Box>
             {loading ? <LoaderCircle /> : (
               <TableContainer>
-                <Table stickyHeader aria-label="sticky table">
+                <Table>
                   <TableHead>
                     <TableRow>
                       <TableCell> Created At </TableCell>

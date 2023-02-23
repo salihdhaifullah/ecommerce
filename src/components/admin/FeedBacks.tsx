@@ -149,7 +149,7 @@ export default function FeedBacks() {
 
         {loading ? <LoaderCircle /> : (
           <TableContainer>
-            <Table stickyHeader aria-label="sticky table">
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableCell> Created At </TableCell>
@@ -160,9 +160,7 @@ export default function FeedBacks() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {feedBacks.map((row, index) => (
-                  <Row row={row} key={index} />
-                ))}
+                {feedBacks.map((row, index) => <Row row={row} key={index} /> )}
               </TableBody>
             </Table>
           </TableContainer>

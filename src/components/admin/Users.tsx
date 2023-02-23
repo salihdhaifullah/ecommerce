@@ -102,7 +102,7 @@ export default function Users() {
 
         {loading ? <LoaderCircle /> : (
           <TableContainer>
-            <Table stickyHeader aria-label="sticky table">
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableCell> Join At </TableCell>

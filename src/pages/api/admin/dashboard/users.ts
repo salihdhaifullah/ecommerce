@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../libs/prisma';
+import prisma from '../../../../libs/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -9,20 +9,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({massage: "Bad Request"});
 
-        const products = await prisma.product.findMany({
+        const users = await prisma.user.findMany({
             skip: skip,
             take: take,
             select: {
-                id: true,
-                title: true,
-                likes: true,
-                price: true,
-                pieces: true,
+                firstName: true,
+                lastName: true,
+                email: true,
                 createdAt: true,
-                category: { select: { name: true } }
+                payment: { select: { totalPrice: true }, where: { verified: true } }
             }
         });
 
-        return res.status(200).json({products})
+        return res.status(200).json({ users })
+
     }
 };

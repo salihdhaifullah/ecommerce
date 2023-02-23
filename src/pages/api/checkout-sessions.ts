@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import stripe from '../../../libs/stripe/api'
+import stripe from '../../libs/stripe/api'
 import Stripe from 'stripe'
-import { ISale } from '../../../types/sale'
-import GetUserIdAndRole from '../../../utils/auth'
-import prisma from '../../../libs/prisma'
-import { ICheckoutData } from '../../../types/cart'
+import { ISale } from '../../types/sale'
+import GetUserIdAndRole from '../../utils/auth'
+import prisma from '../../libs/prisma'
+import { ICheckoutData } from '../../types/cart'
 
 interface IProductSale {
     productId: number

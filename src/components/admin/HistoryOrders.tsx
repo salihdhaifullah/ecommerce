@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import { deliverOrder, getHistoryOrders } from '../../api';
 import Details from '../../components/admin/Details';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Button, Chip } from '@mui/material';
+import { Button, Chip, Typography } from '@mui/material';
 import dateFormat from '../../utils/dateFormat';
 import Box from '@mui/material/Box';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -123,7 +123,10 @@ export default function HistoryOrders() {
   };
 
   return (
-    <div className="h-[100vh] lg:px-20 break-keep px-4 flex items-center justify-center">
+    <div className="h-[100vh] flex-col lg:px-20 break-keep px-4 flex items-center justify-center">
+      <Box className="my-20 text-start">
+        <Typography variant="h3" className="text-gray-900 font-bold">Orders</Typography>
+      </Box>
 
       <Paper className="w-full overflow-auto px-4 pt-4">
         <Box className="w-full flex flex-row justify-start m-1 mr-2 gap-2 items-center">

@@ -33,8 +33,8 @@ export const likeProduct = async (productId: number) => await API.patch(`/like/?
 
 export const getCartProducts = async (productsIds: number[]) => await API.post(`/cart`, { ids: productsIds });
 
-export const getHistoryOrders = async (skip: number, take: number, userName?: string, paymentState?: string, deliverState?: string, date?: boolean, totalPrice?: boolean
-    ) => await API.get(`/admin/dashboard/history-orders/?skip=${skip}&take=${take}&user-name=${userName || ""}&payment-state=${paymentState || ""}&deliver-state=${deliverState || ""}$date=${date || ""}&total-price=${totalPrice || ""}`)
+export const getHistoryOrders = async (skip: number, take: number, userName?: string, paymentState?: "verified" | "canceled", deliverState?: "undelivered" | "received", sort?: "total-price" | "date"
+    ) => await API.get(`/admin/dashboard/history-orders/?skip=${skip}&take=${take}&user-name=${userName || ""}&payment-state=${paymentState || ""}&deliver-state=${deliverState || ""}&sort=${sort || ""}`)
 
 export const getProductsTable = async (skip: number, take: number, category?: string, title?: string, sort?: "date" | "likes" | "pieces" | "price",
     ) => await API.get(`/admin/dashboard/products/?skip=${skip}&take=${take}&category=${category || ""}&title=${title || ""}&sort=${sort || ""}`)

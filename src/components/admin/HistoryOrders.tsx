@@ -96,18 +96,18 @@ export default function HistoryOrders() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false)
   const [userNameFilter, setUserNameFilter] = useState("")
-  const [sort, setSort] = useState({ date: false, totalPrice: false })
-  const [paymentFilter, setPaymentFilter] = useState("")
-  const [deliverFilter, setDeliverFilter] = useState("")
+  const [sort, setSort] = useState<"date" | "total-price" | undefined>(undefined)
+  const [paymentFilter, setPaymentFilter] = useState<"verified" | "canceled" | undefined>(undefined)
+  const [deliverFilter, setDeliverFilter] = useState<"undelivered" | "received" | undefined>(undefined)
 
   const GetHistoryOrders = useCallback(async () => {
     if (open) return;
     setLoading(true)
-    await getHistoryOrders((page * rowsPerPage), rowsPerPage, userNameFilter, paymentFilter, deliverFilter, sort.date, sort.totalPrice)
+    await getHistoryOrders((page * rowsPerPage), rowsPerPage, userNameFilter, paymentFilter, deliverFilter, sort)
       .then((res) => { setHistoryOrders(res.data.orders) })
       .catch((err) => { console.log(err) })
       .finally(() => { setLoading(false) })
-  }, [deliverFilter, open, page, paymentFilter, rowsPerPage, sort.date, sort.totalPrice, userNameFilter])
+  }, [deliverFilter, open, page, paymentFilter, rowsPerPage, sort, userNameFilter])
 
   useEffect(() => {
     GetHistoryOrders()
@@ -138,8 +138,8 @@ export default function HistoryOrders() {
             <Box className="p-4 flex flex-col gap-4">
               <section className="gap-4 max-w-[400px] flex-col">
                 <div className="flex flex-row flex-wrap gap-2">
-                  <Chip clickable label="date" variant="outlined" icon={sort.date ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, date: !sort.date })} />
-                  <Chip clickable label="total-price" variant="outlined" icon={sort.totalPrice ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, totalPrice: !sort.totalPrice })} />
+                  <Chip clickable label="date" variant="outlined" icon={sort === "date" ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => sort === "date" ? setSort(undefined) : setSort("date")} />
+                  <Chip clickable label="total-price" variant="outlined" icon={sort === "total-price" ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => sort === "total-price" ? setSort(undefined) : setSort("total-price")} />
                 </div>
               </section>
 
@@ -149,18 +149,21 @@ export default function HistoryOrders() {
 
                 <div className="flex flex-row w-[300px]">
                   <label htmlFor="payment-state" className="text-sm w-[180px] text-center font-medium text-gray-700">payment state</label>
+                  {/* @ts-ignore */}
                   <select id="payment-state" value={paymentFilter} onChange={(e) => setPaymentFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    <option value="Verified">Verified</option>
-                    <option value="Canceled">Canceled</option>
+                    <option value={undefined}>-all-</option>
+                    <option value="verified">Verified</option>
+                    <option value="canceled">Canceled</option>
                   </select>
                 </div>
 
                 <div className="flex flex-row w-[300px]">
                   <label htmlFor="deliver-state" className="text-sm w-[180px] text-center font-medium text-gray-700">deliver state</label>
+                  {/* @ts-ignore */}
                   <select id="deliver-state" value={deliverFilter} onChange={(e) => setDeliverFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    <option value="UnVerified">UnVerified</option>
-                    <option value="UnDelivered">UnDelivered</option>
-                    <option value="Received">Received</option>
+                    <option value={undefined}>-all-</option>
+                    <option value="unDelivered">UnDelivered</option>
+                    <option value="received">Received</option>
                   </select>
                 </div>
 

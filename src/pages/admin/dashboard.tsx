@@ -6,6 +6,7 @@ import ProductsRateChart from '../../components/admin/ProductsRateChart';
 import Line from '../../components/utils/Line';
 import HistoryOrders from '../../components/admin/HistoryOrders';
 import FeedBacks from './../../components/admin/FeedBacks';
+import OrdersChart from '../../components/admin/OrdersChart';
 
 const Dashboard = () => {
   return (
@@ -18,6 +19,7 @@ const Dashboard = () => {
       <UsersPaymentsChart />
       <Line />
       <HistoryOrders />
+      <OrdersChart />
       <Line />
       <FeedBacks />
     </div>

@@ -1,4 +1,4 @@
-const DiscountAndPrice = ({discount, price}: {discount: number, price: number}) => {
+const DiscountAndPrice = ({ discount, price }: { discount: number, price: number }) => {
     return (
         <>
             {discount !== 0 && (

@@ -1,4 +1,3 @@
-import { ISale } from "./sale";
 import { InterNationalPhoneNumberInputData } from "./utils";
 
 export interface ICartProduct {
@@ -20,6 +19,9 @@ export interface IOrderDetails {
 
 
 export interface ICheckoutData {
-    items: ISale[]
+    items: {
+        productId: number,
+        quantity: number
+    }[]
     details: IOrderDetails
 }

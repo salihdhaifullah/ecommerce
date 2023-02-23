@@ -4,7 +4,6 @@ import { useState, useContext, useEffect } from 'react'
 import { Context } from '../../context';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/router';
-import { ISale } from '../../types/sale';
 import getStripe from '../../libs/stripe';
 import { checkoutSessions } from '../../api/index';
 import Line from '../utils/Line';
@@ -36,7 +35,7 @@ const Model = ({ setOpen }: { setOpen: (bool: boolean) => void }) => {
 
         if (!isValid()) return;
 
-        const items: ISale[] = [];
+        const items: {productId: number, quantity: number}[] = [];
 
         for (let item of cartItems) {
             items.push({ productId: item.id, quantity: item.quantity })

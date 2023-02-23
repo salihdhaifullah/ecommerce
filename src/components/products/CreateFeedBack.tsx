@@ -3,7 +3,6 @@ import { createFeedBack } from '../../api/index';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ICreateFeedback } from '../../types/feedBack';
 import FeedBackRate from './FeedBackRate';
 import useGetUser from '../../hooks/useGetUser';
 
@@ -18,7 +17,7 @@ const CreateFeedBack = ({ init, productId }: { init: () => Promise<void>, produc
 
     const handelSubmitComment = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const data: ICreateFeedback = { content, rate };
+        const data: { rate: number, content: string } = { content, rate };
 
         setIsLoading(true)
         await createFeedBack(productId, data)

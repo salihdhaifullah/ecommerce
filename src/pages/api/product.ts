@@ -4,13 +4,6 @@ import { Prisma } from '@prisma/client';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'GET') {
-        const getLength = req.query["get-length"];
-
-        if (getLength === "true") {
-            const products = await prisma.product.count()
-            return res.status(200).json({ products })
-        }
-
         const base = 5;
         const page = Number(req.query["page"])
         const category = req.query["category"]

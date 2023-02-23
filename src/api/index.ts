@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { ICreateProduct, IUpdateProduct } from '../types/product';
 import { ILogin, ISingUp } from '../types/user'
-import { ICreateFeedback } from '../types/feedBack';
 import { ICheckoutData } from '../types/cart';
 
 let baseURL = 'http://localhost:3000/api'
@@ -21,11 +20,9 @@ export const createProduct = async (data: ICreateProduct) => await API.post("/ad
 
 export const getCategoriesAndTags = async () => await API.get("/admin/product")
 
-export const getCategories = async (page?: number) => await API.get(`/utils?categories=true&page=${page}`)
+export const getCategories = async (page?: number) => await API.get(`/category?page=${page}`)
 
 export const getProducts = async (category: string, page: number) => await API.get(`/product?category=${category}&page=${page}`)
-
-export const GetProductsLength = async (filter: string | null) => await API.get(`/product?get-length=${true}`)
 
 export const getLikes = async (productId: number) => await API.get(`/like/?id=${productId}`);
 
@@ -65,8 +62,10 @@ export const getRates = async (productId: number) => await API.get(`/rate/?id=${
 
 export const getFeedBacks = async (productId: number) => await API.get(`/feed-back/?id=${productId}`);
 
-export const createFeedBack = async (productId: number, data: ICreateFeedback) => await API.post(`/feed-back/?id=${productId}`, data)
+export const createFeedBack = async (productId: number, data: { rate: number, content: string }) => await API.post(`/feed-back/?id=${productId}`, data)
 
 export const deliverOrder = async (id: number) => await API.patch(`/admin/orders/?id=${id}`)
 
 export const demoAccount = async () => await API.get("/auth/demo")
+
+export const getOrderChart = async () => await API.get("/admin/dashboard/orders-chart")

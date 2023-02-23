@@ -1,8 +1,3 @@
-export interface ICreateFeedback {
-    rate: number;
-    content: string;
-}
-
 export interface IFeedback {
     id: number;
     content: string;

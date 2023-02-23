@@ -11,8 +11,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import { NextPage } from 'next';
-import { ISingUp } from '../types/user';
-import Swal from 'sweetalert2';
 import { singUp } from '../api'
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';

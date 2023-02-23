@@ -1,11 +1,10 @@
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { IStatus } from '../../types/dashboard';
 import { getStatus } from '../../api';
 import { useCallback, useEffect, useState } from 'react';
 
 const Status = () => {
-    const [status, setStatus] = useState<IStatus | null>(null)
+    const [status, setStatus] = useState<{ users: number, sales: number, total: string } | null>(null)
 
     const init = useCallback(async () => {
         await getStatus()

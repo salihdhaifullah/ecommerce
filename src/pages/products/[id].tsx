@@ -1,17 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
 import prisma from '../../libs/prisma'
 import { IProduct } from '../../types/product';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
-import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
-import AddTaskIcon from '@mui/icons-material/AddTask';
 import ImageSlider from '../../components/utils/ImageSlider';
 import Chip from '@mui/material/Chip'
-import { createFeedBack, getLikes, getFeedBacks, likeProduct } from '../../api';
-import useGetUser from '../../hooks/useGetUser';
-import { Context } from '../../context'
-import { Box, CircularProgress, Container } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import FeedBacks from '../../components/products/FeedBacks';
 import Likes from '../../components/products/Likes';
 import AddProduct from '../../components/products/AddProduct';

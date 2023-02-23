@@ -34,22 +34,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             if (!isFoundSale) return;
 
-            const promises = [];
+            const transactions = [];
 
             for (let productSale of isFoundSale?.saleProducts) {
                 const promise = prisma.product.update({
                     where: { id: productSale.productId },
                     data:  { pieces: { decrement: productSale.numberOfItems } }
                 })
-                promises.push(promise)
+                transactions.push(promise)
             }
 
-            const promise = prisma.sale.update({ where: { id: isFoundSale.id }, data: { verified: true } });
-            const promise2 = prisma.user.update({ where: { id: isFoundSale.userId }, data: { isPayUse: true } });
-
-            promises.push(promise)
-            promises.push(promise2)
-            await Promise.all(promises)
+            await prisma.$transaction([
+                prisma.sale.update({ where: { id: isFoundSale.id }, data: { verified: true } }),
+                prisma.user.update({ where: { id: isFoundSale.userId }, data: { isPayUse: true } }),
+                ...transactions
+            ])
         }
 
     } catch (error: any) {

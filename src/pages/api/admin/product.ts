@@ -10,42 +10,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const id: number = Number(req.query["id"]);
 
-    if (!id) {
-      const tags = prisma.tag.findMany({ select: { name: true } });
-      const categories = prisma.category.findMany({ select: { name: true } });
+    if (typeof id !== 'number') {
+      const data = await prisma.$transaction([
+        prisma.tag.findMany({ select: { name: true } }),
+        prisma.category.findMany({ select: { name: true } })
+      ])
 
-      const data = await Promise.all([tags, categories])
-      return res.status(200).json({ tags: data[0], categories: data[1] });
-    } else {
+      return res.status(200).json({ tags: data });
+    }
 
-      if (typeof id !== 'number') return res.status(404).json({ massage: "Product Not Found" })
-      const data = await prisma.product.findFirst({
-        where: { id: id },
-        select: {
-          title: true,
-          discount: true,
-          price: true,
-          pieces: true,
-          content: true,
-          tags: { select: { name: true } },
-          category: { select: { name: true } }
-        }
-      });
+    const data = await prisma.product.findFirst({
+      where: { id: id },
+      select: {
+        title: true,
+        discount: true,
+        price: true,
+        pieces: true,
+        content: true,
+        tags: { select: { name: true } },
+        category: { select: { name: true } }
+      }
+    });
 
-      if (!data) return res.status(404).json({ massage: "Product Not Found" })
-      return res.status(200).json({ data })
-    };
+    if (!data) return res.status(404).json({ massage: "Product Not Found" })
+
+    return res.status(200).json({ data })
   }
 
 
   if (req.method === 'DELETE') {
-    const { error, id, role } = GetUserIdAndRole(req);
-
-    if (error) return res.status(500).json({ error: error });
-
-    if (role !== "ADMIN") return res.status(403).json({ massage: "unauthorized" })
-
     const productId: number = Number(req.query["id"]);
+
+    const { error, id, role } = GetUserIdAndRole(req);
+    if (error) return res.status(500).json({ error: error });
+    if (role !== "ADMIN") return res.status(403).json({ massage: "unauthorized" })
 
     if (typeof productId !== "number") return res.status(400).json({ massage: "Product Id Not Found" });
 
@@ -67,14 +65,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
   if (req.method === 'PATCH') {
+    const productId: number = Number(req.query["id"]);
 
     const { error, id, role } = GetUserIdAndRole(req);
-
     if (error) return res.status(500).json({ error: error });
-
     if (role !== "ADMIN") return res.status(403).json({ massage: "unauthorized" })
-
-    const productId: number = Number(req.query["id"]);
 
     if (typeof productId !== "number") return res.status(400).json({ massage: "Product Id Not Found" });
 
@@ -95,9 +90,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       TagsQuery.push({ where: { name: tag }, create: { name: tag } })
     }
 
-    const productData = await prisma.product.findUnique({ where: { id: productId }, select: { stripeProductId: true, stripePriceId: true, tags: {
-      select: { id: true }
-    } } })
+    const productData = await prisma.product.findUnique({
+      where: { id: productId },
+      select: {
+        stripeProductId: true,
+        stripePriceId: true,
+        tags: {
+          select: { id: true }
+        }
+      }
+    })
 
     if (!productData?.stripeProductId) return res.status(400).json({ massage: "Product Not Found" });
 
@@ -142,7 +144,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { error, id, role } = GetUserIdAndRole(req);
 
     if (error) return res.status(500).json({ error: error });
-
     if (role !== "ADMIN") return res.status(403).json({ massage: "unauthorized" })
     if (typeof id !== "number") return res.status(404).json({ massage: "User Not Found" });
 
@@ -159,15 +160,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const TagsQuery = [];
     const imagesUrls: string[] = [];
 
-    const { Url, error: storageError } = await Storage.uploadFile(image);
-    if (storageError) return res.status(400).json({ massage: "Some Thing Want Wrong", error: storageError });
-    const imageUrl = Url;
-    imagesUrls.push(Url)
+    const uploadPromises = []
+    // const { Url, error: storageError } = await Storage.uploadFile(image);
+    // if (storageError) return res.status(500).json({ massage: "Internal server Error" });
+    // const imageUrl = Url;
+    // imagesUrls.push(Url)
 
+    uploadPromises.push(Storage.uploadFile(image))
     for (let image of images) {
-      const { Url, error: storageError } = await Storage.uploadFile(image);
-      if (error) return res.status(400).json({ massage: "Some Thing Want Wrong", error: storageError });
-      imagesUrls.push(Url);
+    uploadPromises.push(Storage.uploadFile(image))
+      // const { Url, error: storageError } = await Storage.uploadFile(image);
+      // if (storageError) return res.status(500).json({ massage: "Internal server Error" });
+      // imagesUrls.push(Url);
+    }
+
+    const uploadData = await Promise.all(uploadPromises)
+
+    if (uploadData[0].error) return res.status(500).json({ massage: "Internal server Error" });
+    const imageUrl = uploadData[0].Url;
+    imagesUrls.push(imageUrl)
+
+    for (let i = 1; i < uploadData.length; i++) {
+      if (uploadData[i].error) return res.status(500).json({ massage: "Internal server Error" });
+      imagesUrls.push(uploadData[i].Url);
     }
 
     const product = await stripe.products.create({
@@ -203,6 +218,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     return res.status(200).json({ id: data.id, massage: "Product Successfully Created" })
-
   }
 };

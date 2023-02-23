@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../libs/prisma';
 import GetUserIdAndRole from '../../utils/auth';
-import { ICreateFeedback } from '../../types/feedBack';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -31,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (req.method === 'POST') {
         const productId = Number(req.query["id"])
-        const data: ICreateFeedback = req.body;
+        const data: { rate: number, content: string } = req.body;
         const { id: userId, error } = GetUserIdAndRole(req)
 
         if (!(data.rate === 1 || 2 || 3 || 4 || 5)) return res.status(400).json({ massage: "inValid Rate Type" });

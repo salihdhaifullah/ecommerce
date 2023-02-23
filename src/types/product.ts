@@ -18,7 +18,6 @@ export interface IProductRow {
     imageUrl: string;
 }
 
-export type SortByType = "CreateAt" | "Likes" | "Price High To Low" | "Price Low To High";
 
 export interface IProduct {
     id: number;

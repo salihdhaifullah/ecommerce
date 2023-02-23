@@ -1,10 +1,9 @@
-import { useState, useEffect, FormEvent, ChangeEvent, useCallback } from 'react';
+import { useState, useEffect, FormEvent, useCallback } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import { getCategoriesAndTags, getProductToUpdate, updateProduct } from '../../api';

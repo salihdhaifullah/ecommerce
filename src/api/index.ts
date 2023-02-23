@@ -42,8 +42,8 @@ export const getProductsTable = async (skip: number, take: number, category?: st
 export const getUsers = async (skip: number, take: number, name?: string, email?: string, sort?: "date"
     ) => await API.get(`/admin/dashboard/users/?skip=${skip}&take=${take}&name=${name || ""}&email=${email || ""}&sort=${sort || ""}`)
 
-export const getFeedBacksTable = async (skip: number, take: number, productTitle?: string, userName?: string, content?: string, rate?: 1 | 2 | 3 | 4 | 5, date?: boolean
-    ) => await API.get(`/admin/dashboard/feed-backs/?skip=${skip}&take=${take}&product-title=${productTitle || ""}&user-name=${userName || ""}&content=${content || ""}&rate=${rate || ""}&date=${date || ""}`)
+export const getFeedBacksTable = async (skip: number, take: number, productTitle?: string, userName?: string, content?: string, rate?: 1 | 2 | 3 | 4 | 5, sort?: "date"
+    ) => await API.get(`/admin/dashboard/feed-backs/?skip=${skip}&take=${take}&product-title=${productTitle || ""}&user-name=${userName || ""}&content=${content || ""}&rate=${rate || ""}&sort=${sort || ""}`)
 
 export const getProductToUpdate = async (id: number) => await API.get(`/admin/product?id=${id}`)
 

@@ -73,7 +73,7 @@ export default function FeedBacks() {
   const [feedBacks, setFeedBacks] = useState<IFeedBack[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [sort, setSort] = useState({ date: false })
+  const [sort, setSort] = useState<"date" | undefined>(undefined)
   const [productTitleFilter, setProductTitleFilter] = useState("")
   const [userNameFilter, setUserNameFilter] = useState("")
   const [contentFilter, setContentFilter] = useState("")
@@ -82,11 +82,11 @@ export default function FeedBacks() {
   const GetFeedBacks = useCallback(async () => {
     if (open) return;
     setLoading(true)
-    await getFeedBacksTable((page * rowsPerPage), rowsPerPage, productTitleFilter, userNameFilter, contentFilter, rateFilter, sort.date)
+    await getFeedBacksTable((page * rowsPerPage), rowsPerPage, productTitleFilter, userNameFilter, contentFilter, rateFilter, sort)
       .then((res) => { setFeedBacks(res.data.data) })
       .catch((err) => { console.log(err) })
       .finally(() => { setLoading(false) })
-  }, [open, page, rowsPerPage, productTitleFilter, userNameFilter, contentFilter, rateFilter, sort.date])
+  }, [open, page, rowsPerPage, productTitleFilter, userNameFilter, contentFilter, rateFilter, sort])
 
   useEffect(() => {
     GetFeedBacks()
@@ -118,7 +118,7 @@ export default function FeedBacks() {
             <Box className="p-4 flex flex-col gap-4">
               <section className="gap-4 max-w-[400px] flex-col">
                 <div className="flex flex-row flex-wrap gap-2">
-                  <Chip clickable label="date" variant="outlined" icon={sort.date ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, date: !sort.date })} />
+                  <Chip clickable label="date" variant="outlined" icon={sort === "date" ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => sort === "date" ? setSort(undefined) : setSort("date")} />
                 </div>
               </section>
 
@@ -135,6 +135,7 @@ export default function FeedBacks() {
                 <label htmlFor="product-rate" className="text-sm w-[180px] text-center font-medium text-gray-700">product rate</label>
                 {/* @ts-ignore */}
                 <select id="product-rate" value={rateFilter} onChange={(e) => setRateFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                  <option value={undefined}>-all-</option>
                   <option value={1}>1 start</option>
                   <option value={2}>2 starts</option>
                   <option value={3}>3 starts</option>

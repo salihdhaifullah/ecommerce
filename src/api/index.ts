@@ -39,8 +39,8 @@ export const getHistoryOrders = async (skip: number, take: number, userName?: st
 export const getProductsTable = async (skip: number, take: number, category?: string, title?: string, sort?: "date" | "likes" | "pieces" | "price",
     ) => await API.get(`/admin/dashboard/products/?skip=${skip}&take=${take}&category=${category || ""}&title=${title || ""}&sort=${sort || ""}`)
 
-export const getUsers = async (skip: number, take: number, name?: string, email?: string, date?: boolean, totalPayment?: boolean
-    ) => await API.get(`/admin/dashboard/users/?skip=${skip}&take=${take}&name=${name || ""}&email=${email || ""}&date=${date || ""}&total-payment=${totalPayment || ""}`)
+export const getUsers = async (skip: number, take: number, name?: string, email?: string, sort?: "date"
+    ) => await API.get(`/admin/dashboard/users/?skip=${skip}&take=${take}&name=${name || ""}&email=${email || ""}&sort=${sort || ""}`)
 
 export const getFeedBacksTable = async (skip: number, take: number, productTitle?: string, userName?: string, content?: string, rate?: 1 | 2 | 3 | 4 | 5, date?: boolean
     ) => await API.get(`/admin/dashboard/feed-backs/?skip=${skip}&take=${take}&product-title=${productTitle || ""}&user-name=${userName || ""}&content=${content || ""}&rate=${rate || ""}&date=${date || ""}`)

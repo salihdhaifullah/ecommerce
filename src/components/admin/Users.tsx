@@ -41,18 +41,18 @@ export default function Users() {
   const [users, setUsers] = useState<IUsersData[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [sort, setSort] = useState({ date: false, totalPayment: false })
+  const [sort, setSort] = useState<"date" | undefined>()
   const [nameFilter, setNameFilter] = useState("")
   const [emailFilter, setEmailFilter] = useState("")
 
   const GetUsers = useCallback(async () => {
     if (open) return;
     setLoading(true)
-    await getUsers((page * rowsPerPage), rowsPerPage, nameFilter, emailFilter, sort.date, sort.totalPayment)
+    await getUsers((page * rowsPerPage), rowsPerPage, nameFilter, emailFilter, sort)
       .then((res) => { setUsers(res.data.users) })
       .catch((err) => { console.log(err) })
       .finally(() => { setLoading(false) })
-  }, [emailFilter, nameFilter, open, page, rowsPerPage, sort.date, sort.totalPayment])
+  }, [emailFilter, nameFilter, open, page, rowsPerPage, sort])
 
   useEffect(() => {
     GetUsers()
@@ -84,8 +84,7 @@ export default function Users() {
             <Box className="p-4 flex flex-col gap-4">
               <section className="gap-4 max-w-[400px] flex-col">
                 <div className="flex flex-row flex-wrap gap-2">
-                  <Chip clickable label="date" variant="outlined" icon={sort.date ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, date: !sort.date })} />
-                  <Chip clickable label="total-payment" variant="outlined" icon={sort.totalPayment ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => setSort({ ...sort, totalPayment: !sort.totalPayment })} />
+                  <Chip clickable label="date" variant="outlined" icon={sort === "date" ? <DoneIcon className="text-green-500 w-6 h-6 " /> : undefined} onClick={() => sort === "date" ? setSort(undefined) : setSort("date")} />
                 </div>
               </section>
 

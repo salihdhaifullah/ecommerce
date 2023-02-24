@@ -67,20 +67,28 @@ const Row = ({ row }: { row: IFeedBack }) => {
   )
 }
 
-export default function FeedBacks() {
+export default function FeedBacks({feedBacksInit}: {feedBacksInit: IFeedBack[]}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [feedBacks, setFeedBacks] = useState<IFeedBack[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [sort, setSort] = useState<"date" | undefined>(undefined)
   const [productTitleFilter, setProductTitleFilter] = useState("")
   const [userNameFilter, setUserNameFilter] = useState("")
   const [contentFilter, setContentFilter] = useState("")
   const [rateFilter, setRateFilter] = useState<1 | 2 | 3 | 4 | 5 | undefined>(undefined)
+  const [isInit, setIsInit] = useState(true);
 
   const GetFeedBacks = useCallback(async () => {
     if (open) return;
+    if (isInit) {
+      if (feedBacksInit) {
+        setFeedBacks(feedBacksInit)
+        setIsInit(false)
+      }
+      return;
+    }
     setLoading(true)
     await getFeedBacksTable((page * rowsPerPage), rowsPerPage, productTitleFilter, userNameFilter, contentFilter, rateFilter, sort)
       .then((res) => { setFeedBacks(res.data.data) })

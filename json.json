@@ -1,0 +1,430 @@
+{
+    "feedbacks": [
+        {
+            "id": 1,
+            "createdAt": "2023-02-01T19:47:05.725Z",
+            "product": {
+                "title": "hot dog",
+                "id": 1
+            },
+            "user": {
+                "firstName": "Salih",
+                "lastName": "Hassan"
+            },
+            "rate": 5,
+            "content": "nice"
+        },
+        {
+            "id": 2,
+            "createdAt": "2023-02-04T19:57:37.092Z",
+            "product": {
+                "title": "infinite power t-shirt",
+                "id": 3
+            },
+            "user": {
+                "firstName": "Salih",
+                "lastName": "Hassan"
+            },
+            "rate": 5,
+            "content": "nice "
+        },
+        {
+            "id": 3,
+            "createdAt": "2023-02-20T15:40:22.071Z",
+            "product": {
+                "title": "black jacket ",
+                "id": 4
+            },
+            "user": {
+                "firstName": "Salih",
+                "lastName": "Hassan"
+            },
+            "rate": 2,
+            "content": "ahh"
+        },
+        {
+            "id": 4,
+            "createdAt": "2023-02-20T15:40:49.669Z",
+            "product": {
+                "title": "black jeans",
+                "id": 2
+            },
+            "user": {
+                "firstName": "Salih",
+                "lastName": "Hassan"
+            },
+            "rate": 4,
+            "content": "not Bad"
+        },
+        {
+            "id": 5,
+            "createdAt": "2023-02-20T20:41:48.384Z",
+            "product": {
+                "title": "white car",
+                "id": 8
+            },
+            "user": {
+                "firstName": "Salih",
+                "lastName": "Hassan"
+            },
+            "rate": 5,
+            "content": "good , \nvery nice price it semes to be stolen"
+        },
+        {
+            "id": 6,
+            "createdAt": "2023-02-24T13:16:15.815Z",
+            "product": {
+                "title": "hot dog",
+                "id": 1
+            },
+            "user": {
+                "firstName": "demo",
+                "lastName": "demo"
+            },
+            "rate": 5,
+            "content": "So Good"
+        }
+    ],
+    "orders": [
+        {
+            "user": {
+                "firstName": "Salih",
+                "lastName": "Hassan",
+                "email": "salehwebdev2004@gmail.com"
+            },
+            "saleProducts": [
+                {
+                    "numberOfItems": 5,
+                    "product": {
+                        "title": "hot dog",
+                        "id": 1
+                    }
+                }
+            ],
+            "totalPrice": "4",
+            "id": 1,
+            "verified": false,
+            "received": false,
+            "address1": "test",
+            "address2": "test",
+            "phoneNumber": "test",
+            "country": "test",
+            "countryCode": "test",
+            "createdAt": "2023-02-01T20:12:35.188Z"
+        },
+        {
+            "user": {
+                "firstName": "Salih",
+                "lastName": "Hassan",
+                "email": "salehwebdev2004@gmail.com"
+            },
+            "saleProducts": [
+                {
+                    "numberOfItems": 5,
+                    "product": {
+                        "title": "hot dog",
+                        "id": 1
+                    }
+                }
+            ],
+            "totalPrice": "4",
+            "id": 2,
+            "verified": true,
+            "received": true,
+            "address1": "test",
+            "address2": "test",
+            "phoneNumber": "test",
+            "country": "test",
+            "countryCode": "test",
+            "createdAt": "2023-02-01T20:21:28.835Z"
+        },
+        {
+            "user": {
+                "firstName": "Salih",
+                "lastName": "Hassan",
+                "email": "salehwebdev2004@gmail.com"
+            },
+            "saleProducts": [
+                {
+                    "numberOfItems": 1,
+                    "product": {
+                        "title": "hot dog",
+                        "id": 1
+                    }
+                }
+            ],
+            "totalPrice": "0.8",
+            "id": 3,
+            "verified": false,
+            "received": false,
+            "address1": "test",
+            "address2": "test",
+            "phoneNumber": "test",
+            "country": "test",
+            "countryCode": "test",
+            "createdAt": "2023-02-05T17:01:27.912Z"
+        },
+        {
+            "user": {
+                "firstName": "Salih",
+                "lastName": "Hassan",
+                "email": "salehwebdev2004@gmail.com"
+            },
+            "saleProducts": [
+                {
+                    "numberOfItems": 1,
+                    "product": {
+                        "title": "hot dog",
+                        "id": 1
+                    }
+                }
+            ],
+            "totalPrice": "0.8",
+            "id": 4,
+            "verified": true,
+            "received": true,
+            "address1": "libya",
+            "address2": "ras alhlal, alhmseen",
+            "phoneNumber": "0924685343",
+            "country": "Libya",
+            "countryCode": "218",
+            "createdAt": "2023-02-20T15:28:46.652Z"
+        },
+        {
+            "user": {
+                "firstName": "Salih",
+                "lastName": "Hassan",
+                "email": "salehwebdev2004@gmail.com"
+            },
+            "saleProducts": [
+                {
+                    "numberOfItems": 1,
+                    "product": {
+                        "title": "white car",
+                        "id": 8
+                    }
+                }
+            ],
+            "totalPrice": "3600",
+            "id": 5,
+            "verified": true,
+            "received": true,
+            "address1": "libya",
+            "address2": "ras alhlal",
+            "phoneNumber": "0924685343",
+            "country": "Libya",
+            "countryCode": "218",
+            "createdAt": "2023-02-20T20:43:34.187Z"
+        }
+    ],
+    "ordersChart": [
+        {
+            "_count": 2,
+            "verified": false
+        },
+        {
+            "_count": 3,
+            "verified": true
+        }
+    ],
+    "products": [
+        {
+            "id": 1,
+            "title": "hot dog",
+            "likes": [
+                {
+                    "id": 3,
+                    "userId": 1,
+                    "productId": 1
+                }
+            ],
+            "price": "1",
+            "pieces": "94",
+            "createdAt": "2023-02-01T19:44:36.939Z",
+            "category": {
+                "name": "fast food"
+            }
+        },
+        {
+            "id": 2,
+            "title": "black jeans",
+            "likes": [
+                {
+                    "id": 5,
+                    "userId": 1,
+                    "productId": 2
+                }
+            ],
+            "price": "8",
+            "pieces": "37",
+            "createdAt": "2023-02-03T12:17:37.227Z",
+            "category": {
+                "name": "clothes"
+            }
+        },
+        {
+            "id": 3,
+            "title": "infinite power t-shirt",
+            "likes": [
+                {
+                    "id": 2,
+                    "userId": 1,
+                    "productId": 3
+                }
+            ],
+            "price": "12",
+            "pieces": "24",
+            "createdAt": "2023-02-03T12:21:06.208Z",
+            "category": {
+                "name": "clothes"
+            }
+        },
+        {
+            "id": 4,
+            "title": "black jacket ",
+            "likes": [
+                {
+                    "id": 4,
+                    "userId": 1,
+                    "productId": 4
+                }
+            ],
+            "price": "30",
+            "pieces": "36",
+            "createdAt": "2023-02-03T12:29:40.060Z",
+            "category": {
+                "name": "clothes"
+            }
+        },
+        {
+            "id": 5,
+            "title": "reb bull",
+            "likes": [],
+            "price": "2",
+            "pieces": "27",
+            "createdAt": "2023-02-03T12:36:40.675Z",
+            "category": {
+                "name": "drinks"
+            }
+        },
+        {
+            "id": 6,
+            "title": "a good Pizza",
+            "likes": [],
+            "price": "7",
+            "pieces": "49",
+            "createdAt": "2023-02-03T13:41:28.802Z",
+            "category": {
+                "name": "pizza"
+            }
+        },
+        {
+            "id": 7,
+            "title": "Margherita Pizza",
+            "likes": [],
+            "price": "7",
+            "pieces": "43",
+            "createdAt": "2023-02-03T13:46:13.886Z",
+            "category": {
+                "name": "pizza"
+            }
+        },
+        {
+            "id": 8,
+            "title": "white car",
+            "likes": [
+                {
+                    "id": 6,
+                    "userId": 1,
+                    "productId": 8
+                }
+            ],
+            "price": "4000",
+            "pieces": "7",
+            "createdAt": "2023-02-04T11:43:23.361Z",
+            "category": {
+                "name": "car"
+            }
+        }
+    ],
+    "status": {
+        "sales": 3,
+        "total": "3604.8",
+        "users": 3
+    },
+    "users": [
+        {
+            "firstName": "Salih",
+            "lastName": "Hassan",
+            "email": "salehwebdev2004@gmail.com",
+            "createdAt": "2023-01-30T19:03:01.018Z",
+            "payment": [
+                {
+                    "totalPrice": "4"
+                },
+                {
+                    "totalPrice": "0.8"
+                },
+                {
+                    "totalPrice": "3600"
+                }
+            ]
+        },
+        {
+            "firstName": "Hello",
+            "lastName": "World",
+            "email": "salehwebdev@gmail.com",
+            "createdAt": "2023-01-30T20:18:57.913Z",
+            "payment": []
+        },
+        {
+            "firstName": "demo",
+            "lastName": "demo",
+            "email": "demo@gmail.com",
+            "createdAt": "2023-02-21T20:58:43.654Z",
+            "payment": []
+        }
+    ],
+    "productsRateChart": [
+        {
+            "_avg": {
+                "rate": 5
+            },
+            "productId": 1
+        },
+        {
+            "_avg": {
+                "rate": 5
+            },
+            "productId": 3
+        },
+        {
+            "_avg": {
+                "rate": 4
+            },
+            "productId": 2
+        },
+        {
+            "_avg": {
+                "rate": 2
+            },
+            "productId": 4
+        },
+        {
+            "_avg": {
+                "rate": 5
+            },
+            "productId": 8
+        }
+    ],
+    "usersPaymentChart": [
+        {
+            "_count": 2,
+            "isPayUse": false
+        },
+        {
+            "_count": 1,
+            "isPayUse": true
+        }
+    ]
+}

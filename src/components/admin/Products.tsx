@@ -12,7 +12,6 @@ import { deleteProduct, getCategories, getProductsTable } from '../../api';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
 import Toast from '../../utils/sweetAlert';
-import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import dateFormat from '../../utils/dateFormat';
@@ -29,45 +28,43 @@ interface IProductsData {
     name: string
   };
   id: number;
-  likes: string[];
-  pieces: number;
-  price: number;
+  likes: { id: number}[];
+  pieces: string;
+  price: string;
   title: string;
 }
 
-const Products = () => {
+const Products = ({productsInit, categories}: { productsInit: IProductsData[], categories: { name: string }[] | null}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [products, setProducts] = useState<IProductsData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [titleFilter, setTitleFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [sort, setSort] = useState<"date" | "likes" | "pieces" | "price" | undefined>(undefined)
-  const [categories, setCategories] = useState<{ name: string }[]>([])
+  const [isInit, setIsInit] = useState(true)
 
   const GetProducts = useCallback(async () => {
     if (open) return;
+    if (isInit) {
+      if (productsInit) {
+        setProducts(productsInit)
+        setIsInit(false)
+      }
+      return;
+    }
     setLoading(true)
     await getProductsTable((page * rowsPerPage), rowsPerPage, categoryFilter, titleFilter, sort)
       .then((res) => { setProducts(res.data.products) })
       .catch((err) => { console.log(err) })
       .finally(() => { setLoading(false) })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryFilter, open, page, rowsPerPage, sort, titleFilter])
 
   useEffect(() => {
     GetProducts()
   }, [GetProducts])
-
-  const getCategoriesOptions = useCallback(async () => {
-    await getCategories()
-      .then((res) => setCategories(res.data.categories))
-      .catch((err) => { console.log(err) })
-  }, [])
-
-  useEffect(() => {
-    getCategoriesOptions()
-  }, [getCategoriesOptions])
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -129,9 +126,9 @@ const Products = () => {
                         <label htmlFor="category" className="text-sm w-[180px] text-center font-medium text-gray-700">category</label>
                         <select id="category" onChange={(e) => setCategoryFilter(e.target.value)} value={categoryFilter} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option value={""}>-all-</option>
-                          {categories.map((category, index) => (
+                          {(categories && categories.length > 0) ? categories.map((category, index) => (
                             <option value={category.name} key={index}>{category.name}</option>
-                          ))}
+                          )) : null}
                         </select>
                       </div>
                     </section>

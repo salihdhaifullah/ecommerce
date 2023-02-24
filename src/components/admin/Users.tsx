@@ -35,23 +35,31 @@ const getTotal = (input: { totalPrice: string }[]): number => {
   return total;
 }
 
-export default function Users() {
+export default function Users({usersInit}: {usersInit: IUsersData[]}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [users, setUsers] = useState<IUsersData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [sort, setSort] = useState<"date" | undefined>()
   const [nameFilter, setNameFilter] = useState("")
   const [emailFilter, setEmailFilter] = useState("")
-
+  const [isInit, setIsInit] = useState(true);
   const GetUsers = useCallback(async () => {
     if (open) return;
+    if (isInit) {
+      if (usersInit) {
+        setUsers(usersInit)
+        setIsInit(false)
+      }
+      return;
+    }
     setLoading(true)
     await getUsers((page * rowsPerPage), rowsPerPage, nameFilter, emailFilter, sort)
       .then((res) => { setUsers(res.data.users) })
       .catch((err) => { console.log(err) })
       .finally(() => { setLoading(false) })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emailFilter, nameFilter, open, page, rowsPerPage, sort])
 
   useEffect(() => {

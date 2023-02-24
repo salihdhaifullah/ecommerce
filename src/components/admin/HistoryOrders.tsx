@@ -29,7 +29,7 @@ interface IHistoryOrdersOrderData {
     numberOfItems: number;
   }[]
 
-  totalPrice: number;
+  totalPrice: string;
   user: {
     firstName: string;
     lastName: string;
@@ -89,19 +89,29 @@ const Row = ({ row }: { row: IHistoryOrdersOrderData }) => {
   )
 }
 
-export default function HistoryOrders() {
+export default function HistoryOrders({ordersInit}: {ordersInit: IHistoryOrdersOrderData[]}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [historyOrders, setHistoryOrders] = useState<IHistoryOrdersOrderData[]>([])
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false)
   const [userNameFilter, setUserNameFilter] = useState("")
   const [sort, setSort] = useState<"date" | "total-price" | undefined>(undefined)
   const [paymentFilter, setPaymentFilter] = useState<"verified" | "canceled" | undefined>(undefined)
   const [deliverFilter, setDeliverFilter] = useState<"undelivered" | "received" | undefined>(undefined)
+  const [isInit, setIsInit] = useState(true);
+
 
   const GetHistoryOrders = useCallback(async () => {
     if (open) return;
+
+    if (isInit) {
+      if (ordersInit) {
+        setHistoryOrders(ordersInit)
+        setIsInit(false)
+      }
+      return;
+    }
     setLoading(true)
     await getHistoryOrders((page * rowsPerPage), rowsPerPage, userNameFilter, paymentFilter, deliverFilter, sort)
       .then((res) => { setHistoryOrders(res.data.orders) })

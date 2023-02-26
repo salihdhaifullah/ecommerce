@@ -50,7 +50,10 @@ export const updateProduct = async (id: number, data: IUpdateProduct) => await A
 
 export const checkoutSessions = async (data: ICheckoutData) => await API.post("/checkout-sessions", data)
 
-export const generalSearch = async (search: string, skip: number, take: number, type: "search" | "tag" | "category") => await API.get(`/search?${type}=${search}&skip=${skip}&take=${take}`)
+export const generalSearch = async (skip: number, take: number, search?: string, tag?: string, category?: string,
+    discount?: 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9,
+    sort?: "likes" | "price-low-to-high" | "price-high-to-low" | "discount" | "date"
+    ) => await API.get(`/search?skip=${skip}&take=${take}&search=${search || ""}&tag=${tag || ""}&category=${category || ""}&discount=${discount || ""}&sort=${sort || ""}`)
 
 export const getStatus = async () => await API.get("/admin/dashboard/status")
 

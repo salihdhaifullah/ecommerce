@@ -1,30 +1,24 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../../libs/prisma';
-
-interface IFilterQuery {
-    category?: {name: string}
-    title?: { contains: string, mode: 'insensitive' }
-}
+import { Prisma } from '@prisma/client';
 
 const filterQuery = (category: unknown, title: unknown) => {
-    let query: IFilterQuery = {}
+    let query: Prisma.ProductWhereInput = {}
     if (typeof category === "string" && category.length > 2) query["category"] = { name: category };
-    if (typeof title === 'string' && title.length > 0)  query["title"] = { contains: title, mode: 'insensitive' };
+    if (typeof title === 'string' && title.length > 0) query["title"] = { contains: title, mode: 'insensitive' };
     return query;
 }
 
-type ISortQuery = { createdAt: "desc" } | { likes: { _count: "desc" } } | { pieces: "desc" } | { price: "desc" } | { };
-
 const SortQuery = (sort: unknown) => {
-    let query: ISortQuery = {}
+    let query: Prisma.ProductOrderByWithRelationInput = {}
     const sortOptions = ["date", "likes", "pieces", "price"]
     if (typeof sort !== "string" || sort.length < 1) return query;
     if (!sortOptions.includes(sort)) return query;
 
-    if (sort === "date") query = {createdAt: "desc"}
-    else if (sort === "likes") query = {likes: {_count: "desc" } }
-    else if (sort === "pieces") query = {pieces: "desc" }
-    else query = {price: "desc" }
+    if (sort === "date") query = { createdAt: "desc" }
+    else if (sort === "likes") query = { likes: { _count: "desc" } }
+    else if (sort === "pieces") query = { pieces: "desc" }
+    else query = { price: "desc" }
     return query;
 }
 
@@ -38,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const sort = req.query["sort"]
 
 
-        if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({massage: "Bad Request"});
+        if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({ massage: "Bad Request" });
 
         const products = await prisma.product.findMany({
             skip: skip,
@@ -56,6 +50,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
         });
 
-        return res.status(200).json({products})
+        return res.status(200).json({ products })
     }
 };

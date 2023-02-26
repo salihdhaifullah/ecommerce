@@ -1,21 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../../libs/prisma';
-
-interface IFilterQuery {
-    product?:  { title: { contains: string, mode: 'insensitive' } },
-    user?: {
-        OR: [
-            { firstName: { contains: string, mode: 'insensitive' } },
-            { lastName: { contains: string, mode: 'insensitive' } }
-        ]
-    },
-    content?: { contains: string, mode: 'insensitive' }
-    rate?: number
-}
-
+import { Prisma } from '@prisma/client';
 
 const filterQuery = (userName: unknown, productTitle: unknown, content: unknown, rate: unknown) => {
-    let query: IFilterQuery = {}
+    let query: Prisma.FeedBackWhereInput = {}
     const rateOptions = [1, 2, 3, 4, 5]
 
     if (typeof userName === "string" && userName.length > 2) {
@@ -36,10 +24,8 @@ const filterQuery = (userName: unknown, productTitle: unknown, content: unknown,
     return query;
 }
 
-type ISortQuery = { createdAt: "desc" } | {};
-
 const SortQuery = (sort: unknown) => {
-    let query: ISortQuery = {}
+    let query: Prisma.FeedBackOrderByWithRelationInput = {}
     if (typeof sort !== "string" || sort.length < 1 || sort !== "date") return query;
 
     query = { createdAt: "desc" }

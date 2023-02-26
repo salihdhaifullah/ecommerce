@@ -87,7 +87,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const TagsQuery2 = [];
 
     for (let tag of tags) {
-      TagsQuery.push({ where: { name: tag }, create: { name: tag } })
+      TagsQuery.push({ where: { name: tag.trim() }, create: { name: tag.trim() } })
     }
 
     const productData = await prisma.product.findUnique({
@@ -128,7 +128,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         price: price,
         pieces: pieces,
         stripePriceId: StripePrice.id,
-        category: { connectOrCreate: { where: { name: category }, create: { name: category } } }
+        category: { connectOrCreate: { where: { name: category.trim() }, create: { name: category.trim() } } }
       }
     });
 
@@ -197,7 +197,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     for (let tag of tags) {
-      TagsQuery.push({ where: { name: tag }, create: { name: tag } })
+      TagsQuery.push({ where: { name: tag.trim() }, create: { name: tag.trim() } })
     }
 
     const data = await prisma.product.create({
@@ -210,7 +210,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         discount: discount,
         price: price,
         pieces: pieces,
-        category: { connectOrCreate: { where: { name: category }, create: { name: category } } },
+        category: { connectOrCreate: { where: { name: category.trim() }, create: { name: category.trim() } } },
         stripeProductId: product.id,
         stripePriceId: product.default_price as string
       },

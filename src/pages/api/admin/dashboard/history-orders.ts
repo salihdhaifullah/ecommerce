@@ -1,18 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../../libs/prisma';
-
-interface IFilterQuery {
-    email?: { contains: string, mode: 'insensitive' },
-    user?: { OR: [
-        { firstName: { contains: string, mode: 'insensitive' } },
-        { lastName: { contains: string, mode: 'insensitive' } }
-    ]},
-    verified?: boolean
-    received?: boolean
-}
+import { Prisma } from '@prisma/client';
 
 const filterQuery = (userName: unknown, paymentState: unknown, deliverState: unknown) => {
-    let query: IFilterQuery = {}
+    let query: Prisma.SaleWhereInput = {}
     const paymentStateOptions = ["verified", "canceled"]
     const deliverStateOptions = ["undelivered", "received"]
 
@@ -37,10 +28,8 @@ const filterQuery = (userName: unknown, paymentState: unknown, deliverState: unk
     return query;
 }
 
-type ISortQuery = { createdAt: "desc" } | { totalPrice: "desc" } | {};
-
 const SortQuery = (sort: unknown) => {
-    let query: ISortQuery = {}
+    let query: Prisma.SaleOrderByWithRelationInput = {}
     const sortOptions = ["total-price", "date"]
     if (typeof sort !== "string" || sort.length < 1) return query;
     if (!sortOptions.includes(sort)) return query;
@@ -50,8 +39,6 @@ const SortQuery = (sort: unknown) => {
 
     return query;
 }
-
-
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 

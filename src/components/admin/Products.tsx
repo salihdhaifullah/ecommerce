@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
-import { deleteProduct, getCategories, getProductsTable } from '../../api';
+import { deleteProduct,  getProductsTable } from '../../api';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
 import Toast from '../../utils/sweetAlert';
@@ -90,7 +90,6 @@ const Products = ({productsInit, categories}: { productsInit: IProductsData[], c
         GetProducts()
       }
     })
-
   }
 
   return (

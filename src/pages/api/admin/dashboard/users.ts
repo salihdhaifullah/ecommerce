@@ -1,16 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../../libs/prisma';
-
-interface IFilterQuery {
-    email?: { contains: string, mode: 'insensitive' },
-    OR?: [
-        { firstName: { contains: string, mode: 'insensitive' } },
-        { lastName: { contains: string, mode: 'insensitive' } }
-    ]
-}
+import { Prisma } from '@prisma/client';
 
 const filterQuery = (name: unknown, email: unknown) => {
-    let query: IFilterQuery = {}
+    let query: Prisma.UserWhereInput = {}
     if (typeof name === "string" && name.length > 2) {
         query["OR"] = [
             { firstName: { contains: name, mode: 'insensitive' } },
@@ -22,10 +15,8 @@ const filterQuery = (name: unknown, email: unknown) => {
     return query;
 }
 
-type ISortQuery = { createdAt: "desc" } | {};
-
 const SortQuery = (sort: unknown) => {
-    let query: ISortQuery = {}
+    let query: Prisma.UserOrderByWithRelationInput = {}
     if (typeof sort !== "string" || sort.length < 1 || sort !== "date") return query;
     query = { createdAt: "desc" }
     return query;

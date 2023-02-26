@@ -161,7 +161,7 @@ export default function HistoryOrders({ordersInit}: {ordersInit: IHistoryOrdersO
                   <label htmlFor="payment-state" className="text-sm w-[180px] text-center font-medium text-gray-700">payment state</label>
                   {/* @ts-ignore */}
                   <select id="payment-state" value={paymentFilter} onChange={(e) => setPaymentFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    <option value={undefined}>-all-</option>
+                    <option value={""}>-all-</option>
                     <option value="verified">Verified</option>
                     <option value="canceled">Canceled</option>
                   </select>
@@ -171,7 +171,7 @@ export default function HistoryOrders({ordersInit}: {ordersInit: IHistoryOrdersO
                   <label htmlFor="deliver-state" className="text-sm w-[180px] text-center font-medium text-gray-700">deliver state</label>
                   {/* @ts-ignore */}
                   <select id="deliver-state" value={deliverFilter} onChange={(e) => setDeliverFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    <option value={undefined}>-all-</option>
+                    <option value={""}>-all-</option>
                     <option value="unDelivered">UnDelivered</option>
                     <option value="received">Received</option>
                   </select>

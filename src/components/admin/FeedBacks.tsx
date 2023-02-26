@@ -143,7 +143,7 @@ export default function FeedBacks({feedBacksInit}: {feedBacksInit: IFeedBack[]})
                 <label htmlFor="product-rate" className="text-sm w-[180px] text-center font-medium text-gray-700">product rate</label>
                 {/* @ts-ignore */}
                 <select id="product-rate" value={rateFilter} onChange={(e) => setRateFilter(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                  <option value={undefined}>-all-</option>
+                  <option value={""}>-all-</option>
                   <option value={1}>1 start</option>
                   <option value={2}>2 starts</option>
                   <option value={3}>3 starts</option>

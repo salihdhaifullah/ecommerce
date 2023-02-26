@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link';
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import LoginIcon from '@mui/icons-material/Login';
 import StorefrontIcon from '@mui/icons-material/Storefront';
@@ -85,12 +84,6 @@ const SideBar = () => {
                                     {isAdmin === true && (
                                         <>
                                             <hr />
-                                            <li>
-                                                <Link href="/admin/create-product" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
-                                                    <CreateOutlinedIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"></CreateOutlinedIcon>
-                                                    <span className="flex-1 ml-3 whitespace-nowrap">Create Product</span>
-                                                </Link>
-                                            </li>
                                             <li>
                                                 <Link href="/admin/dashboard" className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100">
                                                     <DashboardIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"></DashboardIcon>

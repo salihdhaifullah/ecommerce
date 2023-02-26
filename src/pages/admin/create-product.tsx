@@ -9,11 +9,14 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import PreviewProduct from '../../components/products/PreviewProduct';
-import { createProduct, getCategoriesAndTags } from '../../api';
+import { createProduct } from '../../api';
 import { ICreateProduct } from '../../types/product';
 import CircularProgress from '@mui/material/CircularProgress';
 import Toast from '../../utils/sweetAlert';
 import createResizedImage from '../../utils/image-resizer';
+import GetUserIdAndRole from '../../utils/auth';
+import { GetServerSidePropsContext } from 'next';
+import prisma from '../../libs/prisma';
 
 interface ICategory {
     inputValue?: string;
@@ -31,7 +34,7 @@ const filter1 = createFilterOptions<string>();
 const discountsOptions: IDiscountsOptions[] = [{ value: 0, name: "none" }, { value: 0.1, name: "10%" }, { value: 0.2, name: "20%" }, { value: 0.3, name: "30%" }, { value: 0.4, name: "40%" }, { value: 0.5, name: "50%" }, { value: 0.6, name: "60%" }, { value: 0.7, name: "70%" }, { value: 0.8, name: "80%" }, { value: 0.9, name: "90%" }];
 const disableStyle = "bg-gray-100 text-xs sm:text-sm hover:bg-gray-200 text-gray-700 hover:text-gray-600";
 
-const CreateProduct = () => {
+const CreateProduct = ({tagsOptions, categoriesOptions}: {tagsOptions: ICategory[], categoriesOptions: ICategory[]}) => {
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("")
     const [tags, setTags] = useState<string[]>([])
@@ -43,20 +46,7 @@ const CreateProduct = () => {
     const [images, setImages] = useState<string[]>([])
     const [open, setOpen] = useState(false)
     const [isValid, setIsValid] = useState(false)
-    const [tagsOptions, setTagsOptions] = useState<ICategory[]>([])
-    const [categoriesOptions, setCategoriesOptions] = useState<ICategory[]>([])
     const [isLoading, setIsLoading] = useState(false)
-
-    const init = useCallback(async () => {
-        await getCategoriesAndTags()
-            .then((res) => {
-                setTagsOptions(res.data.tags);
-                setCategoriesOptions(res.data.categories);
-            })
-            .catch((err) => { console.log(err) })
-    }, [])
-
-    useEffect(() => { init() }, [init])
 
     const Validator = useCallback(() => {
         const validation: boolean = Boolean(pieces >= 1 && price >= 1 && title.length >= 6 && content.length >= 20 && (category && category?.name?.length >= 2) && tags.length >= 2 && image);
@@ -335,3 +325,17 @@ const CreateProduct = () => {
 }
 
 export default CreateProduct;
+
+
+export async function getServerSideProps(context: GetServerSidePropsContext){
+    // @ts-ignore
+  const { id, error, role } = GetUserIdAndRole(context.req)
+  if (error || !id || role !== "ADMIN") return { notFound: true };
+
+  const [categoriesOptions, tagsOptions] = await prisma.$transaction([
+    prisma.category.findMany({ select: { name: true } }),
+    prisma.tag.findMany({ select: { name: true } })
+  ])
+
+  return { props: { tagsOptions, categoriesOptions } }
+}

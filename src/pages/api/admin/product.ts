@@ -18,23 +18,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       return res.status(200).json({ tags: data });
     }
-
-    const data = await prisma.product.findFirst({
-      where: { id: id },
-      select: {
-        title: true,
-        discount: true,
-        price: true,
-        pieces: true,
-        content: true,
-        tags: { select: { name: true } },
-        category: { select: { name: true } }
-      }
-    });
-
-    if (!data) return res.status(404).json({ massage: "Product Not Found" })
-
-    return res.status(200).json({ data })
   }
 
 

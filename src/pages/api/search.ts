@@ -52,7 +52,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({ massage: "Bad Request" });
 
-            console.log(filterQuery(search, tag, category, discount))
             const [products, totalProducts] = await prisma.$transaction([
                 prisma.product.findMany({
                     where: filterQuery(search, tag, category, discount),

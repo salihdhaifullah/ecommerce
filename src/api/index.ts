@@ -18,8 +18,6 @@ export const Logout = async () => await API.get("/auth/logout")
 
 export const createProduct = async (data: ICreateProduct) => await API.post("/admin/product", data)
 
-export const getCategoriesAndTags = async () => await API.get("/admin/product")
-
 export const getCategories = async (page: number) => await API.get(`/category?page=${page}`)
 
 export const getProducts = async (category: string, page: number) => await API.get(`/product?category=${category}&page=${page}`)
@@ -42,8 +40,6 @@ export const getUsers = async (skip: number, take: number, name?: string, email?
 export const getFeedBacksTable = async (skip: number, take: number, productTitle?: string, userName?: string, content?: string, rate?: 1 | 2 | 3 | 4 | 5, sort?: "date"
     ) => await API.get(`/admin/dashboard/feed-backs/?skip=${skip}&take=${take}&product-title=${productTitle || ""}&user-name=${userName || ""}&content=${content || ""}&rate=${rate || ""}&sort=${sort || ""}`)
 
-export const getProductToUpdate = async (id: number) => await API.get(`/admin/product?id=${id}`)
-
 export const deleteProduct = async (id: number) => await API.delete(`/admin/product?id=${id}`)
 
 export const updateProduct = async (id: number, data: IUpdateProduct) => await API.patch(`/admin/product?id=${id}`, data)
@@ -55,12 +51,6 @@ export const generalSearch = async (skip: number, take: number, search?: string,
     sort?: "likes" | "price-low-to-high" | "price-high-to-low" | "discount" | "date"
     ) => await API.get(`/search?skip=${skip}&take=${take}&search=${search || ""}&tag=${tag || ""}&category=${category || ""}&discount=${discount || ""}&sort=${sort || ""}`)
 
-export const getStatus = async () => await API.get("/admin/dashboard/status")
-
-export const getUsersPayers = async () => await API.get("/admin/dashboard/users-payments-chart")
-
-export const getProductsAverageRate = async () => await API.get("/admin/dashboard/products-rate")
-
 export const getRates = async (productId: number) => await API.get(`/rate/?id=${productId}`);
 
 export const getFeedBacks = async (productId: number) => await API.get(`/feed-back/?id=${productId}`);
@@ -70,5 +60,3 @@ export const createFeedBack = async (productId: number, data: { rate: number, co
 export const deliverOrder = async (id: number) => await API.patch(`/admin/orders/?id=${id}`)
 
 export const demoAccount = async () => await API.get("/auth/demo")
-
-export const getOrderChart = async () => await API.get("/admin/dashboard/orders-chart")

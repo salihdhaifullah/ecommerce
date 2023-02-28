@@ -75,7 +75,7 @@ const RowChild = ({ item, isLoading }: IRowChild) => {
 
                             <AddProduct productId={item.id} />
 
-                            <p className="text-gray-700 md:text-lg flex justify-between text-semibold text-base">{item.title}</p>
+                            <p className="text-gray-700 md:text-lg flex justify-between text-semibold text-base">{item.title.length >= 18 ? item.title.slice(0, 15) + "..." : item.title}</p>
                         </div>
                     </div >
                 )}

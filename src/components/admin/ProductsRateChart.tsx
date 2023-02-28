@@ -6,7 +6,7 @@ const prosesRates = (input: {_avg: { rate: 1 | 2 | 3 | 4 | 5 }, productId: numbe
   const intitule = [0, 0, 0, 0, 0];
 
   for (let item of input) {
-    intitule[(item._avg.rate - 1)] += 1;
+    intitule[(Math.round(item._avg.rate) - 1)] += 1;
   }
   return intitule;
 }

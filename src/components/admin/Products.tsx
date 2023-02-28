@@ -34,7 +34,7 @@ interface IProductsData {
   title: string;
 }
 
-const Products = ({productsInit, categories}: { productsInit: IProductsData[], categories: { name: string }[] | null}) => {
+const Products = ({productsInit, categories, count}: { productsInit: IProductsData[], categories: { name: string }[] | null, count: number}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [products, setProducts] = useState<IProductsData[]>([]);
@@ -184,7 +184,7 @@ const Products = ({productsInit, categories}: { productsInit: IProductsData[], c
             <TablePagination
               rowsPerPageOptions={[10, 25, 100]}
               component="div"
-              count={products.length}
+              count={count}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

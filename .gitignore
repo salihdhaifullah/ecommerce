@@ -2,7 +2,7 @@
 
 .vscode
 .env
-
+data
 # dependencies
 /node_modules
 /.pnp

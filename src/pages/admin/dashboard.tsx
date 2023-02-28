@@ -90,6 +90,10 @@ interface IData {
     isPayUse: boolean
   }[]
   categories: { name: string }[]
+  usersCount: number;
+  feedbacksCount: number;
+  ordersCount: number;
+  productsCount: number;
 }
 
 const Dashboard = ({ data }: { data: IData }) => {
@@ -99,16 +103,16 @@ const Dashboard = ({ data }: { data: IData }) => {
       {!data ? <Loader /> : (
         <>
           <Status status={data.status} />
-          <Products productsInit={data.products} categories={data.categories}/>
+          <Products count={data.productsCount} productsInit={data.products} categories={data.categories}/>
           <ProductsRateChart productsRate={data.productsRateChart} />
           <Line />
-          <Users usersInit={data.users}/>
+          <Users count={data.usersCount} usersInit={data.users}/>
           <UsersPaymentsChart usersPayment={data.usersPaymentChart} />
           <Line />
-          <HistoryOrders ordersInit={data.orders}/>
+          <HistoryOrders count={data.ordersCount} ordersInit={data.orders}/>
           <OrdersChart ordersChart={data.ordersChart} />
           <Line />
-          <FeedBacks feedBacksInit={data.feedbacks} />
+          <FeedBacks count={data.feedbacksCount} feedBacksInit={data.feedbacks} />
         </>
       )}
     </div>
@@ -124,7 +128,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
   // @ts-ignore
   if (error || !id || role !== "ADMIN") return { notFound: true };
 
-  const [feedbacks, orders, ordersChart, products, sales, total, usersCount, users, productsRateChart, usersPaymentChart, categories] = await prisma.$transaction([
+  const [feedbacks, feedbacksCount, orders, ordersCount, ordersChart, products, productsCount, sales, total, usersCount, users, productsRateChart, usersPaymentChart, categories] = await prisma.$transaction([
     prisma.feedBack.findMany({
       take: 10,
       select: {
@@ -136,6 +140,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
         content: true
       }
     }),
+    prisma.feedBack.count(),
     prisma.sale.findMany({
       take: 10,
       select: {
@@ -158,6 +163,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
         createdAt: true
       },
     }),
+    prisma.sale.count(),
     // @ts-ignore
     prisma.sale.groupBy({ by: ["verified"], _count: true }),
     prisma.product.findMany({
@@ -172,6 +178,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
         category: { select: { name: true } }
       }
     }),
+    prisma.product.count(),
     prisma.sale.count({ where: { verified: true } }),
     prisma.sale.aggregate({ _sum: { totalPrice: true }, where: { verified: true } }),
     prisma.user.count(),
@@ -205,8 +212,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
     users,
     productsRateChart,
     usersPaymentChart,
-    categories
+    categories,
+    usersCount,
+    feedbacksCount,
+    ordersCount,
+    productsCount
   }
+
+  console.log(productsRateChart)
 
   return {
     // @ts-ignore

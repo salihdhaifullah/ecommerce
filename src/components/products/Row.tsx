@@ -21,6 +21,7 @@ const GetButtonClass = (rest: string): string => {
 
 const Row = ({ category }: { category: string }) => {
     const [products, setProducts] = useState<IProduct[]>([])
+    const [totalProducts, setTotalProducts] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
     const scrollRef = useRef<HTMLDivElement | null>(null)
     const [isLastEleVisible, setIsLastEleVisible] = useState(false)
@@ -36,25 +37,35 @@ const Row = ({ category }: { category: string }) => {
         setIsLoading(true)
         await getProducts(category, page)
             .then((res) => {
-                const data = [...products, ...res.data.products]
-                setProducts(data)
-                if (data.length >= res.data.totalProducts) setIsDone(true)
+                setProducts((prev) => [...prev, ...res.data.products])
+                setTotalProducts(() => res.data.totalProducts)
             })
             .catch((err) => { console.log(err) })
             .finally(() => { setIsLoading(false) })
     }, [page])
 
-    useEffect(() => { HandelGetProducts() }, [HandelGetProducts])
-
-    const {current: observer} = useRef(new IntersectionObserver((entries) => { setIsVisible(entries[0].isIntersecting) }))
-    const {current: lastObserver} = useRef(new IntersectionObserver((entries) => { setIsLastEleVisible(entries[0].isIntersecting) } , {rootMargin: "100px"}))
-    const {current: firstObserver} = useRef(new IntersectionObserver((entries) => { setIsFirstEleVisible(entries[0].isIntersecting) }))
-
 
     useEffect(() => {
-        if ((isLastEleVisible && isVisible) && !isLoading && !isDone) setPage((prev) => prev++);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLastEleVisible, isLoading, isVisible])
+        if (!isLastEleVisible || !isVisible || isLoading || isDone) return;
+        console.log(category, "Its")
+        setPage((prev) => (prev + 1));
+    }, [category, isDone, isLastEleVisible, isLoading, isVisible])
+
+    useEffect(() => {
+        if (products.length === totalProducts) setIsDone(true)
+        else setIsDone(false)
+    }, [products.length, totalProducts])
+
+    useEffect(() => {
+        console.log(category, "isDone", isDone)
+    }, [isDone])
+
+    useEffect(() => { HandelGetProducts() }, [HandelGetProducts])
+
+    const { current: observer } = useRef(new IntersectionObserver((entries) => { setIsVisible(entries[0].isIntersecting) }, { threshold: 0.1 }))
+    const { current: lastObserver } = useRef(new IntersectionObserver((entries) => { setIsLastEleVisible(entries[0].isIntersecting) }, { threshold: 0.1, rootMargin: "100px" }))
+    const { current: firstObserver } = useRef(new IntersectionObserver((entries) => { setIsFirstEleVisible(entries[0].isIntersecting) }))
+
 
     const mainElement = useCallback((node: HTMLDivElement | null) => {
         if (node !== null) observer.observe(node)
@@ -67,16 +78,6 @@ const Row = ({ category }: { category: string }) => {
     const firstElement = useCallback((node: HTMLDivElement | null) => {
         if (node !== null) firstObserver.observe(node)
     }, [firstObserver])
-
-    useEffect(() => {
-        if (!isVisible) {
-            lastObserver.disconnect()
-            firstObserver.disconnect()
-        }
-    }, [isVisible])
-
-    useEffect(() => { if (isDone) lastObserver.disconnect(); }, [isDone])
-
 
     const handelScroll = (direction: "l" | "r") => {
         if (direction === "r") {
@@ -91,7 +92,6 @@ const Row = ({ category }: { category: string }) => {
 
             {!isVisible ? null : (
                 <>
-
                     <div className="justify-start ml-4 mb-4 w-fit items-start flex flex-col">
                         <h1 className="text-blue-600 text-2xl">{category}</h1>
                         <div className="w-[calc(100%+30px)]"><Line height={3} /> </div>
@@ -101,7 +101,7 @@ const Row = ({ category }: { category: string }) => {
                         {!(!isTouchDevise && !isFirstEleVisible) ? null : <motion.button whileTap={{ scale: 0.6 }} onClick={() => handelScroll("l")} className={GetButtonClass("left-4")}> <ArrowBackIosIcon /> </motion.button>}
 
                         <div ref={scrollRef} className="flex hide_scroll_bar h-[300px] flex-row w-[90vw] overflow-auto">
-                        <div ref={firstElement} className="h-full px-8"></div>
+                            <div ref={firstElement} className="h-full px-8"></div>
                             {products.length >= 1 ? products.map((item, index) => (
                                 <RowChild key={index} isLoading={isLoading} item={item} />
                             )) : null}

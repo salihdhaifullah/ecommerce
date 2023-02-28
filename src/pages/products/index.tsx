@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Row from '../../components/products/Row';
-import { getCategories, getCategoriesAndTags } from '../../api';
+import { getCategories } from '../../api';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -11,9 +11,12 @@ export default function Index() {
   const [isLoadingRow, setLoadingRow] = useState(false)
   const [page, setPage] = useState(1)
   const [isDone, setIsDone] = useState(false)
+  let init = useRef(true)
 
   const GetCategoriesCallBack = useCallback(async () => {
-    setIsLoading(true)
+    if (init.current) setIsLoading(true)
+    else setLoadingRow(true)
+
     await getCategories(page)
       .then((res) => {
         const data = [...categoriesOptions, ...res.data.categories]
@@ -21,12 +24,19 @@ export default function Index() {
         if (data.length >= res.data.totalCategories) setIsDone(true);
       })
       .catch((err) => { console.log(err) })
-      .finally(() => { setIsLoading(false) })
+      .finally(() => {
+        if (init.current) setIsLoading(false)
+        else setLoadingRow(false)
+        init.current = false
+      })
   }, [page])
 
   useEffect(() => { GetCategoriesCallBack() }, [GetCategoriesCallBack])
 
-  const { current: observer } = useRef(new IntersectionObserver((entries) => { if (entries[0].isIntersecting && !isLoadingRow) setPage((prev) => prev++); }))
+  const { current: observer } = useRef(new IntersectionObserver((entries) => {
+    console.log(entries[0].isIntersecting)
+    if (entries[0].isIntersecting && !isLoadingRow) setPage((prev) => (prev + 1));
+   }))
 
   useEffect(() => { if (isDone) observer.disconnect(); }, [isDone])
 
@@ -59,6 +69,8 @@ export default function Index() {
     </>
   )
 }
+
+
 
 
 

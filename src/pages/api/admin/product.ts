@@ -7,20 +7,6 @@ import { ICreateProduct, IUpdateProduct } from '../../../types/product';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-  if (req.method === 'GET') {
-    const id: number = Number(req.query["id"]);
-
-    if (typeof id !== 'number') {
-      const data = await prisma.$transaction([
-        prisma.tag.findMany({ select: { name: true } }),
-        prisma.category.findMany({ select: { name: true } })
-      ])
-
-      return res.status(200).json({ tags: data });
-    }
-  }
-
-
   if (req.method === 'DELETE') {
     const productId: number = Number(req.query["id"]);
 
@@ -124,6 +110,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
   if (req.method === 'POST') {
+
     const { error, id, role } = GetUserIdAndRole(req);
 
     if (error) return res.status(500).json({ error: error });
@@ -144,17 +131,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const imagesUrls: string[] = [];
 
     const uploadPromises = []
-    // const { Url, error: storageError } = await Storage.uploadFile(image);
-    // if (storageError) return res.status(500).json({ massage: "Internal server Error" });
-    // const imageUrl = Url;
-    // imagesUrls.push(Url)
 
     uploadPromises.push(Storage.uploadFile(image))
+
     for (let image of images) {
-    uploadPromises.push(Storage.uploadFile(image))
-      // const { Url, error: storageError } = await Storage.uploadFile(image);
-      // if (storageError) return res.status(500).json({ massage: "Internal server Error" });
-      // imagesUrls.push(Url);
+      uploadPromises.push(Storage.uploadFile(image))
     }
 
     const uploadData = await Promise.all(uploadPromises)

@@ -67,7 +67,7 @@ const Row = ({ row }: { row: IFeedBack }) => {
   )
 }
 
-export default function FeedBacks({feedBacksInit}: {feedBacksInit: IFeedBack[]}) {
+export default function FeedBacks({feedBacksInit, count}: {feedBacksInit: IFeedBack[], count: number}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [feedBacks, setFeedBacks] = useState<IFeedBack[]>([]);
@@ -178,7 +178,7 @@ export default function FeedBacks({feedBacksInit}: {feedBacksInit: IFeedBack[]})
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={feedBacks.length}
+          count={count}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

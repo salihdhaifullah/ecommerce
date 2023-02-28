@@ -89,7 +89,7 @@ const Row = ({ row }: { row: IHistoryOrdersOrderData }) => {
   )
 }
 
-export default function HistoryOrders({ordersInit}: {ordersInit: IHistoryOrdersOrderData[]}) {
+export default function HistoryOrders({ordersInit, count}: {ordersInit: IHistoryOrdersOrderData[], count: number}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [historyOrders, setHistoryOrders] = useState<IHistoryOrdersOrderData[]>([])
@@ -209,7 +209,7 @@ export default function HistoryOrders({ordersInit}: {ordersInit: IHistoryOrdersO
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={historyOrders.length}
+          count={count}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

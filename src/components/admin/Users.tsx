@@ -35,7 +35,7 @@ const getTotal = (input: { totalPrice: string }[]): number => {
   return total;
 }
 
-export default function Users({usersInit}: {usersInit: IUsersData[]}) {
+export default function Users({usersInit, count}: {usersInit: IUsersData[], count: number}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [users, setUsers] = useState<IUsersData[]>([]);
@@ -137,7 +137,7 @@ export default function Users({usersInit}: {usersInit: IUsersData[]}) {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={users.length}
+          count={count}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

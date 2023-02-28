@@ -68,7 +68,7 @@ const Model = ({ setOpen }: { setOpen: (bool: boolean) => void }) => {
             {ReactDOM.createPortal(
                 <div className="max-w-[500px]  w-full flex fixed justify-center center items-center">
                     {isLoading ? (
-                        <div className="border justify-center items-center bg-slate-50 p-4 min-h-[200px] flex flex-col w-full mx-4 md:w-auto shadow-xl z-50 rounded-md ">
+                        <div className="border justify-center items-center bg-slate-50 p-4 min-h-[200px] min-w-[300px] flex flex-col w-full mx-4 md:w-auto shadow-xl z-50 rounded-md ">
                             <CircularProgress className="w-10 h-10 text-blue-600" />
                         </div>
                     ) : (

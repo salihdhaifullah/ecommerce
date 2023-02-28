@@ -50,7 +50,7 @@ const Row = ({ row }: { row: IFeedBack }) => {
       </TableCell>
 
       <Dialog onClose={() => setOpen(false)} open={open}>
-        <DialogTitle>payment details</DialogTitle>
+        <DialogTitle>FeedBack details</DialogTitle>
         <Box className="flex flex-col min-w-[50vw] h-auto mb-4 gap-4 rounded-lg bg-white py-2 px-4 justify-start items-start">
           <div className="flex flex-row gap-4"><span className="text-gray-600 ">createdAt</span><p>{dateFormat(row.createdAt)}</p></div>
           <div className="flex flex-row gap-4"><span className="text-gray-600 ">UserName</span><p>{row.user.firstName + " " + row.user.lastName}</p></div>

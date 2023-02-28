@@ -5,7 +5,7 @@ import { Prisma } from '@prisma/client';
 const filterQuery = (userName: unknown, paymentState: unknown, deliverState: unknown) => {
     let query: Prisma.SaleWhereInput = {}
     const paymentStateOptions = ["verified", "canceled"]
-    const deliverStateOptions = ["undelivered", "received"]
+    const deliverStateOptions = ["unDelivered", "received"]
 
     if (typeof userName === "string" && userName.length > 2) {
         query["user"] = { OR: [
@@ -22,6 +22,7 @@ const filterQuery = (userName: unknown, paymentState: unknown, deliverState: unk
     if (typeof deliverState === 'string' && deliverState.length > 0 && deliverStateOptions.includes(deliverState)) {
         if (deliverState === "received") query["received"] = true
         else query["received"] = false
+        query["verified"] = true
     }
 
 
@@ -50,6 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const paymentState = req.query["payment-state"]
         const deliverState = req.query["deliver-state"]
 
+        console.log(deliverState)
         if (typeof skip !== 'number' || typeof take !== 'number') return res.status(400).json({ massage: "Bad Request" });
 
         const orders = await prisma.sale.findMany({

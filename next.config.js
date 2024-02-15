@@ -2,8 +2,10 @@
 const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
+
   images: {
-    domains: ['uyowzupacsoabvqjpfah.supabase.co', 'avatars.dicebear.com', 'flagcdn.com'],
+    dangerouslyAllowSVG: true,
+    domains: ['uyowzupacsoabvqjpfah.supabase.co', 'api.dicebear.com', 'flagcdn.com'],
   },
   env: {
       HOST: process.env.HOST,

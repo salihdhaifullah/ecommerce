@@ -20,8 +20,8 @@ const FeedBack = ({ item }: { item: IFeedback }) => {
                     <Image
                         width={20}
                         height={20}
-                        src={`https://avatars.dicebear.com/api/bottts/${item.user.firstName + " " + item.user.lastName}.svg`}
-                        alt={"User Profile"} className="object-contain rounded-lg shadow-2xl flex w-full h-full" />
+                        src={`https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(item.user.firstName + " " + item.user.lastName)}`}
+                       alt={"User Profile"} className="object-contain rounded-lg shadow-2xl flex w-full h-full" />
                 </div>
 
                 <div className="flex flex-row gap-4">

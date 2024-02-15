@@ -49,7 +49,7 @@ const Header = () => {
                         </li>
                         <li className={classes.li}>
                             <motion.img className='w-10 rounded-full ease-in-out cursor-pointer shadow-xl h-10 min-w-[40px] min-h-[40px]'
-                                whileTap={{ scale: 0.6, rotate: 180 }} src={`https://avatars.dicebear.com/api/bottts/${"hello world"}.svg`} alt='profile'
+                                whileTap={{ scale: 0.6, rotate: 180 }} src={`https://api.dicebear.com/7.x/bottts/svg?seed=${"hello-world"}`}alt='profile'
                             />
                         </li>
                         <li className=' text-base text-gray-600 duration-100 transition-all cursor-pointer ease-in-out relative mr-4'>
@@ -75,7 +75,7 @@ const Header = () => {
 
                 <li className={classes.li}>
                     <motion.img className='w-10 rounded-full ease-in-out cursor-pointer shadow-xl h-10 min-w-[40px] min-h-[40px]'
-                        whileTap={{ scale: 0.6, rotate: 180 }} src={`https://avatars.dicebear.com/api/bottts/${"hello world"}.svg`} alt='profile' />
+                        whileTap={{ scale: 0.6, rotate: 180 }} src={`https://api.dicebear.com/7.x/bottts/svg?seed=${"hello-world"}`} alt='profile' />
                 </li>
 
                 <li className='text-base text-gray-600 duration-100 transition-all cursor-pointer ease-in-out'>
